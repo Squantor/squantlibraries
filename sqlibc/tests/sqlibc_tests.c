@@ -1,4 +1,5 @@
 #include "minunit.h"
+#include "test_strlen.h"
 
 static int foo = 0;
 static int bar = 0;
@@ -80,6 +81,7 @@ MU_TEST_SUITE(test_suite) {
 
 int main(int argc, char *argv[]) {
 	MU_RUN_SUITE(test_suite);
+    MU_RUN_SUITE(test_strlen);
 	MU_REPORT();
 	return 0;
 }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="sqlibc_test" Version="10.0.0" InternalType="Console">
   <VirtualDirectory Name="tests">
+    <File Name="test_strlen.c"/>
+    <File Name="test_strlen.h"/>
+    <File Name="sqlibc_tests.h"/>
     <File Name="sqlibc_tests.c"/>
     <File Name="minunit.h"/>
   </VirtualDirectory>

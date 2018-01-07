@@ -1,6 +1,6 @@
 # Project settings
 BIN_NAME = sqlibc_tests
-SOURCES = sqlibc_tests.c 
+SOURCES = sqlibc_tests.c test_strlen.c
 INCLUDES = -I. -I../inc
 
 # Toolchain settings
