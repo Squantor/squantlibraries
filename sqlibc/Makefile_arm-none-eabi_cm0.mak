@@ -1,28 +1,24 @@
 # Project settings
-BIN_NAME = sqlibc_tests
-SOURCES = sqlibc_tests.c test_strlen.c
-INCLUDES = -I. -I../inc
-RLIBDIR = -L"../bin/release"
-RLIBS = -lsqlibc
-DLIBDIR = -L"../bin/debug"
-DLIBS = -lsqlibc
+BIN_NAME = libsqlibc
+SOURCES = src/string/strlen.c
+INCLUDES = -Iinc
 
 # Toolchain settings
 MAKE = make
 MKDIR = mkdir
 RM = rm
 CXX = gcc
-CXX_PREFIX = 
+CXX_PREFIX = arm-none-eabi-
 SIZE = size
 AR = ar
 OBJDUMP = objdump
 
 # Toolchain flags
-COMPILE_FLAGS = -std=c99 -Wall -Wextra
-DEFINES = 
+COMPILE_FLAGS = -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -std=c11 -mcpu=cortex-m0 -mthumb
+DEFINES = -DCORE_M0
 RDEFINES = -DNDEBUG
 DDEFINES = -DDEBUG
-RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -O3
+RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -Os
 DCOMPILE_FLAGS = $(DEFINES) $(DDEFINES) -g3 -O0
 
 LINK_FLAGS =
@@ -42,11 +38,9 @@ print-%: ; @echo $*=$($*)
 
 # Combine compiler and linker flags
 release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(RCOMPILE_FLAGS)
-release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS) $(RLIBDIR)
-release: export LIBS := $(RLIBS)
+release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS)
 debug: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(DCOMPILE_FLAGS)
-debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS) $(DLIBDIR)
-debug: export LIBS := $(DLIBS)
+debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS)
 
 # Build and output paths
 release: export BUILD_PATH := build/release
@@ -63,13 +57,11 @@ DEPS = $(OBJECTS:.o=.d)
 # Standard, non-optimized release build
 .PHONY: release
 release: dirs
-	$(MAKE) -C .. release
 	$(MAKE) all --no-print-directory
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
-	$(MAKE) -C .. debug
 	$(MAKE) all --no-print-directory
 
 # Create the directories used in the build
@@ -87,17 +79,14 @@ clean:
 	$(RM) -r bin
 
 # Main rule, checks the executable and symlinks to the output
-all: $(BIN_PATH)/$(BIN_NAME)
+all: $(BIN_PATH)/$(BIN_NAME).a
 
 # create the archive
-$(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	$(CXX_PREFIX)$(CXX) $(LDFLAGS) $(OBJECTS) -Xlinker -Map="$(BIN_PATH)/$(BIN_NAME).map" -o $@ $(LIBS)
-	# dump size and log to file
-	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME)
-	date >> size$(BUILD_TARGET).log
-	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME) >> size$(BUILD_TARGET).log
-	# create the various output files
-	$(CXX_PREFIX)$(OBJDUMP) -h -S "$(BIN_PATH)/$(BIN_NAME)" > "$(BIN_PATH)/$(BIN_NAME).lss"
+$(BIN_PATH)/$(BIN_NAME).a: $(OBJECTS)
+	#$(CXX_PREFIX)$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CXX_PREFIX)$(AR) -r $@ $(OBJECTS)
+	$(CXX_PREFIX)$(SIZE) $@
+	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(BIN_NAME).lss"
 
 # Add dependency files, if they exist
 -include $(DEPS)

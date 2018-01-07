@@ -8,17 +8,17 @@ MAKE = make
 MKDIR = mkdir
 RM = rm
 CXX = gcc
-CXX_PREFIX = arm-none-eabi-
+CXX_PREFIX = 
 SIZE = size
 AR = ar
 OBJDUMP = objdump
 
 # Toolchain flags
-COMPILE_FLAGS = -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -std=c11 -mcpu=cortex-m0 -mthumb
-DEFINES = -DCORE_M0
+COMPILE_FLAGS = -std=c99 -Wall -Wextra
+DEFINES = 
 RDEFINES = -DNDEBUG
 DDEFINES = -DDEBUG
-RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -Os
+RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -O3
 DCOMPILE_FLAGS = $(DEFINES) $(DDEFINES) -g3 -O0
 
 LINK_FLAGS =
@@ -83,10 +83,11 @@ all: $(BIN_PATH)/$(BIN_NAME).a
 
 # create the archive
 $(BIN_PATH)/$(BIN_NAME).a: $(OBJECTS)
-	#$(CXX_PREFIX)$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
 	$(CXX_PREFIX)$(AR) -r $@ $(OBJECTS)
-	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME).a
-	$(CXX_PREFIX)$(OBJDUMP) -h -S "$(BIN_PATH)/$(BIN_NAME).a" > "$(BIN_PATH)/$(BIN_NAME).lss"
+	$(CXX_PREFIX)$(SIZE) $@
+	date >> size$(BUILD_TARGET).log
+	$(CXX_PREFIX)$(SIZE) $@ >> size$(BUILD_TARGET).log
+	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(BIN_NAME).lss"
 
 # Add dependency files, if they exist
 -include $(DEPS)
