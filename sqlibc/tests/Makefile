@@ -1,5 +1,5 @@
 # Project settings
-BIN_NAME = sqlibc_tests
+BIN_NAME = sqlibc_test
 SOURCES = sqlibc_tests.c test_strlen.c
 INCLUDES = -I. -I../inc
 RLIBDIR = -L"../bin/release"

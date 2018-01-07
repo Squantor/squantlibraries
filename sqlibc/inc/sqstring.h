@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 
-size_t sqstrlen(const char * str);
+size_t sqstrlen ( const char * str );
+size_t sqstrnlen ( const char * str, size_t num );
 
 #endif
