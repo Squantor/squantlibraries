@@ -6,11 +6,42 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
+    <VirtualDirectory Name="internal">
+      <File Name="src/internal/ctypetable.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="ctype">
+      <File Name="src/ctype/iscntrl.c"/>
+      <File Name="src/ctype/isalnum.c"/>
+      <File Name="src/ctype/isdigit.c"/>
+      <File Name="src/ctype/tolower.c"/>
+      <File Name="src/ctype/isprint.c"/>
+      <File Name="src/ctype/isupper.c"/>
+      <File Name="src/ctype/isgraph.c"/>
+      <File Name="src/ctype/isalpha.c"/>
+      <File Name="src/ctype/isblank.c"/>
+      <File Name="src/ctype/toupper.c"/>
+      <File Name="src/ctype/isascii.c"/>
+      <File Name="src/ctype/isxdigit.c"/>
+      <File Name="src/ctype/isspace.c"/>
+      <File Name="src/ctype/ispunct.c"/>
+      <File Name="src/ctype/islower.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="stdlib">
+      <File Name="src/stdlib/strto.c"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="string">
+      <File Name="src/string/memcmp.c"/>
+      <File Name="src/string/memmove.c"/>
+      <File Name="src/string/memset.c"/>
+      <File Name="src/string/memcpy.c"/>
+      <File Name="src/string/memchr.c"/>
       <File Name="src/string/strlen.c"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/sqctype.h"/>
+    <File Name="inc/sqctypetable.h"/>
+    <File Name="inc/sqstdlib.h"/>
     <File Name="inc/sqstring.h"/>
   </VirtualDirectory>
   <Description/>

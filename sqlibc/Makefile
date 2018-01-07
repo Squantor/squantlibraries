@@ -1,6 +1,10 @@
 # Project settings
 BIN_NAME = libsqlibc
-SOURCES = src/string/strlen.c
+SOURCES = src/string/strlen.c \
+src/string/memchr.c src/string/memcmp.c src/string/memcpy.c src/string/memmove.c src/string/memset.c \
+src/stdlib/strto.c \
+src/internal/ctypetable.c \
+src/ctype/isspace.c
 INCLUDES = -Iinc
 
 # Toolchain settings
