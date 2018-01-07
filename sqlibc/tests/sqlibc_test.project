@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="sqlibc" Version="10.0.0" InternalType="Console">
+<CodeLite_Project Name="sqlibc_test" Version="10.0.0" InternalType="Console">
+  <VirtualDirectory Name="tests">
+    <File Name="sqlibc_tests.c"/>
+    <File Name="minunit.h"/>
+  </VirtualDirectory>
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
     </Plugin>
   </Plugins>
-  <VirtualDirectory Name="src">
-    <VirtualDirectory Name="string">
-      <File Name="src/string/strlen.c"/>
-    </VirtualDirectory>
-  </VirtualDirectory>
-  <VirtualDirectory Name="inc">
-    <File Name="inc/sqstring.h"/>
-  </VirtualDirectory>
   <Description/>
   <Dependencies/>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
@@ -25,7 +23,7 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-O0;-Wall" C_Options="-g;-O0;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
