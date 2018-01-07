@@ -1,10 +1,10 @@
 # Project settings
 BIN_NAME = libsqlibc
-SOURCES = src/string/strlen.c
-INCLUDES = -Iinc
+SOURCES = ../src/string/strlen.c
+INCLUDES = -I"../inc"
 
 # Toolchain settings
-MAKEFILE = Makefile_arm-none-eabi_cm0.mak
+MAKEFILE = Makefile
 MAKE = make
 MKDIR = mkdir
 RM = rm
@@ -84,9 +84,10 @@ all: $(BIN_PATH)/$(BIN_NAME).a
 
 # create the archive
 $(BIN_PATH)/$(BIN_NAME).a: $(OBJECTS)
-	#$(CXX_PREFIX)$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
 	$(CXX_PREFIX)$(AR) -r $@ $(OBJECTS)
 	$(CXX_PREFIX)$(SIZE) $@
+	date >> size$(BUILD_TARGET).log
+	$(CXX_PREFIX)$(SIZE) $@ >> size$(BUILD_TARGET).log
 	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(BIN_NAME).lss"
 
 # Add dependency files, if they exist
