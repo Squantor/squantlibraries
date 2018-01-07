@@ -4,6 +4,7 @@ SOURCES = src/string/strlen.c
 INCLUDES = -Iinc
 
 # Toolchain settings
+MAKEFILE = Makefile_arm-none-eabi_cm0.mak
 MAKE = make
 MKDIR = mkdir
 RM = rm
@@ -57,12 +58,12 @@ DEPS = $(OBJECTS:.o=.d)
 # Standard, non-optimized release build
 .PHONY: release
 release: dirs
-	$(MAKE) all --no-print-directory
+	$(MAKE) -f $(MAKEFILE) all --no-print-directory
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
-	$(MAKE) all --no-print-directory
+	$(MAKE) -f $(MAKEFILE) all --no-print-directory
 
 # Create the directories used in the build
 .PHONY: dirs
