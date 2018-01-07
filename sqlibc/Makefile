@@ -1,5 +1,5 @@
 # Project settings
-BIN_NAME = sqlibc
+BIN_NAME = libsqlibc
 SOURCES = src/string/strlen.c
 INCLUDES = -Iinc
 
