@@ -1,6 +1,10 @@
 # Project settings
 BIN_NAME = libsqlibc
-SOURCES = ../src/string/strlen.c
+SOURCES = src/string/strlen.c \
+src/string/memchr.c src/string/memcmp.c src/string/memcpy.c src/string/memmove.c src/string/memset.c \
+src/stdlib/strto.c \
+src/internal/ctypetable.c \
+src/ctype/isspace.c src/ctype/isxdigit.c
 INCLUDES = -I"../inc"
 
 # Toolchain settings
@@ -48,6 +52,10 @@ release: export BUILD_PATH := build/release
 release: export BIN_PATH := bin/release
 debug: export BUILD_PATH := build/debug
 debug: export BIN_PATH := bin/debug
+
+# export what target we are building, used for size logs
+release: export BUILD_TARGET := release
+debug: export BUILD_TARGET := debug
 
 # Set the object file names, with the source directory stripped
 # from the path, and the build path prepended in its place
@@ -97,6 +105,6 @@ $(BIN_PATH)/$(BIN_NAME).a: $(OBJECTS)
 # After the first compilation they will be joined with the rules from the
 # dependency files to provide header dependencies
 # if the source file is in a subdir, create this subdir in the build dir
-$(BUILD_PATH)/%.o: ./%.$(SRC_EXT)
+$(BUILD_PATH)/%.o: ./../%.$(SRC_EXT)
 	$(MKDIR) -p $(dir $@) 
 	$(CXX_PREFIX)$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
