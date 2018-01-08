@@ -71,6 +71,6 @@ long int sqstrtol( const char * s, char ** endptr, int base )
         multiplier = multiplier * base;
         --digitcount;
     }
-    return value;
+    return (sign == '+') ? value : -value;
 }
 
