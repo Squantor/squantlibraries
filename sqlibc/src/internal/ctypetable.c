@@ -50,16 +50,16 @@ const ctypeEntry asciiTableCtypes[128] =
     {ctypeIsNone}, // -
     {ctypeIsNone}, // .
     {ctypeIsNone}, // /
-    {ctypeIsNone}, // 0
-    {ctypeIsNone}, // 1
-    {ctypeIsNone}, // 2
-    {ctypeIsNone}, // 3
-    {ctypeIsNone}, // 4
-    {ctypeIsNone}, // 5
-    {ctypeIsNone}, // 6
-    {ctypeIsNone}, // 7
-    {ctypeIsNone}, // 8
-    {ctypeIsNone}, // 9
+    {ctypeIsDigit | ctypeIsXdigit}, // 0
+    {ctypeIsDigit | ctypeIsXdigit}, // 1
+    {ctypeIsDigit | ctypeIsXdigit}, // 2
+    {ctypeIsDigit | ctypeIsXdigit}, // 3
+    {ctypeIsDigit | ctypeIsXdigit}, // 4
+    {ctypeIsDigit | ctypeIsXdigit}, // 5
+    {ctypeIsDigit | ctypeIsXdigit}, // 6
+    {ctypeIsDigit | ctypeIsXdigit}, // 7
+    {ctypeIsDigit | ctypeIsXdigit}, // 8
+    {ctypeIsDigit | ctypeIsXdigit}, // 9
     {ctypeIsNone}, // :
     {ctypeIsNone}, // ;
     {ctypeIsNone}, // <
@@ -67,12 +67,12 @@ const ctypeEntry asciiTableCtypes[128] =
     {ctypeIsNone}, // >
     {ctypeIsNone}, // ?
     {ctypeIsNone}, // @
-    {ctypeIsUpper}, // A
-    {ctypeIsUpper}, // B
-    {ctypeIsUpper}, // C
-    {ctypeIsUpper}, // D
-    {ctypeIsUpper}, // E
-    {ctypeIsUpper}, // F
+    {ctypeIsUpper | ctypeIsXdigit}, // A
+    {ctypeIsUpper | ctypeIsXdigit}, // B
+    {ctypeIsUpper | ctypeIsXdigit}, // C
+    {ctypeIsUpper | ctypeIsXdigit}, // D
+    {ctypeIsUpper | ctypeIsXdigit}, // E
+    {ctypeIsUpper | ctypeIsXdigit}, // F
     {ctypeIsUpper}, // G
     {ctypeIsUpper}, // H
     {ctypeIsUpper}, // I
@@ -99,12 +99,12 @@ const ctypeEntry asciiTableCtypes[128] =
     {ctypeIsNone}, // ^
     {ctypeIsNone}, // _
     {ctypeIsNone}, // `
-    {ctypeIsLower}, // a
-    {ctypeIsLower}, // b
-    {ctypeIsLower}, // c
-    {ctypeIsLower}, // d
-    {ctypeIsLower}, // e
-    {ctypeIsLower}, // f
+    {ctypeIsLower | ctypeIsXdigit}, // a
+    {ctypeIsLower | ctypeIsXdigit}, // b
+    {ctypeIsLower | ctypeIsXdigit}, // c
+    {ctypeIsLower | ctypeIsXdigit}, // d
+    {ctypeIsLower | ctypeIsXdigit}, // e
+    {ctypeIsLower | ctypeIsXdigit}, // f
     {ctypeIsLower}, // g
     {ctypeIsLower}, // h
     {ctypeIsLower}, // i
