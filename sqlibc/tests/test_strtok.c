@@ -47,7 +47,7 @@ MU_TEST(test_sqstrstok)
     mu_assert_string_eq("moo", token);
 }
 
-MU_TEST(test_sqstrstoks) 
+MU_TEST(test_sqstrstokns) 
 {
 
 }
@@ -57,5 +57,5 @@ MU_TEST_SUITE_GLOBAL(test_strtok)
 {
     MU_SUITE_CONFIGURE(&test_strtok_setup, &test_strtok_teardown);
     MU_RUN_TEST(test_sqstrstok);
-    MU_RUN_TEST(test_sqstrstoks);
+    MU_RUN_TEST(test_sqstrstokns);
 }
