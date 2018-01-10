@@ -30,6 +30,7 @@
       <File Name="src/stdlib/strto.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="string">
+      <File Name="src/string/strtok.c"/>
       <File Name="src/string/memcmp.c"/>
       <File Name="src/string/memmove.c"/>
       <File Name="src/string/memset.c"/>
