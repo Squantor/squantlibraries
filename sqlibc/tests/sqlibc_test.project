@@ -6,6 +6,8 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="tests">
+    <File Name="test_strtok.h"/>
+    <File Name="test_strtok.c"/>
     <File Name="test_strto.h"/>
     <File Name="test_strto.c"/>
     <File Name="test_strlen.c"/>
