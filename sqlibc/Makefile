@@ -52,6 +52,10 @@ release: export BIN_PATH := bin/release
 debug: export BUILD_PATH := build/debug
 debug: export BIN_PATH := bin/debug
 
+# export what target we are building, used for size logs
+release: export BUILD_TARGET := release
+debug: export BUILD_TARGET := debug
+
 # Set the object file names, with the source directory stripped
 # from the path, and the build path prepended in its place
 OBJECTS = $(SOURCES:%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
