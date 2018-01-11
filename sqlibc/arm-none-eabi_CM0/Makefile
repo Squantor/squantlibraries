@@ -1,6 +1,6 @@
 # Project settings
 BIN_NAME = libsqlibc
-SOURCES = src/string/strlen.c src/string/strtok.c\
+SOURCES = src/string/strlen.c src/string/strtok.c src/string/strcmp.c src/string/strncpy.c \
 src/string/memchr.c src/string/memcmp.c src/string/memcpy.c src/string/memmove.c src/string/memset.c \
 src/stdlib/strto.c \
 src/internal/ctypetable.c \
