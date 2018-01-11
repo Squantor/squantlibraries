@@ -1,6 +1,7 @@
 #include "minunit.h"
 #include "test_strlen.h"
 #include "test_strto.h"
+#include "test_strtok.h"
 
 int main(int argc, char *argv[]) {
     MU_RUN_SUITE(test_strlen);
