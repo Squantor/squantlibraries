@@ -1,5 +1,5 @@
 # Project settings
-BIN_NAME = libsqlibc
+BIN_NAME = libsqlibembedded
 SOURCES = 
 INCLUDES = -Iinc
 

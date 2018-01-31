@@ -1,7 +1,11 @@
 # Project settings
-BIN_NAME = sqlibembedded_tests
+BIN_NAME = sqlibembedded_test
 SOURCES = sqlibembedded_tests.c 
 INCLUDES = -I. -I../inc
+RLIBDIR = -L"../bin/release"
+RLIBS = -lsqlibembedded
+DLIBDIR = -L"../bin/debug"
+DLIBS = -lsqlibembedded
 
 # Toolchain settings
 MAKE = make
@@ -38,15 +42,21 @@ print-%: ; @echo $*=$($*)
 
 # Combine compiler and linker flags
 release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(RCOMPILE_FLAGS)
-release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS)
+release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS) $(RLIBDIR)
+release: export LIBS := $(RLIBS)
 debug: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(DCOMPILE_FLAGS)
-debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS)
+debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS) $(DLIBDIR)
+debug: export LIBS := $(DLIBS)
 
 # Build and output paths
 release: export BUILD_PATH := build/release
 release: export BIN_PATH := bin/release
 debug: export BUILD_PATH := build/debug
 debug: export BIN_PATH := bin/debug
+
+# export what target we are building, used for size logs
+release: export BUILD_TARGET := release
+debug: export BUILD_TARGET := debug
 
 # Set the object file names, with the source directory stripped
 # from the path, and the build path prepended in its place
@@ -57,11 +67,13 @@ DEPS = $(OBJECTS:.o=.d)
 # Standard, non-optimized release build
 .PHONY: release
 release: dirs
+	$(MAKE) -C .. release
 	$(MAKE) all --no-print-directory
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
+	$(MAKE) -C .. debug
 	$(MAKE) all --no-print-directory
 
 # Create the directories used in the build
@@ -75,6 +87,7 @@ dirs:
 clean_debug:
 clean_release:
 clean:
+	$(MAKE) -C .. clean
 	$(RM) -r build
 	$(RM) -r bin
 
