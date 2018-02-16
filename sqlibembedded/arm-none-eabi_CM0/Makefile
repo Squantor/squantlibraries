@@ -1,8 +1,7 @@
 # Project settings
 BIN_NAME = libsqlibc
-#SOURCES = src/string/strlen.c 
-SOURCES =  
-INCLUDES = -I"../inc"
+SOURCES = src/cmdline.c
+INCLUDES = -I"../inc" -I"../../sqlibc/inc/"
 
 # Toolchain settings
 MAKEFILE = Makefile
