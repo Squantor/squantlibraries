@@ -3,17 +3,17 @@
 #include <sqctype.h>
 
 // string to long converter, simple edition
-long int sqstrstol(const char * s)
+long int strstol(const char * s)
 {
-    return sqstrtol(s, NULL, 0);
+    return strtol(s, NULL, 0);
 }
 
-long int sqstrtol( const char * s, char ** endptr, int base )
+long int strtol( const char * s, char ** endptr, int base )
 {
     long int value = 0;
     char sign = '+';
     // skipping leading whitespace
-    while(sqisspace(*s)) ++s;
+    while(isspace(*s)) ++s;
     // determine sign
     if(*s != '+' && *s != '-')
         sign = '+';
@@ -37,7 +37,7 @@ long int sqstrtol( const char * s, char ** endptr, int base )
     int digitcount = 0;
     int multiplier = 1;
     // scan forward (TODO make separate hex and decimal scanner
-    while(sqisxdigit(*s))
+    while(isxdigit(*s))
     {
         digitcount++;
         ++s;

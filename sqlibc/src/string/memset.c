@@ -1,6 +1,6 @@
 #include <sqstring.h>
 
-void * sqmemset( void * s, int c, size_t n )
+void * memset( void * s, int c, size_t n )
 {
     unsigned char * p = (unsigned char *) s;
     while ( n-- )
