@@ -1,6 +1,6 @@
 #include <sqstring.h>
 
-char * sqstrtok(char * restrict s1, const char * restrict s2)
+char * strtok(char * restrict s1, const char * restrict s2)
 {
     static char * tmp = NULL;
     const char * p = s2;
@@ -63,7 +63,7 @@ char * sqstrtok(char * restrict s1, const char * restrict s2)
 }
 
 // strtok variant with no static variable
-char * sqstrtokns(char * restrict s1, const char * restrict s2, char ** pos)
+char * strtokns(char * restrict s1, const char * restrict s2, char ** pos)
 {
     char * tmp = *pos;
     const char * p = s2;

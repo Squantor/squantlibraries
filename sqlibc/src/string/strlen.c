@@ -1,6 +1,6 @@
 #include <sqstring.h>
 
-size_t sqstrlen ( const char * str )
+size_t strlen ( const char * str )
 {
 	size_t len = 0;
     while(str[len])
@@ -10,7 +10,7 @@ size_t sqstrlen ( const char * str )
 	return len;
 }
 
-size_t sqstrnlen ( const char * str, size_t num )
+size_t strnlen ( const char * str, size_t num )
 {
 	size_t len = 0;
     while(str[len] && (len < num))
