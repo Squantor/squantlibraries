@@ -1,28 +1,26 @@
 # Project settings
-BIN_NAME = sqlibembedded_test
-SOURCES = sqlibembedded_tests.c 
-INCLUDES = -I. -I../inc
-RLIBDIR = -L"../bin/release"
-RLIBS = -lsqlibembedded
-DLIBDIR = -L"../bin/debug"
-DLIBS = -lsqlibembedded
+BIN_NAME = libsqlibc
+#SOURCES = src/string/strlen.c 
+SOURCES =  
+INCLUDES = -I"../inc"
 
 # Toolchain settings
+MAKEFILE = Makefile
 MAKE = make
 MKDIR = mkdir
 RM = rm
 CXX = gcc
-CXX_PREFIX = 
+CXX_PREFIX = arm-none-eabi-
 SIZE = size
 AR = ar
 OBJDUMP = objdump
 
 # Toolchain flags
-COMPILE_FLAGS = -std=c99 -Wall -Wextra
-DEFINES = 
+COMPILE_FLAGS = -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -std=c11 -mcpu=cortex-m0 -mthumb
+DEFINES = -DCORE_M0
 RDEFINES = -DNDEBUG
 DDEFINES = -DDEBUG
-RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -O3
+RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -Os
 DCOMPILE_FLAGS = $(DEFINES) $(DDEFINES) -g3 -O0
 
 LINK_FLAGS =
@@ -42,11 +40,9 @@ print-%: ; @echo $*=$($*)
 
 # Combine compiler and linker flags
 release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(RCOMPILE_FLAGS)
-release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS) $(RLIBDIR)
-release: export LIBS := $(RLIBS)
+release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS)
 debug: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(DCOMPILE_FLAGS)
-debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS) $(DLIBDIR)
-debug: export LIBS := $(DLIBS)
+debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS)
 
 # Build and output paths
 release: export BUILD_PATH := build/release
@@ -67,14 +63,12 @@ DEPS = $(OBJECTS:.o=.d)
 # Standard, non-optimized release build
 .PHONY: release
 release: dirs
-	$(MAKE) -C .. release
-	$(MAKE) all --no-print-directory
+	$(MAKE) -f $(MAKEFILE) all --no-print-directory
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
-	$(MAKE) -C .. debug
-	$(MAKE) all --no-print-directory
+	$(MAKE) -f $(MAKEFILE) all --no-print-directory
 
 # Create the directories used in the build
 .PHONY: dirs
@@ -87,22 +81,19 @@ dirs:
 clean_debug:
 clean_release:
 clean:
-	$(MAKE) -C .. clean
 	$(RM) -r build
 	$(RM) -r bin
 
 # Main rule, checks the executable and symlinks to the output
-all: $(BIN_PATH)/$(BIN_NAME)
+all: $(BIN_PATH)/$(BIN_NAME).a
 
 # create the archive
-$(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	$(CXX_PREFIX)$(CXX) $(LDFLAGS) $(OBJECTS) -Xlinker -Map="$(BIN_PATH)/$(BIN_NAME).map" -o $@ $(LIBS)
-	# dump size and log to file
-	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME)
+$(BIN_PATH)/$(BIN_NAME).a: $(OBJECTS)
+	$(CXX_PREFIX)$(AR) -r $@ $(OBJECTS)
+	$(CXX_PREFIX)$(SIZE) $@
 	date >> size$(BUILD_TARGET).log
-	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME) >> size$(BUILD_TARGET).log
-	# create the various output files
-	$(CXX_PREFIX)$(OBJDUMP) -h -S "$(BIN_PATH)/$(BIN_NAME)" > "$(BIN_PATH)/$(BIN_NAME).lss"
+	$(CXX_PREFIX)$(SIZE) $@ >> size$(BUILD_TARGET).log
+	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(BIN_NAME).lss"
 
 # Add dependency files, if they exist
 -include $(DEPS)
@@ -111,6 +102,6 @@ $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 # After the first compilation they will be joined with the rules from the
 # dependency files to provide header dependencies
 # if the source file is in a subdir, create this subdir in the build dir
-$(BUILD_PATH)/%.o: ./%.$(SRC_EXT)
+$(BUILD_PATH)/%.o: ./../%.$(SRC_EXT)
 	$(MKDIR) -p $(dir $@) 
 	$(CXX_PREFIX)$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@

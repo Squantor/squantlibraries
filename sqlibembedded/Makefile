@@ -1,11 +1,7 @@
 # Project settings
-BIN_NAME = sqlibembedded_test
-SOURCES = sqlibembedded_tests.c 
-INCLUDES = -I. -I../inc
-RLIBDIR = -L"../bin/release"
-RLIBS = -lsqlibembedded
-DLIBDIR = -L"../bin/debug"
-DLIBS = -lsqlibembedded
+BIN_NAME = libsqlibembedded
+SOURCES = 
+INCLUDES = -Iinc
 
 # Toolchain settings
 MAKE = make
@@ -42,11 +38,9 @@ print-%: ; @echo $*=$($*)
 
 # Combine compiler and linker flags
 release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(RCOMPILE_FLAGS)
-release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS) $(RLIBDIR)
-release: export LIBS := $(RLIBS)
+release: export LDFLAGS := $(LINK_FLAGS) $(RLINK_FLAGS)
 debug: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(DCOMPILE_FLAGS)
-debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS) $(DLIBDIR)
-debug: export LIBS := $(DLIBS)
+debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS)
 
 # Build and output paths
 release: export BUILD_PATH := build/release
@@ -67,13 +61,11 @@ DEPS = $(OBJECTS:.o=.d)
 # Standard, non-optimized release build
 .PHONY: release
 release: dirs
-	$(MAKE) -C .. release
 	$(MAKE) all --no-print-directory
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
-	$(MAKE) -C .. debug
 	$(MAKE) all --no-print-directory
 
 # Create the directories used in the build
@@ -87,22 +79,19 @@ dirs:
 clean_debug:
 clean_release:
 clean:
-	$(MAKE) -C .. clean
 	$(RM) -r build
 	$(RM) -r bin
 
 # Main rule, checks the executable and symlinks to the output
-all: $(BIN_PATH)/$(BIN_NAME)
+all: $(BIN_PATH)/$(BIN_NAME).a
 
 # create the archive
-$(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	$(CXX_PREFIX)$(CXX) $(LDFLAGS) $(OBJECTS) -Xlinker -Map="$(BIN_PATH)/$(BIN_NAME).map" -o $@ $(LIBS)
-	# dump size and log to file
-	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME)
+$(BIN_PATH)/$(BIN_NAME).a: $(OBJECTS)
+	$(CXX_PREFIX)$(AR) -r $@ $(OBJECTS)
+	$(CXX_PREFIX)$(SIZE) $@
 	date >> size$(BUILD_TARGET).log
-	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME) >> size$(BUILD_TARGET).log
-	# create the various output files
-	$(CXX_PREFIX)$(OBJDUMP) -h -S "$(BIN_PATH)/$(BIN_NAME)" > "$(BIN_PATH)/$(BIN_NAME).lss"
+	$(CXX_PREFIX)$(SIZE) $@ >> size$(BUILD_TARGET).log
+	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(BIN_NAME).lss"
 
 # Add dependency files, if they exist
 -include $(DEPS)
