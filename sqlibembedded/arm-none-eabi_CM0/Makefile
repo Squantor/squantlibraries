@@ -1,7 +1,7 @@
 # Project settings
-BIN_NAME = libsqlibc
-SOURCES = src/cmdline.c
-INCLUDES = -I"../inc" -I"../../sqlibc/inc/"
+BIN_NAME = libsqlibembedded
+SOURCES =
+INCLUDES = -I"../inc" -I"../../sqlibc/inc"
 
 # Toolchain settings
 MAKEFILE = Makefile
