@@ -6,6 +6,13 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
+    <VirtualDirectory Name="stdio">
+      <File Name="src/stdio/stdFILE.c"/>
+      <File Name="src/stdio/fgetc.c"/>
+      <File Name="src/stdio/fputc.c"/>
+      <File Name="src/stdio/getchar.c"/>
+      <File Name="src/stdio/putchar.c"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="internal">
       <File Name="src/internal/ctypetable.c"/>
     </VirtualDirectory>
@@ -42,6 +49,8 @@
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/sqstdiodefs.h"/>
+    <File Name="inc/sqstdio.h"/>
     <File Name="inc/sqctype.h"/>
     <File Name="inc/sqctypetable.h"/>
     <File Name="inc/sqstdlib.h"/>
