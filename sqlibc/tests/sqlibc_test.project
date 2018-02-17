@@ -6,6 +6,10 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="tests">
+    <File Name="test_getchar.h"/>
+    <File Name="test_getchar.c"/>
+    <File Name="test_putchar.c"/>
+    <File Name="test_putchar.h"/>
     <File Name="test_strtok.h"/>
     <File Name="test_strtok.c"/>
     <File Name="test_strto.h"/>

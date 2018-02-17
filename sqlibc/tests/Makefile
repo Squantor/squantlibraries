@@ -1,6 +1,6 @@
 # Project settings
 BIN_NAME = sqlibc_test
-SOURCES = sqlibc_tests.c test_strlen.c test_strto.c test_strtok.c
+SOURCES = sqlibc_tests.c test_strlen.c test_strto.c test_strtok.c test_putchar.c test_getchar.c
 INCLUDES = -I. -I../inc
 RLIBDIR = -L"../bin/release"
 RLIBS = -lsqlibc
@@ -18,7 +18,7 @@ AR = ar
 OBJDUMP = objdump
 
 # Toolchain flags
-COMPILE_FLAGS = -std=c99 -Wall -Wextra
+COMPILE_FLAGS = -std=c99 -Wall -Wextra -lrt -lm
 DEFINES = 
 RDEFINES = -DNDEBUG
 DDEFINES = -DDEBUG

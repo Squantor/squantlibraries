@@ -6,7 +6,7 @@
 const sqFILE __attribute__((weak)) sqstdindef = {
     NULL,
     NULL,
-} ;
+};
 
 const sqFILE __attribute__((weak)) sqstdoutdef = {
     NULL,
