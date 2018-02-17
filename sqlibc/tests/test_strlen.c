@@ -51,3 +51,9 @@ MU_TEST_SUITE_GLOBAL(test_strlen)
     MU_RUN_TEST(test_strnlen_empty);
     MU_RUN_TEST(test_strnlen_invalid);
 }
+
+void testStrlenSuite()
+{
+    MU_RUN_SUITE(test_strlen);
+    MU_REPORT();
+}
