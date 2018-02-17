@@ -4,7 +4,8 @@ SOURCES = src/string/strlen.c src/string/strtok.c src/string/strcmp.c src/string
 src/string/memchr.c src/string/memcmp.c src/string/memcpy.c src/string/memmove.c src/string/memset.c \
 src/stdlib/strto.c \
 src/internal/ctypetable.c \
-src/ctype/isspace.c src/ctype/isxdigit.c
+src/ctype/isspace.c src/ctype/isxdigit.c \
+src/stdio/stdFILE.c src/stdio/getchar.c src/stdio/fgetc.c src/stdio/putchar.c src/stdio/fputc.c
 INCLUDES = -I"../inc"
 
 # Toolchain settings
