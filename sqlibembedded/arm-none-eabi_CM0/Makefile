@@ -1,7 +1,13 @@
 # Project settings
 BIN_NAME = libsqlibembedded
-SOURCES = src/cmdline.c src/print.c
-INCLUDES = -I"../inc" -I"../../sqlibc/inc"
+SOURCES = src/cmdline.c src/print.c \
+src/strlen.c src/strtok.c src/strcmp.c src/strncpy.c \
+src/memchr.c src/memcmp.c src/memcpy.c src/memmove.c src/memset.c \
+src/strto.c \
+src/ctypetable.c \
+src/isspace.c src/isxdigit.c \
+src/stdFILE.c src/getchar.c src/fgetc.c src/putchar.c src/fputc.c
+INCLUDES = -I"../inc"
 
 
 # Toolchain settings
