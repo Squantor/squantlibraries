@@ -1,7 +1,7 @@
 #include <sqctype.h>
 #include <sqctypetable.h>
 
-int isxdigit(int c)
+int sqisxdigit(int c)
 {
     return(asciiTableCtypes[c].flags & (ctypeIsXdigit));
 }

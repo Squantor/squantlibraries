@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-unsigned long int strtoul( const char * s, char ** endptr, int base );
-long int strtol( const char * s, char ** endptr, int base );
-long int strstol(const char * s);
+unsigned long int sqstrtoul( const char * s, char ** endptr, int base );
+long int sqstrtol( const char * s, char ** endptr, int base );
+long int sqstrstol(const char * s);
 
 #endif

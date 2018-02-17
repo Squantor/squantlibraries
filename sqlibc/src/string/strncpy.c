@@ -1,6 +1,6 @@
 #include <sqstring.h>
 
-char * strncpy( char * restrict s1, const char * restrict s2, size_t n )
+char * sqstrncpy( char * restrict s1, const char * restrict s2, size_t n )
 {
     char * rc = s1;
     while(( n > 0) && (*s1++ = *s2++))

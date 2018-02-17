@@ -1,7 +1,7 @@
 #include <sqctype.h>
 #include <sqctypetable.h>
 
-int isalnum( int c )
+int sqisalnum( int c )
 {
     return(asciiTableCtypes[c].flags & ( ctypeIsDigit | ctypeIsLower | ctypeIsUpper));
 }

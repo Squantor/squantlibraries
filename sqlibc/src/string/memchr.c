@@ -1,6 +1,6 @@
 #include <sqstring.h>
 
-void * memchr( const void * s, int c, size_t n )
+void * sqmemchr( const void * s, int c, size_t n )
 {
     const unsigned char * p = (const unsigned char *) s;
     while ( n-- )
