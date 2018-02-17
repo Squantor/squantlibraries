@@ -17,6 +17,7 @@ char * sqstrtok_r(char * restrict s1, const char * restrict s2, char ** pos)
         if(tmp == NULL)
         {
             /* No old string, no new string, nothing to do */
+            *pos = tmp;
             return NULL;
         }
         s1 = tmp;
@@ -38,7 +39,7 @@ char * sqstrtok_r(char * restrict s1, const char * restrict s2, char ** pos)
     if(!*s1)
     {
         /* no more to parse */
-        return(tmp = NULL);
+        return(*pos = tmp = NULL);
     }
 
     /* skipping non-s2 characters */
@@ -52,6 +53,7 @@ char * sqstrtok_r(char * restrict s1, const char * restrict s2, char ** pos)
             {
                 /* found seperator; overwrite with '\0', position tmp, return */
                 *tmp++ = '\0';
+                (*pos) = tmp;
                 return s1;
             }
         }
@@ -60,5 +62,6 @@ char * sqstrtok_r(char * restrict s1, const char * restrict s2, char ** pos)
 
     /* parsed to end of string */
     tmp = NULL;
+    *pos = tmp;
     return s1;
 }
