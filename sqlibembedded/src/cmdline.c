@@ -28,26 +28,28 @@ SOFTWARE.
 
 #include "results.h"
 #include "cmdline.h"
-#include "cmdline_commands.h"
 
 #define	ASCII_BS	(8)	// backspace
 #define ASCII_SPACE	(32)	// space
 #define	ASCII_CR	(13)	// Carriage Return
 
-result cmdlineParse(char * line)
+result cmdlineParse(cmdLineEntry * cmdLineEntries[], char * line);
+
+
+result cmdlineParse(cmdLineEntry * cmdLineEntries[], char * line)
 {
 	char *strtok_state;
     char commandline[CMDLINE_MAX_LENGTH];
     sqstrncpy(commandline, line, sizeof(commandline));
     char *trigger = sqstrtok_r(commandline,STRTOK_DELIM, &strtok_state);
     // match to the command table
-    for(int i = 0; cmdLineEntries[i].strTrigger != NULL; i++)
+    for(int i = 0; cmdLineEntries[i]->strTrigger != NULL; i++)
     {
-        if(sqstrcmp(trigger, cmdLineEntries[i].strTrigger) == 0)
+        if(sqstrcmp(trigger, cmdLineEntries[i]->strTrigger) == 0)
         {
             int arguments[CMDLINE_MAX_ARGS];
             // matched, parse arguments of commandline
-            for(int j = 0; j < cmdLineEntries[i].argCnt; j++)
+            for(int j = 0; j < cmdLineEntries[i]->argCnt; j++)
             {
                 char *arg = sqstrtok_r(NULL,STRTOK_DELIM, &strtok_state);
                 if(arg == NULL)
@@ -55,7 +57,7 @@ result cmdlineParse(char * line)
                 arguments[j] = sqstrstol(arg);
             }
             // call the matched command with the argument count
-            cmdLineEntries[i].argHandler(arguments);
+            cmdLineEntries[i]->argHandler(arguments);
             return noError;
         }
     }
@@ -63,7 +65,7 @@ result cmdlineParse(char * line)
 }
 
 // call periodically to fetch received characters
-void cmdlineProcess(void)
+void cmdlineProcess(cmdLineEntry * cmdLineEntries[])
 {
 	static char commandline[CMDLINE_MAX_LENGTH];
 	static int commandlineIndex = 0;
@@ -84,7 +86,7 @@ void cmdlineProcess(void)
 		// terminate string
 		commandline[commandlineIndex] = 0;
 		// call handler
-		cmdlineParse(commandline);
+		cmdlineParse(cmdLineEntries, commandline);
 		commandlineIndex = 0;
 		break;
 	case EOF:

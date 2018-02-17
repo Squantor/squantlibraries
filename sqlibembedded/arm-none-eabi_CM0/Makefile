@@ -3,6 +3,7 @@ BIN_NAME = libsqlibembedded
 SOURCES = src/cmdline.c src/print.c
 INCLUDES = -I"../inc" -I"../../sqlibc/inc"
 
+
 # Toolchain settings
 MAKEFILE = Makefile
 MAKE = make

@@ -27,7 +27,6 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <results.h>
-#include <ringbuffers.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,11 +50,7 @@ typedef struct {
     const cmdlineHandler argHandler;
 } cmdLineEntry;
 
-result cmdlineParseInt(char * token, int * value);
-result cmdlineParseHex(char * token, int * value);
-result cmdlineParseArg(char * token, int * value);
-result cmdlineParse(char * line);
-void cmdlineProcess(void);
+void cmdlineProcess(cmdLineEntry * cmdLineEntries[]);
 
 #ifdef __cplusplus
 }
