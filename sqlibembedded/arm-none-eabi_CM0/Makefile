@@ -1,6 +1,6 @@
 # Project settings
 BIN_NAME = libsqlibembedded
-SOURCES =
+SOURCES = src/cmdline.c src/print.c
 INCLUDES = -I"../inc" -I"../../sqlibc/inc"
 
 # Toolchain settings
