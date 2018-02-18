@@ -35,6 +35,8 @@ typedef enum {
     cmdlineNotFound,
     cmdlineInvalidArg,
     streamEOF,
+	flashUnknownId,
+	resultEnd,
 } result;
 
 #ifdef __cplusplus
