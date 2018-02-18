@@ -36,6 +36,7 @@ typedef enum {
     cmdlineInvalidArg,
     streamEOF,
 	flashUnknownId,
+	flashInvalidAddr,
 	resultEnd,
 } result;
 
