@@ -3,7 +3,6 @@
 	<name>sqlibembedded</name>
 	<comment></comment>
 	<projects>
-		<project>sqlibc</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
