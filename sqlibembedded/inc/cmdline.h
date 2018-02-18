@@ -50,7 +50,7 @@ typedef struct {
     const cmdlineHandler argHandler;
 } cmdLineEntry;
 
-void cmdlineProcess(cmdLineEntry * cmdLineEntries[]);
+void cmdlineProcess(const cmdLineEntry * cmdLineEntries);
 
 #ifdef __cplusplus
 }
