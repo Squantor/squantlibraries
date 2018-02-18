@@ -9,15 +9,14 @@
 
 typedef struct sqInternalFILE sqFILE;
 
-extern const sqFILE * sqstdin;
-extern const sqFILE * sqstdout;
-extern const sqFILE * sqstderr;
+extern const rStream * sqstdin;
+extern const wStream * sqstdout;
 
 int sqputchar(int c);
 int sqgetchar(void);
 
-int sqfputc(int c, const sqFILE * stream);
-int sqfgetc (const sqFILE * stream);
+int sqfputc(int c, const wStream * stream);
+int sqfgetc (const rStream * stream);
 
 
 #endif

@@ -34,6 +34,7 @@ typedef enum {
     error,
     cmdlineNotFound,
     cmdlineInvalidArg,
+    streamEOF,
 } result;
 
 #ifdef __cplusplus

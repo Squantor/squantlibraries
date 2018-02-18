@@ -2,13 +2,16 @@
 #define SQSTDIODEFS_H
 
 #include <stdint.h>
+#include <results.h>
 
-struct sqInternalFILE
+typedef struct 
 {
-    // function pointer to write to stream
-    int (*streamWrite)(uint8_t);
-    // function pointer to read from stream
-    int (*streamRead)(uint8_t *);
-};
+    result (*readStream)(uint8_t *);
+} rStream;
+
+typedef struct 
+{
+    result (*writeStream)(uint8_t);
+} wStream;
 
 #endif

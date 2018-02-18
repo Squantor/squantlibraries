@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="sqlibembedded" Version="10.0.0" InternalType="">
+  <VirtualDirectory Name="src">
+    <File Name="src/iscntrl.c"/>
+    <File Name="src/isalnum.c"/>
+    <File Name="src/stdFILE.c"/>
+    <File Name="src/memcmp.c"/>
+    <File Name="src/isdigit.c"/>
+    <File Name="src/tolower.c"/>
+    <File Name="src/strlen.c"/>
+    <File Name="src/isprint.c"/>
+    <File Name="src/isupper.c"/>
+    <File Name="src/memmove.c"/>
+    <File Name="src/strcmp.c"/>
+    <File Name="src/isgraph.c"/>
+    <File Name="src/fgetc.c"/>
+    <File Name="src/isalpha.c"/>
+    <File Name="src/isblank.c"/>
+    <File Name="src/toupper.c"/>
+    <File Name="src/isascii.c"/>
+    <File Name="src/isxdigit.c"/>
+    <File Name="src/cmdline.c"/>
+    <File Name="src/strtok.c"/>
+    <File Name="src/isspace.c"/>
+    <File Name="src/strncpy.c"/>
+    <File Name="src/ispunct.c"/>
+    <File Name="src/islower.c"/>
+    <File Name="src/print.c"/>
+    <File Name="src/memset.c"/>
+    <File Name="src/fputc.c"/>
+    <File Name="src/strto.c"/>
+    <File Name="src/ctypetable.c"/>
+    <File Name="src/memchr.c"/>
+    <File Name="src/getchar.c"/>
+    <File Name="src/putchar.c"/>
+    <File Name="src/memcpy.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="tests">
+    <File Name="tests/test_strlen.c"/>
+    <File Name="tests/test_getchar.h"/>
+    <File Name="tests/test_strlen.h"/>
+    <File Name="tests/test_strtok.h"/>
+    <File Name="tests/minunit.h"/>
+    <File Name="tests/test_getchar.c"/>
+    <File Name="tests/test_strtok.c"/>
+    <File Name="tests/sqlibembedded_tests.c"/>
+    <File Name="tests/test_strto.h"/>
+    <File Name="tests/test_putchar.c"/>
+    <File Name="tests/test_strto.c"/>
+    <File Name="tests/test_putchar.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="inc">
+    <File Name="inc/sqstdlib.h"/>
+    <File Name="inc/sqstring.h"/>
+    <File Name="inc/cmdline.h"/>
+    <File Name="inc/print.h"/>
+    <File Name="inc/sqctypetable.h"/>
+    <File Name="inc/sqstdio.h"/>
+    <File Name="inc/sqctype.h"/>
+    <File Name="inc/results.h"/>
+    <File Name="inc/sqstdiodefs.h"/>
+  </VirtualDirectory>
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>

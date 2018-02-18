@@ -3,24 +3,16 @@
 
 // std in/out/err defined as weak so they can be overridden
 // OVERRIDE THESE STRUCTS IN YOUR PROJECT!
-const sqFILE __attribute__((weak)) sqstdindef = {
-    NULL,
-    NULL,
-};
-
-const sqFILE __attribute__((weak)) sqstdoutdef = {
-    NULL,
+const rStream __attribute__((weak)) sqstdindef = {
     NULL,
 };
 
-const sqFILE __attribute__((weak)) sqsterrdef = {
-    NULL,
+const wStream __attribute__((weak)) sqstdoutdef = {
     NULL,
 };
 
-const sqFILE * sqstdin = &sqstdindef;
-const sqFILE * sqstdout = &sqstdoutdef;
-const sqFILE * sqstderr = &sqsterrdef;
+const rStream * sqstdin = &sqstdindef;
+const wStream * sqstdout = &sqstdoutdef;
 
 
 

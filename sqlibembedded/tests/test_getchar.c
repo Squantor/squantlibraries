@@ -2,25 +2,25 @@
 #include "minunit.h"
 #include "test_getchar.h"
 #include <sqstdio.h>
+#include <results.h>
 
 uint8_t inchar = 'b';
 bool testEOF;
 
-int testStreamRead(uint8_t * c)
+result testStreamRead(uint8_t * c)
 {
     if(testEOF)
     {
-        return EOF;
+        return streamEOF;
     }
     else
     {
         *c = inchar;    
-        return 0;
+        return noError;
     }
 }
 
-const sqFILE sqstdindef = {
-    NULL,
+const rStream sqstdindef = {
     testStreamRead,
 };
 

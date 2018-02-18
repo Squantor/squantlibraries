@@ -1,10 +1,13 @@
 #include <sqstdio.h>
 
-int sqfputc(int c, const sqFILE * stream)
+int sqfputc(int c, const wStream * stream)
 {
-    if(stream->streamWrite != NULL)
+    if(stream->writeStream != NULL)
     {
-        return stream->streamWrite((uint8_t) c);
+        if(stream->writeStream((uint8_t) c) == noError)
+            return c;
+        else
+            return EOF;
     }
     else
         return EOF;

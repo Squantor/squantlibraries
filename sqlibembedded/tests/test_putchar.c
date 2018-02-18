@@ -6,22 +6,21 @@
 uint8_t outchar;
 bool testEOF;
 
-int testStreamWrite(uint8_t c)
+result testStreamWrite(uint8_t c)
 {
     if(testEOF)
     {
-        return EOF;
+        return streamEOF;
     }
     else
     {
         outchar = c;
-        return 0;
+        return noError;
     }
 }
 
-const sqFILE sqstdoutdef = {
+const wStream sqstdoutdef = {
     testStreamWrite,
-    NULL,
 };
 
 void test_putchar_setup(void) 
@@ -43,7 +42,7 @@ MU_TEST(test_putchar_EOF)
 MU_TEST(test_putchar_normal) 
 {
     testEOF = false;
-    mu_assert_int_eq(0, sqputchar('a'));
+    mu_assert_int_eq('a', sqputchar('a'));
     mu_assert_int_eq('a', outchar);
 }
 

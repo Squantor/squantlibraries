@@ -1,11 +1,11 @@
 #include <sqstdio.h>
 
-int sqfgetc (const sqFILE * stream)
+int sqfgetc (const rStream * stream)
 {
-    if(stream->streamRead != NULL)
+    if(stream->readStream != NULL)
     {
         uint8_t c;
-        if(stream->streamRead(&c) == EOF)
+        if(stream->readStream(&c) != noError)
             return EOF;
         else
             return (int) c;
