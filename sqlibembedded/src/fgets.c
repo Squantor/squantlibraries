@@ -14,7 +14,10 @@ char * sqfgets ( char * restrict s, int size, const rStream * stream )
     size -= 1;
     while(size > 0)
     {
-        fputc( s, stream );
+        int c = sqfgetc( stream );
+        if(c == EOF)
+            return NULL;
+        *s = c;
         ++s;
         --size;
     }

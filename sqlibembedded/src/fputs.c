@@ -8,4 +8,5 @@ int sqfputs( const char * s, const wStream * stream )
             return EOF;
         ++s;
     }
+    return 0;
 }
