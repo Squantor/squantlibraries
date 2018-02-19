@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="sqlibembedded" Version="10.0.0" InternalType="">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>
+    </Plugin>
+  </Plugins>
   <VirtualDirectory Name="src">
+    <File Name="src/fputs.c"/>
+    <File Name="src/puts.c"/>
+    <File Name="src/fgets.c"/>
     <File Name="src/iscntrl.c"/>
     <File Name="src/isalnum.c"/>
     <File Name="src/stdFILE.c"/>
@@ -60,11 +68,6 @@
     <File Name="inc/results.h"/>
     <File Name="inc/sqstdiodefs.h"/>
   </VirtualDirectory>
-  <Plugins>
-    <Plugin Name="qmake">
-      <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>
-    </Plugin>
-  </Plugins>
   <Description/>
   <Dependencies/>
   <Settings Type="Static Library">
