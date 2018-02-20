@@ -1,6 +1,6 @@
 #include <sqstdio.h>
 
-int sqputsn( char * s )
+int sqputsn( const char * s )
 {
     while( *s != '\0' )
     {
@@ -13,7 +13,7 @@ int sqputsn( char * s )
     return 0;
 }
 
-int sqputs( char * s )
+int sqputs( const char * s )
 {
     while( *s != '\0' )
     {

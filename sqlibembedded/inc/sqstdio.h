@@ -14,8 +14,8 @@ extern const wStream * sqstdout;
 
 int sqputchar( int c );
 int sqgetchar( void );
-int sqputs( char * s );
-int sqputsn( char * s );
+int sqputs( const char * s );
+int sqputsn( const char * s );
 
 int sqfputc( int c, const wStream * stream );
 int sqfgetc( const rStream * stream );
