@@ -37,6 +37,9 @@ typedef enum {
     streamEOF,
 	flashUnknownId,
 	flashInvalidAddr,
+	fileNotFound,	// could not find file
+	fileNoEntries,	// could not find free entry
+	fileNoSpace,	// insufficient free space
 	resultEnd,
 } result;
 
