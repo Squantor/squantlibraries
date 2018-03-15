@@ -6,8 +6,9 @@ src/memchr.c src/memcmp.c src/memcpy.c src/memmove.c src/memset.c \
 src/strto.c \
 src/ctypetable.c \
 src/isspace.c src/isxdigit.c \
-src/stdFILE.c src/getchar.c  src/putchar.c src/puts.c \
-src/fgetc.c src/fgets.c src/fputc.c
+src/empty_stdio.c src/getchar.c  src/putchar.c src/puts.c \
+src/fgetc.c src/fgets.c src/fputc.c \
+src/empty_logfs.c src/logfs.c
 INCLUDES = -I"../inc"
 
 
