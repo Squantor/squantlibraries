@@ -6,6 +6,9 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
+    <File Name="src/logfs.c"/>
+    <File Name="src/empty_stdio.c"/>
+    <File Name="src/empty_logfs.c"/>
     <File Name="src/fputs.c"/>
     <File Name="src/puts.c"/>
     <File Name="src/fgets.c"/>
@@ -58,6 +61,8 @@
     <File Name="tests/test_putchar.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/logfs.h"/>
+    <File Name="inc/logfsint.h"/>
     <File Name="inc/sqstdlib.h"/>
     <File Name="inc/sqstring.h"/>
     <File Name="inc/cmdline.h"/>
