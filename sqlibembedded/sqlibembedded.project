@@ -62,6 +62,7 @@
     <File Name="tests/test_putchar.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/queue_macro.h"/>
     <File Name="inc/queue_compact.h"/>
     <File Name="inc/logfs.h"/>
     <File Name="inc/logfsint.h"/>
