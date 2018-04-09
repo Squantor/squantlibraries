@@ -6,6 +6,10 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="tests">
+    <File Name="mock_logfs.c"/>
+    <File Name="mock_stdio.h"/>
+    <File Name="mock_logfs.h"/>
+    <File Name="mock_stdio.c"/>
     <File Name="setup_logfs.c"/>
     <File Name="setup_stdio.c"/>
     <File Name="test_cmdline.c"/>
