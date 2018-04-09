@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <mock_stdio.h>
 #include <mock_setup.h>
 #include <queue_macro.h>
@@ -34,6 +35,18 @@ result mockStdinWrite(uint8_t c)
     return stdinQueueEnqueue(&c);
 }
 
+result mockStdinPuts(char * s)
+{
+    while( *s != '\0' )
+    {
+        if( stdinQueueEnqueue( s ) != noError)
+        {
+            return error;
+        }
+        ++s;
+    }
+}
+
 result mockStdinRead(uint8_t *c)
 {
     stdinQueueDequeue(c);
@@ -58,4 +71,36 @@ result mockStdoutWrite(uint8_t c)
 result mockStdoutRead(uint8_t *c)
 {
     return stdoutQueueDequeue(c);
+}
+
+char * mockStdoutGetsbuf(char * restrict s, int size, int charcount)
+{
+    if ( size == 0 )
+    {
+        return NULL;
+    }
+    if ( size == 1 )
+    {
+        *s = '\0';
+        return s;
+    }
+    size -= 1;
+    while(size > 0)
+    {
+        uint8_t c;
+        result r = stdoutQueueDequeue(&c);
+        if(r == queueEmpty)
+            return NULL;
+        *s = c;
+        ++s;
+        --size;
+        --charcount;
+        if(charcount == 0)
+        {
+            *s = '\0';
+            return s;
+        }
+    }
+    *s = '\0';
+    return s;
 }

@@ -31,7 +31,7 @@ extern "C" {
 
 extern char strCmdTestTrigger[];
 extern char strTestHelp[];
-#define ARGCNTTEST  0
+#define ARGCNTTEST  2
 result CmdTestHandler(int * arglist);
 
 #ifdef __cplusplus

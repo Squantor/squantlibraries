@@ -1,5 +1,6 @@
-#include <stdbool.h>
 #include <minunit.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <sqstdio.h>
 #include <test_cmdline.h>
 #include <results.h>
@@ -27,27 +28,49 @@ void testCmdlineTeardown(void)
 
 }
 
-MU_TEST(testCmdlineCrLf) 
-{
-    mu_check(noError == mockStdinPuts("\r"));
-    mu_check(9 == testCmdlineLoop(10));
-    mu_assert_int_eq(queueEmpty, mockStdinStatus()); 
-}
-
 MU_TEST(testCmdlineEmpty) 
 {
     mu_check(4 == testCmdlineLoop(5));
-    mu_check(queueEmpty == mockStdinStatus());
+    mu_check(queueEmpty == mockStdoutStatus());
+}
+
+MU_TEST(testCmdlineCrLf) 
+{
+    char cmdline[16];
+    mu_check(noError == mockStdinPuts("\r"));
+    mu_check(9 == testCmdlineLoop(10));
+    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("\r")) != NULL);
+    mu_check(strcmp(cmdline, "\r") == 0);
+    mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
 MU_TEST(testCmdlineHelp) 
 {
-
+    char helpcmd[32];
+    char helpline1[32];
+    char helpline2[32];
+    mu_check(noError == mockStdinPuts("help\r"));
+    mu_check(5 == testCmdlineLoop(10));
+    mu_check(mockStdoutGetsbuf(helpcmd, sizeof(helpcmd), strlen("help\r")) != NULL);
+    mu_check(mockStdoutGetsbuf(helpline1, sizeof(helpcmd), strlen("test\n")) != NULL);
+    mu_check(mockStdoutGetsbuf(helpline2, sizeof(helpcmd), strlen("help\n")) != NULL);
+    mu_check(strcmp(helpcmd, "help\r") == 0);
+    mu_check(strcmp(helpline1, "test\n") == 0);
+    mu_check(strcmp(helpline2, "help\n") == 0);
+    mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
 MU_TEST(testCmdlineTest) 
 {
-
+    char cmdline[16];
+    char cmdoutput[64];
+    mu_check(noError == mockStdinPuts("test 51 99\r"));
+    mu_check(4 == testCmdlineLoop(15));
+    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r")) != NULL);
+    mu_check(mockStdoutGetsbuf(cmdoutput, sizeof(cmdoutput), strlen("Hello World! 00051 00099\n")) != NULL);
+    mu_check(strcmp(cmdline, "test 51 99\r") == 0);
+    mu_check(strcmp(cmdoutput, "Hello World! 00051 00099\n") == 0);
+    mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
 MU_TEST(testCmdlineArgs) 

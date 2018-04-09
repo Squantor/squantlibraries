@@ -26,12 +26,17 @@ SOFTWARE.
 #include <sqstdio.h>
 #include <cmdline.h>
 #include <results.h>
+#include <print.h>
 
 const char strCmdTestTrigger[] = "test";
 const char strTestHelp[] = "test\n";
 
 result CmdTestHandler(int * arglist)
 {
-    sqputs("Hello World!");
+    sqputsn("Hello World! ");
+    print_dec_u16(arglist[0]);
+    sqputsn(" ");
+    print_dec_u16(arglist[1]);
+    sqputsn("\n");
     return noError;
 }
