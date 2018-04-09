@@ -14,6 +14,7 @@ void mockStdinReset();
 result mockStdinIsEmpty();
 result mockStdinStatus();
 result mockStdinWrite(uint8_t c);
+result mockStdinPuts(const char * s);
 result mockStdinRead(uint8_t *c);
 
 void mockStdoutReset();

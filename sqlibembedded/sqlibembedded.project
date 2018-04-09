@@ -47,20 +47,6 @@
     <File Name="src/putchar.c"/>
     <File Name="src/memcpy.c"/>
   </VirtualDirectory>
-  <VirtualDirectory Name="tests">
-    <File Name="tests/test_strlen.c"/>
-    <File Name="tests/test_getchar.h"/>
-    <File Name="tests/test_strlen.h"/>
-    <File Name="tests/test_strtok.h"/>
-    <File Name="tests/minunit.h"/>
-    <File Name="tests/test_getchar.c"/>
-    <File Name="tests/test_strtok.c"/>
-    <File Name="tests/sqlibembedded_tests.c"/>
-    <File Name="tests/test_strto.h"/>
-    <File Name="tests/test_putchar.c"/>
-    <File Name="tests/test_strto.c"/>
-    <File Name="tests/test_putchar.h"/>
-  </VirtualDirectory>
   <VirtualDirectory Name="inc">
     <File Name="inc/queue_macro.h"/>
     <File Name="inc/queue_compact.h"/>

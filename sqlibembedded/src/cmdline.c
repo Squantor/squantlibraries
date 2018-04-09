@@ -42,25 +42,29 @@ result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
     char commandline[CMDLINE_MAX_LENGTH];
     sqstrncpy(commandline, line, sizeof(commandline));
     char *trigger = sqstrtok_r(commandline,STRTOK_DELIM, &strtok_state);
-    // match to the command table
-    while(cmdLineEntries->argHandler != NULL)
+    // trigger can be NULL when you just push enter
+    if(trigger != NULL)
     {
-        if(sqstrcmp(trigger, cmdLineEntries->strTrigger) == 0)
+        // match to the command table
+        while(cmdLineEntries->argHandler != NULL)
         {
-            int arguments[CMDLINE_MAX_ARGS];
-            // matched, parse arguments of commandline
-            for(int j = 0; j < cmdLineEntries->argCnt; j++)
+            if(sqstrcmp(trigger, cmdLineEntries->strTrigger) == 0)
             {
-                char *arg = sqstrtok_r(NULL,STRTOK_DELIM, &strtok_state);
-                if(arg == NULL)
-                    return cmdlineInvalidArg;
-                arguments[j] = sqstrstol(arg);
+                int arguments[CMDLINE_MAX_ARGS];
+                // matched, parse arguments of commandline
+                for(int j = 0; j < cmdLineEntries->argCnt; j++)
+                {
+                    char *arg = sqstrtok_r(NULL,STRTOK_DELIM, &strtok_state);
+                    if(arg == NULL)
+                        return cmdlineInvalidArg;
+                    arguments[j] = sqstrstol(arg);
+                }
+                // call the matched command with the argument count
+                cmdLineEntries->argHandler(arguments);
+                return noError;
             }
-            // call the matched command with the argument count
-            cmdLineEntries->argHandler(arguments);
-            return noError;
-        }
-        cmdLineEntries++;
+            cmdLineEntries++;
+        }   
     }
     return cmdlineNotFound;
 }
