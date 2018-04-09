@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include <results.h>
+#include <mock_stdio.h>
 
 result logfsRead(uint32_t address, void *s, uint32_t n)
 {

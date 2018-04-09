@@ -4,10 +4,11 @@
 #include <sqstdlib.h>
 #include <sqstdio.h>
 #include <results.h>
+#include <mock_stdio.h>
 
 result stdinRead(uint8_t *c)
 {
-	if(1 == 1)
+	if()
 	{
 		return noError;
 	}
