@@ -38,7 +38,7 @@ MU_TEST(test_strnlen_empty)
 
 MU_TEST(test_strnlen_invalid) 
 {
-    mu_assert_int_eq(0, sqstrnlen(strnlen_test_invalid, sizeof(strnlen_test_invalid)));
+    mu_assert_int_eq(sizeof(strnlen_test_invalid), sqstrnlen(strnlen_test_invalid, sizeof(strnlen_test_invalid)));
 }
 
 MU_TEST_SUITE(test_strlen) 
