@@ -4,7 +4,7 @@ SOURCES = sqlibembedded_tests.c test_strlen.c test_strto.c test_strtok.c \
 test_putchar.c test_getchar.c test_cmdline.c \
 setup_stdio.c setup_logfs.c \
 mock_stdio.c mock_logfs.c
-INCLUDES = -I. -I../inc -I./inc
+INCLUDES = -I../inc -I./inc
 RLIBDIR = -L"../bin/release"
 RLIBS = -lsqlibembedded
 DLIBDIR = -L"../bin/debug"
