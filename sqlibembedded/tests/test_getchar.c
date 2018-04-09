@@ -1,6 +1,6 @@
 #include <stdbool.h>
-#include "minunit.h"
-#include "test_getchar.h"
+#include <minunit.h>
+#include <test_getchar.h>
 #include <sqstdio.h>
 #include <results.h>
 #include <mock_stdio.h>

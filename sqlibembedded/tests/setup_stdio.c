@@ -26,7 +26,10 @@ result stdoutWrite(uint8_t c)
 	if(mockStdoutStatus() == queueFull)
 		return streamEOF;
 	else
+    {
+        mockStdoutWrite(c);
 		return noError;
+    }
 }
 
 const wStream sqstdoutdef = {

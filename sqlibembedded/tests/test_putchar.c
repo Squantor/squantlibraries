@@ -16,7 +16,7 @@ void test_putchar_teardown(void)
 
 MU_TEST(test_putchar_EOF) 
 {
-    mu_assert_int_eq(EOF, sqputchar('a'));
+    mu_assert_int_eq('a', sqputchar('a'));
 }
 
 MU_TEST(test_putchar_normal) 

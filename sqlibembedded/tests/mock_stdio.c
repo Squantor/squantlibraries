@@ -1,73 +1,61 @@
 #include <mock_stdio.h>
 #include <mock_setup.h>
-#include <queue_compact.h>
+#include <queue_macro.h>
 
-struct
-{
-    uint32_t    mask;
-    uint32_t    head;
-    uint32_t    tail;
-    void *      data[STDIOMOCK_BUFSIZE];
-} queueStdin;
+TEMPLATE_QUEUE_PROTO(stdinQueue, uint8_t)
+TEMPLATE_QUEUE_VARS(stdinQueue, uint8_t, STDIOMOCK_BUFSIZE)
+TEMPLATE_QUEUE_FUNCTIONS(stdinQueue, uint8_t, STDIOMOCK_BUFSIZE, (STDIOMOCK_BUFSIZE-1))
 
-struct
-{
-    uint32_t    mask;
-    uint32_t    head;
-    uint32_t    tail;
-    void *      data[STDIOMOCK_BUFSIZE];
-} queueStdout;
-
+TEMPLATE_QUEUE_PROTO(stdoutQueue, uint8_t)
+TEMPLATE_QUEUE_VARS(stdoutQueue, uint8_t, STDIOMOCK_BUFSIZE)
+TEMPLATE_QUEUE_FUNCTIONS(stdoutQueue, uint8_t, STDIOMOCK_BUFSIZE, (STDIOMOCK_BUFSIZE-1))
 
 result mockStdioSetup()
 {
     // setup ringbuffers for stdin and stdout
-    queueInit(&queueStdin, STDIOMOCK_BUFSIZE-1);
-    queueInit(&queueStdout, STDIOMOCK_BUFSIZE-1);
+    stdinQueueInit();
+    stdoutQueueInit();
     return noError;
 }
 
 // reset stdin to empty
 void mockStdinReset()
 {
-    queueStdin.head = queueStdin.tail = 0;
+    stdinQueueInit();
 }
 
 result mockStdinStatus()
 {
-    return queueFillStatus(&queueStdin);
+    return stdinQueueState();
 }
 
 result mockStdinWrite(uint8_t c)
 {
-    queueEnqueue(&queueStdin, &c);
-    return noError;
+    return stdinQueueEnqueue(&c);
 }
 
 result mockStdinRead(uint8_t *c)
 {
-    queueDequeue(&queueStdin, c);
+    stdinQueueDequeue(c);
     return noError;
 }
 
 void mockStdoutReset()
 {
-    queueStdout.head = queueStdout.tail = 0;
+    stdoutQueueInit();
 }
 
 result mockStdoutStatus()
 {
-    return queueFillStatus(&queueStdout);
+    return stdoutQueueState();
 }
 
 result mockStdoutWrite(uint8_t c)
 {
-    queueEnqueue(&queueStdout, &c);
-    return noError;
+    return stdoutQueueEnqueue(&c);
 }
 
 result mockStdoutRead(uint8_t *c)
 {
-    queueDequeue(&queueStdout, c);
-    return noError;
+    return stdoutQueueDequeue(c);
 }

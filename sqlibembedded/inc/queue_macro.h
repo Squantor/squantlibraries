@@ -45,9 +45,9 @@ only use direct types that can be copied by assignment.
 #define TEMPLATE_QUEUE_PROTO(name, type )                                       \
                                                                                 \
 static void name##Init(void);                                                   \
-static results name##State(void);                                               \
-static results name##Enqueue(type* p);                                          \
-static results name##Dequeue(type* p);                                          \
+static result name##State(void);                                                \
+static result name##Enqueue(type* p);                                           \
+static result name##Dequeue(type* p);                                           \
 
 #define TEMPLATE_QUEUE_FUNCTIONS(name, type, size, mask)                        \
                                                                                 \
@@ -56,7 +56,7 @@ static void name##Init(void)                                                    
     queue##name.head = queue##name.tail = 0;                                    \
 }                                                                               \
                                                                                 \
-static results name##State(void)                                                \
+static result name##State(void)                                                 \
 {                                                                               \
     if(queue##name.head == queue##name.tail)                                    \
         return queueEmpty;                                                      \
@@ -66,7 +66,7 @@ static results name##State(void)                                                
         return queueNotEmpty;                                                   \
 }                                                                               \
                                                                                 \
-static results name##Enqueue(type* p)                                           \
+static result name##Enqueue(type* p)                                            \
 {                                                                               \
     uint32_t newHead = (queue##name.head+1) & mask;                             \
     if(newHead == queue##name.tail)                                             \
@@ -76,7 +76,7 @@ static results name##Enqueue(type* p)                                           
     return noError;                                                             \
 }                                                                               \
                                                                                 \
-static results name##Dequeue(type* p)                                           \
+static result name##Dequeue(type* p)                                            \
 {                                                                               \
     if(queue##name.head == queue##name.tail)                                    \
         return queueEmpty;                                                      \
@@ -84,7 +84,5 @@ static results name##Dequeue(type* p)                                           
     queue##name.tail = (queue##name.tail+1) & mask;                             \
     return noError;                                                             \
 }                                                                               \
-                                                                                \
-
+                                                                                
 #endif
-

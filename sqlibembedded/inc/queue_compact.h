@@ -27,6 +27,8 @@ SOFTWARE.
 #include <stdint.h>
 #include <results.h>
 
+#warning "NOT FINISHED YET!"
+
 typedef struct
 {
     uint32_t    mask;
