@@ -1,6 +1,7 @@
 # Project settings
 BIN_NAME = sqlibembedded_tests
-SOURCES = sqlibembedded_tests.c test_strlen.c test_strto.c test_strtok.c test_putchar.c test_getchar.c
+SOURCES = sqlibembedded_tests.c test_strlen.c test_strto.c test_strtok.c \
+test_putchar.c test_getchar.c test_cmdline.c
 INCLUDES = -I. -I../inc
 RLIBDIR = -L"../bin/release"
 RLIBS = -lsqlibembedded
