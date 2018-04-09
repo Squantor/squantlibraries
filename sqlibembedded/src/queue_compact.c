@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2018 Bart Bilos
+Copyright (c) 2018 Anton Bilos
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef RESULTS_H
-#define RESULTS_H
+#include <results.h>
+#include <queue_compact.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-typedef enum {
-    noError = 0,
-    error,
-    cmdlineNotFound,
-    cmdlineInvalidArg,
-    streamEOF,
-	flashUnknownId,
-	flashInvalidAddr,
-	fileNotFound,	// could not find file
-	fileNoEntries,	// could not find free entry
-	fileNoSpace,	// insufficient free space
-    queueFull,
-	queueNotEmpty,
-	queueEmpty,
-	resultEnd,
-} result;
-
-#ifdef __cplusplus
+result queueInit(void * queueStruct, uint32_t mask)
+{
+    queueCompact * currentQueue = (queueCompact *) queueStruct;
+    currentQueue->mask = mask;
+    currentQueue->head = 0;
+    currentQueue->tail = 0;
+    return noError;
 }
-#endif
 
-#endif
+result queueEnqueue(void * queueStruct, void * data)
+{
+    queueCompact * currentQueue = (queueCompact *) queueStruct;
+    uint32_t newHead = (currentQueue->head+1) & currentQueue->mask;
+    if(newHead == currentQueue->tail)
+        return queueFull;
+    currentQueue->data[currentQueue->head] = data;
+    currentQueue->head = newHead;
+    return noError;
+}
+
+result queueDequeue(void * queueStruct, void ** data)
+{
+    queueCompact * currentQueue = (queueCompact *) queueStruct;
+    if(currentQueue->head == currentQueue->tail)
+        return queueEmpty;
+    *data = currentQueue->data[currentQueue->tail];
+    currentQueue->tail = (currentQueue->tail+1) & currentQueue->mask;
+    return noError;
+}
+
+

@@ -6,6 +6,7 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
+    <File Name="src/queue_compact.c"/>
     <File Name="src/logfs.c"/>
     <File Name="src/empty_stdio.c"/>
     <File Name="src/empty_logfs.c"/>
@@ -61,6 +62,7 @@
     <File Name="tests/test_putchar.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/queue_compact.h"/>
     <File Name="inc/logfs.h"/>
     <File Name="inc/logfsint.h"/>
     <File Name="inc/sqstdlib.h"/>

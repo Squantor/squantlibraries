@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2018 Bart Bilos
+Copyright (c) 2018 Anton Bilos
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,33 +21,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#ifndef QUEUE_COMPACT_H_
+#define QUEUE_COMPACT_H_
 
-#ifndef RESULTS_H
-#define RESULTS_H
+#include <stdint.h>
+#include <results.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+typedef struct
+{
+    uint32_t    mask;
+    uint32_t    head;
+    uint32_t    tail;
+    void *      data[];
+} queueCompact;
 
-typedef enum {
-    noError = 0,
-    error,
-    cmdlineNotFound,
-    cmdlineInvalidArg,
-    streamEOF,
-	flashUnknownId,
-	flashInvalidAddr,
-	fileNotFound,	// could not find file
-	fileNoEntries,	// could not find free entry
-	fileNoSpace,	// insufficient free space
-    queueFull,
-	queueNotEmpty,
-	queueEmpty,
-	resultEnd,
-} result;
+result queueInit(void * queueStruct, uint32_t mask);
 
-#ifdef __cplusplus
-}
-#endif
+result queueEnqueue(void * queueStruct, void * data);
 
-#endif
+result queueDequeue(void * queueStruct, void ** data);
+
+
+#endif // QUEUE_COMPACT_H_

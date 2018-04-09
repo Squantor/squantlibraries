@@ -8,7 +8,8 @@ src/ctypetable.c \
 src/isspace.c src/isxdigit.c \
 src/empty_stdio.c src/getchar.c  src/putchar.c \
 src/fgetc.c src/fgets.c src/fputc.c src/fputs.c \
-src/empty_logfs.c src/logfs.c
+src/empty_logfs.c src/logfs.c \
+src/queue_compact.c
 INCLUDES = -Iinc
 
 # Toolchain settings
