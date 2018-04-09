@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="sqlibembedded_tests" Version="10.0.0" InternalType="">
+  <VirtualDirectory Name="inc">
+    <File Name="inc/mock_setup.h"/>
+  </VirtualDirectory>
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>

@@ -1,4 +1,6 @@
 #include <mock_stdio.h>
+#include <mock_setup.h>
+
 
 result mockStdioSetup()
 {
