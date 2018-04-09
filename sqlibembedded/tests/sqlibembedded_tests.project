@@ -6,6 +6,8 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="tests">
+    <File Name="setup_logfs.c"/>
+    <File Name="setup_stdio.c"/>
     <File Name="test_cmdline.c"/>
     <File Name="test_cmdline.h"/>
     <File Name="test_strlen.c"/>
