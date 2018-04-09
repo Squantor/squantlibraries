@@ -5,12 +5,19 @@
  */
 #ifndef MOCK_STDIO_H
 #define MOCK_STDIO_H
-#include "results.h"
+#include <stdint.h>
+#include <results.h>
 
 result mockStdioSetup();
-result mockStdinWrite();
-result mockStdinRead();
-result mockStdoutWrite();
-result mockStdoutRead();
+
+void mockStdinReset();
+result mockStdinIsEmpty();
+result mockStdinWrite(uint8_t c);
+result mockStdinRead(uint8_t *c);
+
+void mockStdoutReset();
+result mockStdoutIsEmpty();
+result mockStdoutWrite(uint8_t c);
+result mockStdoutRead(uint8_t *c);
 
 #endif

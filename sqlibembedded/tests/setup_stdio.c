@@ -8,8 +8,9 @@
 
 result stdinRead(uint8_t *c)
 {
-	if()
+	if(mockStdinStatus() == queueNotEmpty)
 	{
+        mockStdinRead(c);
 		return noError;
 	}
 	else
@@ -22,7 +23,7 @@ const rStream sqstdindef = {
 
 result stdoutWrite(uint8_t c)
 {
-	if(1 == 1)
+	if(mockStdoutStatus() == queueFull)
 		return streamEOF;
 	else
 		return noError;

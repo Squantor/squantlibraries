@@ -35,6 +35,17 @@ result queueInit(void * queueStruct, uint32_t mask)
     return noError;
 }
 
+result queueFillStatus(void * queueStruct)
+{
+    queueCompact * currentQueue = (queueCompact *) queueStruct;
+    if(((currentQueue->head+1) & currentQueue->mask) == currentQueue->tail)
+        return queueFull;
+    else if(currentQueue->head == currentQueue->tail)
+        return queueEmpty;
+    else
+        return queueNotEmpty;
+}
+
 result queueEnqueue(void * queueStruct, void * data)
 {
     queueCompact * currentQueue = (queueCompact *) queueStruct;

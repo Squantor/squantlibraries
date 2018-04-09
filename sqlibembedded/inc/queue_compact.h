@@ -21,8 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef QUEUE_COMPACT_H_
-#define QUEUE_COMPACT_H_
+#ifndef QUEUE_COMPACT_H
+#define QUEUE_COMPACT_H
 
 #include <stdint.h>
 #include <results.h>
@@ -37,9 +37,11 @@ typedef struct
 
 result queueInit(void * queueStruct, uint32_t mask);
 
+result queueFillStatus(void * queueStruct);
+
 result queueEnqueue(void * queueStruct, void * data);
 
 result queueDequeue(void * queueStruct, void ** data);
 
 
-#endif // QUEUE_COMPACT_H_
+#endif
