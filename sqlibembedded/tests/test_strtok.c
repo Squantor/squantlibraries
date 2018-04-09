@@ -68,8 +68,9 @@ MU_TEST_SUITE(test_strtok)
     MU_RUN_TEST(test_sqstrstok_r_multitoken);
 }
 
-void testStrtokSuite()
+int testStrtokSuite()
 {
     MU_RUN_SUITE(test_strtok);
     MU_REPORT();
+    return minunit_fail;
 }

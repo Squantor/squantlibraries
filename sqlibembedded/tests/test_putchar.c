@@ -53,8 +53,9 @@ MU_TEST_SUITE(test_putchar)
     MU_SUITE_CONFIGURE(&test_putchar_setup, &test_putchar_teardown);
 }
 
-void testPutcharSuite()
+int testPutcharSuite()
 {
     MU_RUN_SUITE(test_putchar);
     MU_REPORT();
+    return minunit_fail;
 }

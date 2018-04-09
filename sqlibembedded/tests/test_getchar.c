@@ -54,8 +54,9 @@ MU_TEST_SUITE(test_getchar)
     MU_SUITE_CONFIGURE(&test_getchar_setup, &test_getchar_teardown);
 }
 
-void testGetcharSuite()
+int testGetcharSuite()
 {
     MU_RUN_SUITE(test_getchar);
     MU_REPORT();
+    return minunit_fail;
 }

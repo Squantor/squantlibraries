@@ -60,8 +60,9 @@ MU_TEST_SUITE(test_strto)
     MU_RUN_TEST(test_sqstrstol_hex_spaces);
 }
 
-void testStrtoSuite()
+int testStrtoSuite()
 {
     MU_RUN_SUITE(test_strto);
     MU_REPORT();
+    return minunit_fail;
 }

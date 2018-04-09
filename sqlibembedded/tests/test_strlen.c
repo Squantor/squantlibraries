@@ -52,8 +52,9 @@ MU_TEST_SUITE(test_strlen)
     MU_RUN_TEST(test_strnlen_invalid);
 }
 
-void testStrlenSuite()
+int testStrlenSuite()
 {
     MU_RUN_SUITE(test_strlen);
     MU_REPORT();
+    return minunit_fail;
 }
