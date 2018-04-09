@@ -1,10 +1,11 @@
-#include <minunit.h>
+#include <stdio.h>
 #include <mock_stdio.h>
 #include <test_strlen.h>
 #include <test_strto.h>
 #include <test_strtok.h>
 #include <test_putchar.h>
 #include <test_getchar.h>
+#include <test_cmdline.h>
 
 
 int main(int argc, char *argv[]) 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
     failedTests += testStrtokSuite();
     failedTests += testPutcharSuite();
     failedTests += testGetcharSuite();
+    failedTests += testCmdlineSuite();
     if(failedTests > 0)
     {
         printf("ERROR: %d tests failed\n", failedTests);

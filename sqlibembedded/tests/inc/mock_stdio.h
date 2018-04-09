@@ -12,10 +12,12 @@ result mockStdioSetup();
 
 void mockStdinReset();
 result mockStdinIsEmpty();
+result mockStdinStatus();
 result mockStdinWrite(uint8_t c);
 result mockStdinRead(uint8_t *c);
 
 void mockStdoutReset();
+result mockStdoutStatus();
 result mockStdoutIsEmpty();
 result mockStdoutWrite(uint8_t c);
 result mockStdoutRead(uint8_t *c);

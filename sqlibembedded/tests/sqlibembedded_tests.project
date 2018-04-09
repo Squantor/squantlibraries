@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="sqlibembedded_tests" Version="10.0.0" InternalType="">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>
+    </Plugin>
+  </Plugins>
   <VirtualDirectory Name="inc">
+    <File Name="inc/cmdline_commands.h"/>
+    <File Name="inc/cmdline_test.h"/>
+    <File Name="inc/cmdline_help.h"/>
     <File Name="inc/test_getchar.h"/>
     <File Name="inc/test_strlen.h"/>
     <File Name="inc/test_strtok.h"/>
@@ -12,12 +20,10 @@
     <File Name="inc/test_putchar.h"/>
     <File Name="inc/mock_setup.h"/>
   </VirtualDirectory>
-  <Plugins>
-    <Plugin Name="qmake">
-      <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>
-    </Plugin>
-  </Plugins>
   <VirtualDirectory Name="tests">
+    <File Name="cmdline_test.c"/>
+    <File Name="cmdline_commands.c"/>
+    <File Name="cmdline_help.c"/>
     <File Name="mock_logfs.c"/>
     <File Name="mock_stdio.c"/>
     <File Name="setup_logfs.c"/>
