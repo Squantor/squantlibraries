@@ -7,6 +7,8 @@
 #include <mock_stdio.h>
 #include <cmdline_commands.h>
 
+
+
 int testCmdlineLoop(int timeout)
 {
     int counts = timeout;
@@ -73,9 +75,34 @@ MU_TEST(testCmdlineTest)
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
-MU_TEST(testCmdlineArgs) 
+MU_TEST(testCmdlinePreviousEmpty) 
 {
+    char cmdline[16];
+    char cmdoutput[64];
+   
+    // emit the up button escape sequence
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    // check if we do not get previous command
+    mu_check(queueEmpty == mockStdoutStatus()); 
+}
 
+MU_TEST(testCmdlinePrevious) 
+{
+    char cmdline[16];
+    char cmdoutput[64];
+    mu_check(noError == mockStdinPuts("test 51 99\r"));
+    mu_check(4 == testCmdlineLoop(15));
+    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r")) != NULL);
+    mu_check(mockStdoutGetsbuf(cmdoutput, sizeof(cmdoutput), strlen("Hello World! 00051 00099\n")) != NULL);
+   
+    // emit the up button escape sequence
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    // check if we get previous command
+    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r")) != NULL);
+    mu_check(strcmp(cmdline, "test 51 99\r") == 0);
+    mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
 MU_TEST_SUITE(testCmdline) 
@@ -85,7 +112,8 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineCrLf);
     MU_RUN_TEST(testCmdlineHelp);
     MU_RUN_TEST(testCmdlineTest);
-    MU_RUN_TEST(testCmdlineArgs);
+    MU_RUN_TEST(testCmdlinePreviousEmpty);
+    MU_RUN_TEST(testCmdlinePrevious);
 }
 
 int testCmdlineSuite()

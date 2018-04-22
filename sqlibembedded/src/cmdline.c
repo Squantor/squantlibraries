@@ -29,16 +29,25 @@ SOFTWARE.
 #include <results.h>
 #include <cmdline.h>
 
-#define	ASCII_BS	(8)	// backspace
-#define ASCII_SPACE	(32)	// space
-#define	ASCII_CR	(13)	// Carriage Return
+#define	ASCII_BS    (8)     // backspace
+#define ASCII_SPACE (32)    // space
+#define	ASCII_CR    (13)    // Carriage Return
+#define ASCII_ESC   (27)    // escape
+
+// states the escape sequence parsing can be in
+typedef enum {
+    cmdlineChar,
+    cmdlineEscape,
+    cmdlineEscapeArgument,
+} cmdlineMode;
+
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line);
 
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
 {
-	char *strtok_state;
+    char *strtok_state;
     char commandline[CMDLINE_MAX_LENGTH];
     sqstrncpy(commandline, line, sizeof(commandline));
     char *trigger = sqstrtok_r(commandline,STRTOK_DELIM, &strtok_state);
@@ -72,37 +81,86 @@ result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
 // call periodically to fetch received characters
 void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
 {
-	static char commandline[CMDLINE_MAX_LENGTH];
-	static int commandlineIndex = 0;
-	int c = sqgetchar();
-	switch(c)
-	{
-	case ASCII_BS:
-		if(commandlineIndex)
-		{
-			commandline[--commandlineIndex] = 0;
-			sqputchar(ASCII_BS);
-			sqputchar(ASCII_SPACE);
-			sqputchar(ASCII_BS);
-		}
-		break;
-	case ASCII_CR:
-		sqputchar(ASCII_CR);
-		// terminate string
-		commandline[commandlineIndex] = 0;
-		// call handler
-		cmdlineParse(cmdLineEntries, commandline);
-		commandlineIndex = 0;
-		break;
-	case EOF:
-		break;
-	default:
-		if(commandlineIndex < (CMDLINE_MAX_LENGTH-1))
-		{
-			commandline[commandlineIndex++] = c;
-			sqputchar(c);
-		}
-		break;
-	}
+    static char commandline[CMDLINE_MAX_LENGTH];
+    static int commandlineIndex = 0;
+    static int commandlineIndexPrev = 0;
+    static cmdlineMode escapeMode = cmdlineChar;
+    
+    int c = sqgetchar();
+    
+    // handling functions for escape sequences
+    if(escapeMode == cmdlineChar)
+    {
+        switch(c)
+        {
+        case ASCII_BS:
+            if(commandlineIndex)
+            {
+                commandline[--commandlineIndex] = 0;
+                sqputchar(ASCII_BS);
+                sqputchar(ASCII_SPACE);
+                sqputchar(ASCII_BS);
+            }
+            break;
+        case ASCII_CR:
+            sqputchar(ASCII_CR);
+            // terminate string
+            commandline[commandlineIndex] = 0;
+            // call handler
+            cmdlineParse(cmdLineEntries, commandline);
+            commandlineIndex = 0;
+            break;
+        case ASCII_ESC:
+            escapeMode = cmdlineEscape;
+            break;
+        case EOF:
+            break;
+        default:
+            if(commandlineIndex < (CMDLINE_MAX_LENGTH-1))
+            {
+                commandline[commandlineIndex++] = c;
+                // TODO: did we overwrite previous command? nuke it
+                sqputchar(c);
+            }
+            break;
+        }
+    } 
+    else if (escapeMode == cmdlineEscape)
+    {
+        switch(c)
+        {
+            case '[':
+                escapeMode = cmdlineEscapeArgument;
+            break;
+            default:
+                escapeMode = cmdlineChar;
+            break;
+        }
+    }
+    else if (escapeMode == cmdlineEscapeArgument)
+    {
+        switch(c)
+        {
+            // we got an up character
+            case 'A':
+                // is there a command to go back to?
+                if(commandlineIndexPrev != commandlineIndex)
+                {
+                    // write command to terminal and set pointers
+                    // 
+                }
+            
+                escapeMode = cmdlineChar;
+            break;
+            default:
+                escapeMode = cmdlineChar;
+            break;
+        }
+    }
+    else
+    {
+        // DIE!!! we need an assert of sorts!
+    }
+    
 }
 
