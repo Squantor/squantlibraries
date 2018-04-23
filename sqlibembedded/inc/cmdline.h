@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 #define CMDLINE_MAX_LENGTH  64
+// power of twos only!
 #define CMDLINE_BUFSIZE     128
 #define CMDLINE_MAX_ARGS    6
 #define STRTOK_DELIM        (" \n\r")
@@ -51,6 +52,7 @@ typedef struct {
     const cmdlineHandler argHandler;
 } cmdLineEntry;
 
+void cmdlineInit();
 void cmdlineProcess(const cmdLineEntry * cmdLineEntries);
 
 #ifdef __cplusplus

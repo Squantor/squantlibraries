@@ -34,9 +34,31 @@ SOFTWARE.
 #define	ASCII_CR    (13)    // Carriage Return
 #define ASCII_ESC   (27)    // escape
 
+static char commandlinebuffer[CMDLINE_BUFSIZE];
+static int commandlineIndex;
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line);
 
+void cmdlineInit()
+{
+    commandlineIndex = 0;
+    sqmemset(commandlinebuffer, 0, sizeof(commandlinebuffer));
+}
+
+void cmdlineBufferAdd(char c)
+{
+    commandlinebuffer[commandlineIndex] = c;
+    commandlineIndex++;
+    commandlineIndex = commandlineIndex & (CMDLINE_BUFSIZE-1);
+}
+
+void cmdlineBufferRemove()
+{
+    // zero out the character
+    commandlinebuffer[commandlineIndex] = 0;
+    commandlineIndex--;
+    commandlineIndex = commandlineIndex & (CMDLINE_BUFSIZE-1);
+}
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
 {
@@ -74,8 +96,7 @@ result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
 // call periodically to fetch received characters
 void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
 {
-    static char commandline[CMDLINE_BUFSIZE];
-    static int commandlineIndex = 0;
+    char newcommand[CMDLINE_MAX_LENGTH];
     
     int c = sqgetchar();
     
@@ -85,7 +106,7 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
     case ASCII_BS:
         if(commandlineIndex)
         {
-            commandline[--commandlineIndex] = 0;
+            cmdlineBufferRemove();
             sqputchar(ASCII_BS);
             sqputchar(ASCII_SPACE);
             sqputchar(ASCII_BS);
@@ -93,11 +114,14 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
         break;
     case ASCII_CR:
         sqputchar(ASCII_CR);
-        // terminate string
-        commandline[commandlineIndex] = 0;
+        // walk back from index to previous null character and then copy
+
+        // copy string
+        
         // call handler
-        cmdlineParse(cmdLineEntries, commandline);
-        commandlineIndex = 0;
+        cmdlineParse(cmdLineEntries, newcommand);
+        // terminate the string
+        cmdlineBufferAdd(0);
         break;
     case ASCII_ESC:
         // TODO handler for escape sequences
@@ -107,8 +131,7 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
     default:
         if(commandlineIndex < (CMDLINE_MAX_LENGTH-1))
         {
-            commandline[commandlineIndex++] = c;
-            // TODO: did we overwrite previous command? nuke it
+            cmdlineBufferAdd(c);
             sqputchar(c);
         }
         break;
