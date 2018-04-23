@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 #define CMDLINE_MAX_LENGTH  64
+#define CMDLINE_BUFSIZE     128
 #define CMDLINE_MAX_ARGS    6
 #define STRTOK_DELIM        (" \n\r")
 
