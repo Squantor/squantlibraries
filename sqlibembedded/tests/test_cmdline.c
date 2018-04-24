@@ -23,6 +23,7 @@ void testCmdlineSetup(void)
 {
    mockStdinReset();
    mockStdoutReset();
+   cmdlineInit();
 }
 
 void testCmdlineTeardown(void) 

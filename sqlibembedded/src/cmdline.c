@@ -34,30 +34,31 @@ SOFTWARE.
 #define	ASCII_CR    (13)    // Carriage Return
 #define ASCII_ESC   (27)    // escape
 
-static char commandlinebuffer[CMDLINE_BUFSIZE];
-static int commandlineIndex;
+#define INC_WRAP(value, mask) (((value) + 1) & ((mask) - 1))
+#define DEC_WRAP(value, mask) (((value) - 1) & ((mask) - 1))
+
+static char historyBuffer[CMDLINE_BUFSIZE];
+static int historyIndexEnd;
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line);
 
 void cmdlineInit()
 {
-    commandlineIndex = 0;
-    sqmemset(commandlinebuffer, 0, sizeof(commandlinebuffer));
+    historyIndexEnd = 0;
+    sqmemset(historyBuffer, 0, sizeof(historyBuffer));
 }
 
 void cmdlineBufferAdd(char c)
 {
-    commandlinebuffer[commandlineIndex] = c;
-    commandlineIndex++;
-    commandlineIndex = commandlineIndex & (CMDLINE_BUFSIZE-1);
+    historyBuffer[historyIndexEnd] = c;
+    historyIndexEnd = INC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
 }
 
 void cmdlineBufferRemove()
 {
     // zero out the character
-    commandlinebuffer[commandlineIndex] = 0;
-    commandlineIndex--;
-    commandlineIndex = commandlineIndex & (CMDLINE_BUFSIZE-1);
+    historyBuffer[historyIndexEnd] = 0;
+    historyIndexEnd = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
 }
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
@@ -104,7 +105,7 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
     switch(c)
     {
     case ASCII_BS:
-        if(commandlineIndex)
+        if(historyBuffer[DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE)] != 0)
         {
             cmdlineBufferRemove();
             sqputchar(ASCII_BS);
@@ -114,14 +115,24 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
         break;
     case ASCII_CR:
         sqputchar(ASCII_CR);
-        // walk back from index to previous null character and then copy
-
-        // copy string
-        
+        // note, we are filling the buffer end to start,
+        char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
+        // terminate string
+        *p = 0;
+        p--;
+        // we want the last input character index
+        int i = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
+        // terminate the history buffer
+        cmdlineBufferAdd(0);
+        // scan backward through history and copy backwards to the buffer
+        while(historyBuffer[i] != 0 && (p >= newcommand))
+        {
+            *p = historyBuffer[i];
+            i = DEC_WRAP(i, CMDLINE_BUFSIZE);
+            p--;
+        }
         // call handler
         cmdlineParse(cmdLineEntries, newcommand);
-        // terminate the string
-        cmdlineBufferAdd(0);
         break;
     case ASCII_ESC:
         // TODO handler for escape sequences
@@ -129,11 +140,8 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
     case EOF:
         break;
     default:
-        if(commandlineIndex < (CMDLINE_MAX_LENGTH-1))
-        {
-            cmdlineBufferAdd(c);
-            sqputchar(c);
-        }
+        cmdlineBufferAdd(c);
+        sqputchar(c);
         break;
     }
 }
