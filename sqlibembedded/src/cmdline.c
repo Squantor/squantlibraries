@@ -119,8 +119,6 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
         char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
         // terminate string
         *p = 0;
-        
-
         // scan backward through history and copy backwards to the buffer
         int i = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
         while ((historyBuffer[i] != 0) && (p >= newcommand))
