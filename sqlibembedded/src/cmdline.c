@@ -120,19 +120,21 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
         // terminate string
         *p = 0;
         p--;
-        // we want the last input character index
-        int i = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
-        // terminate the history buffer
-        cmdlineBufferAdd(0);
+
         // scan backward through history and copy backwards to the buffer
-        while(historyBuffer[i] != 0 && (p >= newcommand))
+        int i = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
+        while ((historyBuffer[i] != 0) && (p >= newcommand))
         {
             *p = historyBuffer[i];
             i = DEC_WRAP(i, CMDLINE_BUFSIZE);
+            if(historyBuffer[i] == 0)
+                break;
             p--;
         }
         // call handler
-        cmdlineParse(cmdLineEntries, newcommand);
+        cmdlineParse(cmdLineEntries, p);
+        // terminate the history buffer
+        cmdlineBufferAdd(0);
         break;
     case ASCII_ESC:
         // TODO handler for escape sequences

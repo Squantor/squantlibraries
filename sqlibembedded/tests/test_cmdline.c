@@ -113,8 +113,8 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineCrLf);
     MU_RUN_TEST(testCmdlineHelp);
     MU_RUN_TEST(testCmdlineTest);
-    MU_RUN_TEST(testCmdlinePreviousEmpty);
-    MU_RUN_TEST(testCmdlinePrevious);
+    //MU_RUN_TEST(testCmdlinePreviousEmpty);
+    //MU_RUN_TEST(testCmdlinePrevious);
 }
 
 int testCmdlineSuite()
