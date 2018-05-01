@@ -63,7 +63,27 @@ MU_TEST(testCmdlineHelp)
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
-MU_TEST(testCmdlineTest) 
+MU_TEST(testCmdlineHelpBuffer) 
+{
+    char helpcmd[32];
+    char helpline1[32];
+    char helpline2[32];
+    // redo test a few times to let the buffer overflow
+    for(int i = 0; i < 20; i++)
+    {
+        mu_check(noError == mockStdinPuts("help\r"));
+        mu_check(5 == testCmdlineLoop(10));
+        mu_check(mockStdoutGetsbuf(helpcmd, sizeof(helpcmd), strlen("help\r")) != NULL);
+        mu_check(mockStdoutGetsbuf(helpline1, sizeof(helpcmd), strlen("test\n")) != NULL);
+        mu_check(mockStdoutGetsbuf(helpline2, sizeof(helpcmd), strlen("help\n")) != NULL);
+        mu_check(strcmp(helpcmd, "help\r") == 0);
+        mu_check(strcmp(helpline1, "test\n") == 0);
+        mu_check(strcmp(helpline2, "help\n") == 0);
+        mu_check(queueEmpty == mockStdoutStatus()); 
+    }
+}
+
+MU_TEST(testCmdlineArgs) 
 {
     char cmdline[16];
     char cmdoutput[64];
@@ -112,7 +132,8 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineEmpty);
     MU_RUN_TEST(testCmdlineCrLf);
     MU_RUN_TEST(testCmdlineHelp);
-    MU_RUN_TEST(testCmdlineTest);
+    MU_RUN_TEST(testCmdlineHelpBuffer);
+    MU_RUN_TEST(testCmdlineArgs);
     //MU_RUN_TEST(testCmdlinePreviousEmpty);
     //MU_RUN_TEST(testCmdlinePrevious);
 }
