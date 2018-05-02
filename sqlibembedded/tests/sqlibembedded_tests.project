@@ -6,6 +6,7 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="inc">
+    <File Name="inc/test_parse_ansi.h"/>
     <File Name="inc/cmdline_commands.h"/>
     <File Name="inc/cmdline_test.h"/>
     <File Name="inc/cmdline_help.h"/>
@@ -21,6 +22,7 @@
     <File Name="inc/mock_setup.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="tests">
+    <File Name="test_parse_ansi.c"/>
     <File Name="cmdline_test.c"/>
     <File Name="cmdline_commands.c"/>
     <File Name="cmdline_help.c"/>

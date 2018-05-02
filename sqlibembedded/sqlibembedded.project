@@ -6,6 +6,7 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
+    <File Name="src/parse_ansi.c"/>
     <File Name="src/queue_compact.c"/>
     <File Name="src/logfs.c"/>
     <File Name="src/empty_stdio.c"/>
@@ -48,6 +49,7 @@
     <File Name="src/memcpy.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/parse_ansi.h"/>
     <File Name="inc/queue_macro.h"/>
     <File Name="inc/queue_compact.h"/>
     <File Name="inc/logfs.h"/>

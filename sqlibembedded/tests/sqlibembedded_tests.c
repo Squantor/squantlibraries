@@ -6,6 +6,7 @@
 #include <test_putchar.h>
 #include <test_getchar.h>
 #include <test_cmdline.h>
+#include <test_parse_ansi.h>
 
 
 int main(int argc, char *argv[]) 
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
     failedTests += testPutcharSuite();
     failedTests += testGetcharSuite();
     failedTests += testCmdlineSuite();
+    failedTests += testParseAnsiSuite();
     if(failedTests > 0)
     {
         printf("ERROR: %d tests failed\n", failedTests);
