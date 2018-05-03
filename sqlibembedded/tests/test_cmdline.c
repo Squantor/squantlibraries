@@ -96,6 +96,11 @@ MU_TEST(testCmdlineArgs)
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
+MU_TEST(testCmdlineIgnoreEscapes)
+{
+    // TODO: ignore all unknown escape sequences
+}
+
 MU_TEST(testCmdlinePreviousEmpty) 
 {
     char cmdline[16];
@@ -134,6 +139,7 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineHelp);
     MU_RUN_TEST(testCmdlineHelpBuffer);
     MU_RUN_TEST(testCmdlineArgs);
+    MU_RUN_TEST(testCmdlineIgnoreEscapes);
     //MU_RUN_TEST(testCmdlinePreviousEmpty);
     //MU_RUN_TEST(testCmdlinePrevious);
 }
