@@ -41,11 +41,14 @@ ansiSequence ansiParse(char c)
         {
             // detected left bracket
             case '[':
-                ansiParserState = ansiLeftBrack;
+                ansiParserState = ansiBrackOpen;
+            break;
+            default:
+                ansiParserState = ansiError;
             break;
         }
     }
-    else if(ansiParserState == ansiLeftBrack)
+    else if(ansiParserState == ansiBrackOpen)
     {
         switch(c)
         {
@@ -61,6 +64,10 @@ ansiSequence ansiParse(char c)
             case 'D':
                 ansiParserState = ansiCursorBackward;
             break;
+            default:
+                ansiParserState = ansiError;
+            break;
+
         }
     }
     else
