@@ -98,7 +98,11 @@ MU_TEST(testCmdlineArgs)
 
 MU_TEST(testCmdlineIgnoreEscapes)
 {
-    // TODO: ignore all unknown escape sequences
+    // emit an unknown escape sequence
+    mu_check(noError == mockStdinPuts("\e_X"));
+    mu_check(12 == testCmdlineLoop(15));
+    // check if stdout is empty
+    mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
 MU_TEST(testCmdlinePreviousEmpty) 
