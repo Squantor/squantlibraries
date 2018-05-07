@@ -37,6 +37,12 @@ SOFTWARE.
 #define INC_WRAP(value, mask) (((value) + 1) & ((mask) - 1))
 #define DEC_WRAP(value, mask) (((value) - 1) & ((mask) - 1))
 
+typedef enum
+{
+    promptNormal,
+    promptEscape,
+} promptState_t;
+
 static char historyBuffer[CMDLINE_BUFSIZE];
 static int historyIndexEnd;
 
@@ -98,48 +104,61 @@ result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
 void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
 {
     char newcommand[CMDLINE_MAX_LENGTH];
+    static promptState_t promptState = promptNormal;
     
     int c = sqgetchar();
     
     // handling functions for escape sequences
-    switch(c)
+    switch(promptState)
     {
-    case ASCII_BS:
-        if(historyBuffer[DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE)] != 0)
-        {
-            cmdlineBufferRemove();
-            sqputchar(ASCII_BS);
-            sqputchar(ASCII_SPACE);
-            sqputchar(ASCII_BS);
-        }
+        case promptNormal:
+            switch(c)
+            {
+                case ASCII_BS:
+                    if(historyBuffer[DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE)] != 0)
+                    {
+                        cmdlineBufferRemove();
+                        sqputchar(ASCII_BS);
+                        sqputchar(ASCII_SPACE);
+                        sqputchar(ASCII_BS);
+                    }
+                    break;
+                case ASCII_CR:
+                    sqputchar(ASCII_CR);
+                    // note, we are filling the buffer end to start,
+                    char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
+                    // terminate string
+                    *p = 0;
+                    // scan backward through history and copy backwards to the buffer
+                    int i = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
+                    while ((historyBuffer[i] != 0) && (p >= newcommand))
+                    {
+                        p--;
+                        *p = historyBuffer[i];
+                        i = DEC_WRAP(i, CMDLINE_BUFSIZE);
+                    }
+                    // call handler
+                    cmdlineParse(cmdLineEntries, p);
+                    // terminate the history buffer
+                    cmdlineBufferAdd(0);
+                    break;
+                case ASCII_ESC:
+                    // TODO handler for escape sequences
+                    ansiParse(c);
+                    break;
+                case EOF:
+                    break;
+                default:
+                    cmdlineBufferAdd(c);
+                    sqputchar(c);
+                    break;
+            }
         break;
-    case ASCII_CR:
-        sqputchar(ASCII_CR);
-        // note, we are filling the buffer end to start,
-        char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
-        // terminate string
-        *p = 0;
-        // scan backward through history and copy backwards to the buffer
-        int i = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
-        while ((historyBuffer[i] != 0) && (p >= newcommand))
-        {
-            p--;
-            *p = historyBuffer[i];
-            i = DEC_WRAP(i, CMDLINE_BUFSIZE);
-        }
-        // call handler
-        cmdlineParse(cmdLineEntries, p);
-        // terminate the history buffer
-        cmdlineBufferAdd(0);
+        case promptEscape:
+            
         break;
-    case ASCII_ESC:
-        // TODO handler for escape sequences
-        break;
-    case EOF:
-        break;
-    default:
-        cmdlineBufferAdd(c);
-        sqputchar(c);
+        default:
+            // TODO assert
         break;
     }
 }
