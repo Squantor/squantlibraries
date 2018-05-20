@@ -146,6 +146,9 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineIgnoreEscapes);
     MU_RUN_TEST(testCmdlinePreviousEmpty);
     MU_RUN_TEST(testCmdlinePrevious);
+    // TODO test previous with a non empty commandline
+    // TODO test previous with more then one command
+    // TODO test back and forward
 }
 
 int testCmdlineSuite()

@@ -68,6 +68,16 @@ void cmdlineBufferRemove()
     historyIndexEnd = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
 }
 
+void promptEraseCharacters(uint16_t count)
+{
+    for(uint16_t i = 0; i < count; i++)
+    {
+        sqputchar(ASCII_BS);
+        sqputchar(ASCII_SPACE);
+        sqputchar(ASCII_BS);        
+    }
+}
+
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
 {
     char *strtok_state;
@@ -106,6 +116,8 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
 {
     char newcommand[CMDLINE_MAX_LENGTH];
     static promptState_t promptState = promptNormal;
+    // how many characters are there on the prompt?
+    static uint16_t promptFill = 0;
     
     int c = sqgetchar();
     
@@ -119,13 +131,13 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                     if(historyBuffer[DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE)] != 0)
                     {
                         cmdlineBufferRemove();
-                        sqputchar(ASCII_BS);
-                        sqputchar(ASCII_SPACE);
-                        sqputchar(ASCII_BS);
+                        promptEraseCharacters(1);
+                        promptFill--;
                     }
                     break;
                 case ASCII_CR:
                     sqputchar(ASCII_CR);
+                    promptFill = 0;
                     // note, we are filling the buffer end to start,
                     char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
                     // terminate string
@@ -152,6 +164,7 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                 default:
                     cmdlineBufferAdd(c);
                     sqputchar(c);
+                    promptFill++;
                     break;
             }
         break;
@@ -168,7 +181,11 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                             promptState = promptNormal;
                         break;
                         case ansiCursorUp:
-                            // TODO go to previous command if available
+                            // clear out current commandline
+                            promptEraseCharacters(promptFill);
+                            promptFill = 0;
+                            // print out previous command
+                            
                             promptState = promptNormal;
                         break;
                         case ansiCursorDown:
