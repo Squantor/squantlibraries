@@ -125,13 +125,17 @@ MU_TEST(testCmdlinePrevious)
     testCmdlineLoop(15);
     mockStdoutGets(cmdline, sizeof(cmdline));
     mockStdoutGets(cmdoutput, sizeof(cmdoutput));
+    mockStdinPuts("test 51 99\r");
+    testCmdlineLoop(15);
+    mockStdoutGets(cmdline, sizeof(cmdline));
+    mockStdoutGets(cmdoutput, sizeof(cmdoutput));
    
     // emit the up button escape sequence
     mu_check(noError == mockStdinPuts("\e[A"));
     mu_check(12 == testCmdlineLoop(15));
     // check if we get previous command
     mu_check(mockStdoutGets(cmdline, sizeof(cmdline)) == cmdline);
-    mu_check(strcmp(cmdline, "test 51 99\r") == 0);
+    mu_check(strcmp(cmdline, "test 51 99") == 0);
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
 

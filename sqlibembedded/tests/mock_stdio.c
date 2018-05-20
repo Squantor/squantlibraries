@@ -92,7 +92,11 @@ char * mockStdoutGets(char * restrict s, int num)
         uint8_t c;
         result r = stdoutQueueDequeue(&c);
         if(r == queueEmpty)
-            return NULL;
+        {
+            // no more characters
+            *current = '\0';
+            return s;
+        }
         // TODO interpreting special characters
         switch(c)
         {

@@ -46,12 +46,21 @@ typedef enum
 
 static char historyBuffer[CMDLINE_BUFSIZE];
 static int historyIndexEnd;
+static int historyIndexBegin;
+// where are we pointing when going through history
+static int historyIndexIndex;
+
+
+// how many characters are there on the prompt?
+static uint16_t promptFill = 0;
+
+
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line);
 
 void cmdlineInit()
 {
-    historyIndexEnd = 0;
+    historyIndexBegin = historyIndexEnd = 0;
     sqmemset(historyBuffer, 0, sizeof(historyBuffer));
 }
 
@@ -75,7 +84,14 @@ void promptEraseCharacters(uint16_t count)
         sqputchar(ASCII_BS);
         sqputchar(ASCII_SPACE);
         sqputchar(ASCII_BS);        
+        promptFill--;
     }
+}
+
+void promptAddCharacter(char c)
+{
+    sqputchar(c);
+    promptFill++;
 }
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
@@ -116,8 +132,6 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
 {
     char newcommand[CMDLINE_MAX_LENGTH];
     static promptState_t promptState = promptNormal;
-    // how many characters are there on the prompt?
-    static uint16_t promptFill = 0;
     
     int c = sqgetchar();
     
@@ -132,7 +146,6 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                     {
                         cmdlineBufferRemove();
                         promptEraseCharacters(1);
-                        promptFill--;
                     }
                     break;
                 case ASCII_CR:
@@ -163,8 +176,7 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                     break;
                 default:
                     cmdlineBufferAdd(c);
-                    sqputchar(c);
-                    promptFill++;
+                    promptAddCharacter(c);
                     break;
             }
         break;
@@ -184,8 +196,28 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                             // clear out current commandline
                             promptEraseCharacters(promptFill);
                             promptFill = 0;
-                            // print out previous command
-                            
+                            int i = DEC_WRAP(historyIndexEnd-1, CMDLINE_BUFSIZE);
+                            if(i != historyIndexBegin)
+                            {
+                                while((historyBuffer[i] != 0))
+                                {
+                                    // find previous in history
+                                    i = DEC_WRAP(i, CMDLINE_BUFSIZE);
+                                }
+                                // end found, put on prompt and history
+                                i = INC_WRAP(i, CMDLINE_BUFSIZE);
+                                while(historyBuffer[i] != 0)
+                                {
+                                    cmdlineBufferAdd(historyBuffer[i]);
+                                    promptAddCharacter(historyBuffer[i]);
+                                    i = INC_WRAP(i, CMDLINE_BUFSIZE);
+                                }
+                            }
+                            else
+                            {
+                                // we are at the end of history, do nothing
+                            }
+                            // put in newcommand and on the prompt
                             promptState = promptNormal;
                         break;
                         case ansiCursorDown:
