@@ -125,10 +125,29 @@ MU_TEST(testCmdlinePrevious)
     testCmdlineLoop(15);
     mockStdoutGets(cmdline, sizeof(cmdline));
     mockStdoutGets(cmdoutput, sizeof(cmdoutput));
+   
+    // emit the up button escape sequence
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    // check if we get previous command
+    mu_check(mockStdoutGets(cmdline, sizeof(cmdline)) == cmdline);
+    mu_check(strcmp(cmdline, "test 51 99") == 0);
+    mu_check(queueEmpty == mockStdoutStatus()); 
+}
+
+MU_TEST(testCmdlinePreviousNonEmptyPrompt) 
+{
+    char cmdline[16];
+    char cmdoutput[64];
+    char cmddump[64];
     mockStdinPuts("test 51 99\r");
     testCmdlineLoop(15);
     mockStdoutGets(cmdline, sizeof(cmdline));
     mockStdoutGets(cmdoutput, sizeof(cmdoutput));
+    // input a something on the prompt, should get erased
+    mockStdinPuts("foo");
+    testCmdlineLoop(5);
+    mockStdoutGets(cmddump, sizeof(cmddump));
    
     // emit the up button escape sequence
     mu_check(noError == mockStdinPuts("\e[A"));
@@ -150,6 +169,8 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineIgnoreEscapes);
     MU_RUN_TEST(testCmdlinePreviousEmpty);
     MU_RUN_TEST(testCmdlinePrevious);
+    MU_RUN_TEST(testCmdlinePreviousNonEmptyPrompt);
+    
     // TODO test previous with a non empty commandline
     // TODO test previous with more then one command
     // TODO test back and forward

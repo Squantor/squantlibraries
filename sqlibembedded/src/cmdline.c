@@ -196,21 +196,29 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                             // clear out current commandline
                             promptEraseCharacters(promptFill);
                             promptFill = 0;
-                            int i = DEC_WRAP(historyIndexEnd-1, CMDLINE_BUFSIZE);
-                            if(i != historyIndexBegin)
+                            int indexClearHist = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
+                            while(historyBuffer[indexClearHist] != 0)
                             {
-                                while((historyBuffer[i] != 0))
+                                historyBuffer[indexClearHist] = 0;
+                                indexClearHist = DEC_WRAP(indexClearHist, CMDLINE_BUFSIZE);
+                            }
+                            historyIndexEnd = INC_WRAP(indexClearHist, CMDLINE_BUFSIZE);
+                            // cleared buffer, lets continue from here
+                            int indexSearchPrev = DEC_WRAP(indexClearHist, CMDLINE_BUFSIZE);
+                            if(indexSearchPrev != historyIndexBegin)
+                            {
+                                while((historyBuffer[indexSearchPrev] != 0))
                                 {
                                     // find previous in history
-                                    i = DEC_WRAP(i, CMDLINE_BUFSIZE);
+                                    indexSearchPrev = DEC_WRAP(indexSearchPrev, CMDLINE_BUFSIZE);
                                 }
                                 // end found, put on prompt and history
-                                i = INC_WRAP(i, CMDLINE_BUFSIZE);
-                                while(historyBuffer[i] != 0)
+                                indexSearchPrev = INC_WRAP(indexSearchPrev, CMDLINE_BUFSIZE);
+                                while(historyBuffer[indexSearchPrev] != 0)
                                 {
-                                    cmdlineBufferAdd(historyBuffer[i]);
-                                    promptAddCharacter(historyBuffer[i]);
-                                    i = INC_WRAP(i, CMDLINE_BUFSIZE);
+                                    cmdlineBufferAdd(historyBuffer[indexSearchPrev]);
+                                    promptAddCharacter(historyBuffer[indexSearchPrev]);
+                                    indexSearchPrev = INC_WRAP(indexSearchPrev, CMDLINE_BUFSIZE);
                                 }
                             }
                             else
