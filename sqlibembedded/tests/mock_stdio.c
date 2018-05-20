@@ -73,34 +73,55 @@ result mockStdoutRead(uint8_t *c)
     return stdoutQueueDequeue(c);
 }
 
-char * mockStdoutGetsbuf(char * restrict s, int size, int charcount)
+char * mockStdoutGets(char * restrict s, int num)
 {
-    if ( size == 0 )
+    char * current = s;
+    if ( num == 0 )
     {
         return NULL;
     }
-    if ( size == 1 )
+    if ( num == 1 )
     {
-        *s = '\0';
+        *current = '\0';
         return s;
     }
-    size -= 1;
+    // always keep one space free for the zero terminte
+    int size = num - 1;
     while(size > 0)
     {
         uint8_t c;
         result r = stdoutQueueDequeue(&c);
         if(r == queueEmpty)
             return NULL;
-        *s = c;
-        ++s;
-        --size;
-        --charcount;
-        if(charcount == 0)
+        // TODO interpreting special characters
+        switch(c)
         {
-            *s = '\0';
-            return s;
+            case '\b':
+                if(current > s)
+                {
+                    --current;
+                    *current = '\0';    
+                    ++size;
+                }
+            break;
+            // lets handle \n and \r as terminators
+            case '\n':
+            case '\r':
+                // terminate string and exit
+                *current = c;
+                ++current;
+                --size;
+                // we can always terminate as we keep one char free
+                *current = '\0';
+                return s;
+            break;
+            default:
+                *current = c;
+                ++current;
+                --size;
+            break;
         }
     }
-    *s = '\0';
+    *current = '\0';
     return s;
 }

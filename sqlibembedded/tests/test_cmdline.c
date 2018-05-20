@@ -42,7 +42,7 @@ MU_TEST(testCmdlineCrLf)
     char cmdline[16];
     mu_check(noError == mockStdinPuts("\r"));
     mu_check(9 == testCmdlineLoop(10));
-    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("\r")) != NULL);
+    mu_check(mockStdoutGets(cmdline, sizeof(cmdline)) == cmdline);
     mu_check(strcmp(cmdline, "\r") == 0);
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
@@ -54,9 +54,9 @@ MU_TEST(testCmdlineHelp)
     char helpline2[32];
     mu_check(noError == mockStdinPuts("help\r"));
     mu_check(5 == testCmdlineLoop(10));
-    mu_check(mockStdoutGetsbuf(helpcmd, sizeof(helpcmd), strlen("help\r")) != NULL);
-    mu_check(mockStdoutGetsbuf(helpline1, sizeof(helpcmd), strlen("test\n")) != NULL);
-    mu_check(mockStdoutGetsbuf(helpline2, sizeof(helpcmd), strlen("help\n")) != NULL);
+    mu_check(mockStdoutGets(helpcmd, sizeof(helpcmd)) == helpcmd);
+    mu_check(mockStdoutGets(helpline1, sizeof(helpcmd)) == helpline1);
+    mu_check(mockStdoutGets(helpline2, sizeof(helpcmd)) == helpline2);
     mu_check(strcmp(helpcmd, "help\r") == 0);
     mu_check(strcmp(helpline1, "test\n") == 0);
     mu_check(strcmp(helpline2, "help\n") == 0);
@@ -73,9 +73,9 @@ MU_TEST(testCmdlineHelpBuffer)
     {
         mu_check(noError == mockStdinPuts("help\r"));
         mu_check(5 == testCmdlineLoop(10));
-        mu_check(mockStdoutGetsbuf(helpcmd, sizeof(helpcmd), strlen("help\r")) != NULL);
-        mu_check(mockStdoutGetsbuf(helpline1, sizeof(helpcmd), strlen("test\n")) != NULL);
-        mu_check(mockStdoutGetsbuf(helpline2, sizeof(helpcmd), strlen("help\n")) != NULL);
+        mu_check(mockStdoutGets(helpcmd, sizeof(helpcmd)) == helpcmd);
+        mu_check(mockStdoutGets(helpline1, sizeof(helpcmd)) == helpline1);
+        mu_check(mockStdoutGets(helpline2, sizeof(helpcmd)) == helpline2);
         mu_check(strcmp(helpcmd, "help\r") == 0);
         mu_check(strcmp(helpline1, "test\n") == 0);
         mu_check(strcmp(helpline2, "help\n") == 0);
@@ -89,8 +89,8 @@ MU_TEST(testCmdlineArgs)
     char cmdoutput[64];
     mu_check(noError == mockStdinPuts("test 51 99\r"));
     mu_check(4 == testCmdlineLoop(15));
-    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r")) != NULL);
-    mu_check(mockStdoutGetsbuf(cmdoutput, sizeof(cmdoutput), strlen("Hello World! 00051 00099\n")) != NULL);
+    mu_check(mockStdoutGets(cmdline, sizeof(cmdline)) == cmdline);
+    mu_check(mockStdoutGets(cmdoutput, sizeof(cmdoutput)) == cmdoutput);
     mu_check(strcmp(cmdline, "test 51 99\r") == 0);
     mu_check(strcmp(cmdoutput, "Hello World! 00051 00099\n") == 0);
     mu_check(queueEmpty == mockStdoutStatus()); 
@@ -123,14 +123,14 @@ MU_TEST(testCmdlinePrevious)
     char cmdoutput[64];
     mockStdinPuts("test 51 99\r");
     testCmdlineLoop(15);
-    mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r"));
-    mockStdoutGetsbuf(cmdoutput, sizeof(cmdoutput), strlen("Hello World! 00051 00099\n"));
+    mockStdoutGets(cmdline, sizeof(cmdline));
+    mockStdoutGets(cmdoutput, sizeof(cmdoutput));
    
     // emit the up button escape sequence
     mu_check(noError == mockStdinPuts("\e[A"));
     mu_check(12 == testCmdlineLoop(15));
     // check if we get previous command
-    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r")) != NULL);
+    mu_check(mockStdoutGets(cmdline, sizeof(cmdline)) == cmdline);
     mu_check(strcmp(cmdline, "test 51 99\r") == 0);
     mu_check(queueEmpty == mockStdoutStatus()); 
 }

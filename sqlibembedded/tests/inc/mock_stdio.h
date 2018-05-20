@@ -22,6 +22,6 @@ result mockStdoutStatus();
 result mockStdoutIsEmpty();
 result mockStdoutWrite(uint8_t c);
 result mockStdoutRead(uint8_t *c);
-char * mockStdoutGetsbuf(char * restrict s, int size, int charcount);
+char * mockStdoutGets(char * restrict s, int size);
 
 #endif
