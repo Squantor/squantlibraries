@@ -99,8 +99,8 @@ MU_TEST(testCmdlineArgs)
 MU_TEST(testCmdlineIgnoreEscapes)
 {
     // emit an unknown escape sequence
-    mu_check(noError == mockStdinPuts("\e_X"));
-    mu_check(12 == testCmdlineLoop(15));
+    mu_check(noError == mockStdinPuts("\e_"));
+    mu_check(13 == testCmdlineLoop(15));
     // check if stdout is empty
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
@@ -121,10 +121,10 @@ MU_TEST(testCmdlinePrevious)
 {
     char cmdline[16];
     char cmdoutput[64];
-    mu_check(noError == mockStdinPuts("test 51 99\r"));
-    mu_check(4 == testCmdlineLoop(15));
-    mu_check(mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r")) != NULL);
-    mu_check(mockStdoutGetsbuf(cmdoutput, sizeof(cmdoutput), strlen("Hello World! 00051 00099\n")) != NULL);
+    mockStdinPuts("test 51 99\r");
+    testCmdlineLoop(15);
+    mockStdoutGetsbuf(cmdline, sizeof(cmdline), strlen("test 51 99\r"));
+    mockStdoutGetsbuf(cmdoutput, sizeof(cmdoutput), strlen("Hello World! 00051 00099\n"));
    
     // emit the up button escape sequence
     mu_check(noError == mockStdinPuts("\e[A"));
@@ -144,8 +144,8 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineHelpBuffer);
     MU_RUN_TEST(testCmdlineArgs);
     MU_RUN_TEST(testCmdlineIgnoreEscapes);
-    //MU_RUN_TEST(testCmdlinePreviousEmpty);
-    //MU_RUN_TEST(testCmdlinePrevious);
+    MU_RUN_TEST(testCmdlinePreviousEmpty);
+    MU_RUN_TEST(testCmdlinePrevious);
 }
 
 int testCmdlineSuite()

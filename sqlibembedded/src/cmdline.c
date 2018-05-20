@@ -144,8 +144,8 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                     cmdlineBufferAdd(0);
                     break;
                 case ASCII_ESC:
-                    // TODO handler for escape sequences
                     ansiParse(c);
+                    promptState = promptEscape;
                     break;
                 case EOF:
                     break;
@@ -165,6 +165,14 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                     {
                         case ansiError:
                             // unknown ansi escape, return to normal operation
+                            promptState = promptNormal;
+                        break;
+                        case ansiCursorUp:
+                            // TODO go to previous command if available
+                            promptState = promptNormal;
+                        break;
+                        case ansiCursorDown:
+                            // TODO go to next command if available
                             promptState = promptNormal;
                         break;
                         default:
