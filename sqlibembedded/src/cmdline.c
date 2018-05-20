@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <results.h>
 #include <cmdline.h>
+#include <parse_ansi.h>
 
 #define	ASCII_BS    (8)     // backspace
 #define ASCII_SPACE (32)    // space
@@ -155,7 +156,22 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
             }
         break;
         case promptEscape:
-            
+            {
+                ansiSequence ansiState = ansiParse(c);
+                // we have successfully parsed the sequence
+                if(ansiState > ansiKnown)
+                {
+                    switch(ansiState)
+                    {
+                        case ansiError:
+                            // unknown ansi escape, return to normal operation
+                            promptState = promptNormal;
+                        break;
+                        default:
+                        break;
+                    }
+                }
+            }
         break;
         default:
             // TODO assert

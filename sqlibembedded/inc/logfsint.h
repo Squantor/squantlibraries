@@ -10,8 +10,8 @@
 #define	LOGFS_MAGIC_EMPTY	(0xFFFF)
 
 // maximum entries in the Inode table
-#define MAX_INODES			(1024)
-#define	MAX_INODESIZE		(1024 * sizeof(fsINode))
+#define MAX_INODES			(1024u)
+#define	MAX_INODESIZE		(1024u * sizeof(fsINode))
 
 // macro that gives the NEXT sector addres
 #define	LOGFS_NEXTSECTADDR(address) ((((address) + 4096) & 0xFFFFF000))

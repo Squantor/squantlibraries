@@ -18,7 +18,7 @@ result fsInit()
 
 	// scan the table for the file entries start and beginning
 	fsINode file;
-	int FsInodePos = 0;
+	uint32_t FsInodePos = 0;
 	bool lastEntryUsed = false;
 	// check first inode
 	logfsRead(FsInodePos, &file, sizeof(file));
@@ -81,7 +81,7 @@ result fsFileCreate(uint16_t fileId, uint32_t fileSize)
 result fsFileDelete(uint16_t fileId)
 {
 	fsINode file;
-	for(int i = 0; i < MAX_INODESIZE; i += sizeof(fsINode))
+	for(uint32_t i = 0; i < MAX_INODESIZE; i += sizeof(fsINode))
 	{
 		logfsRead(i, &file, sizeof(file));
 		if((file.id == fileId) && (file.magic == LOGFS_MAGIC_USED))
