@@ -73,14 +73,12 @@ DEPS = $(OBJECTS:.o=.d)
 release: dirs
 	$(MAKE) -C .. release
 	$(MAKE) all --no-print-directory
-	$(MAKE) -C ../arm-none-eabi_CM0 release
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
 	$(MAKE) -C .. debug
 	$(MAKE) all --no-print-directory
-	$(MAKE) -C ../arm-none-eabi_CM0 debug
 
 # Create the directories used in the build
 .PHONY: dirs
@@ -96,7 +94,6 @@ clean:
 	$(MAKE) -C .. clean
 	$(RM) -r build
 	$(RM) -r bin
-	$(MAKE) -C ../arm-none-eabi_CM0 clean
 
 # Main rule, checks the executable and symlinks to the output
 all: $(BIN_PATH)/$(BIN_NAME)
