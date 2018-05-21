@@ -129,3 +129,15 @@ char * mockStdoutGets(char * restrict s, int num)
     *current = '\0';
     return s;
 }
+
+/*
+ * Keep reading Stdout until nothing is left.
+ * Perfect for resetting stdout to empty state.
+ */
+int mockStdoutClear(void)
+{
+    uint8_t c;
+    result r = stdoutQueueDequeue(&c);
+    while(r != queueEmpty)
+        r = stdoutQueueDequeue(&c);
+}

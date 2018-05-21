@@ -138,16 +138,12 @@ MU_TEST(testCmdlinePrevious)
 MU_TEST(testCmdlinePreviousNonEmptyPrompt) 
 {
     char cmdline[16];
-    char cmdoutput[64];
-    char cmddump[64];
     mockStdinPuts("test 51 99\r");
     testCmdlineLoop(15);
-    mockStdoutGets(cmdline, sizeof(cmdline));
-    mockStdoutGets(cmdoutput, sizeof(cmdoutput));
     // input a something on the prompt, should get erased
     mockStdinPuts("foo");
     testCmdlineLoop(5);
-    mockStdoutGets(cmddump, sizeof(cmddump));
+    mockStdoutClear();
    
     // emit the up button escape sequence
     mu_check(noError == mockStdinPuts("\e[A"));
@@ -155,6 +151,29 @@ MU_TEST(testCmdlinePreviousNonEmptyPrompt)
     // check if we get previous command
     mu_check(mockStdoutGets(cmdline, sizeof(cmdline)) == cmdline);
     mu_check(strcmp(cmdline, "test 51 99") == 0);
+    mu_check(queueEmpty == mockStdoutStatus()); 
+}
+
+MU_TEST(testCmdlineMultiPrevious)
+{
+    char prompt[16];
+    mockStdinPuts("test 51 99\r");
+    testCmdlineLoop(15);
+    // input a something on the prompt, should get erased
+    mockStdinPuts("foo\r");
+    testCmdlineLoop(5);
+    mockStdoutClear();
+   
+    // emit the up button escape sequence, multiple times
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "foo") == 0);
+
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "test 51 99") == 0);    
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
@@ -170,10 +189,9 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlinePreviousEmpty);
     MU_RUN_TEST(testCmdlinePrevious);
     MU_RUN_TEST(testCmdlinePreviousNonEmptyPrompt);
-    
-    // TODO test previous with a non empty commandline
-    // TODO test previous with more then one command
-    // TODO test back and forward
+    MU_RUN_TEST(testCmdlineMultiPrevious);
+    // MU_RUN_TEST(testCmdlinePreviousNext);
+    // MU_RUN_TEST(testCmdlineMultiPreviousMultiNext);
 }
 
 int testCmdlineSuite()

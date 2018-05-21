@@ -34,6 +34,7 @@ SOFTWARE.
 // power of twos only!
 #define PROMPT_HISTBUF_SIZE     128
 
+#define ASCII_NUL   (0)
 #define	ASCII_BS    (8)     // backspace
 #define ASCII_SPACE (32)    // space
 #define	ASCII_CR    (13)    // Carriage Return
@@ -66,15 +67,15 @@ void promptInit()
 static void promptHistoryDel()
 {
     // zero out the character
-    promptHistory[promptHistoryHead] = 0;
+    promptHistory[promptHistoryHead] = ASCII_NUL;
     promptHistoryHead = WRAP_HISTORY(promptHistoryHead - 1);
 }
 
 static void promptHistoryClearLast()
 {
-    while(promptHistory[promptHistoryTail] != 0)
+    while(promptHistory[promptHistoryTail] != ASCII_NUL)
     {
-        promptHistory[promptHistoryTail] = 0;
+        promptHistory[promptHistoryTail] = ASCII_NUL;
         promptHistoryTail = WRAP_HISTORY(promptHistoryTail + 1);
     }
     // end reached, skip zero char
@@ -118,12 +119,10 @@ static void promptHistoryPrev(void)
 {
     // skip zero char
     int historySearchIndex = WRAP_HISTORY(promptHistoryCurrent - 2);
-    while(promptHistory[historySearchIndex] != 0)
-    {
-        promptHistory[historySearchIndex] = 0;
+    while(promptHistory[historySearchIndex] != ASCII_NUL)
         historySearchIndex = WRAP_HISTORY(historySearchIndex - 1);
-    }
-    promptHistoryCurrent = historySearchIndex;
+    // point to begin
+    promptHistoryCurrent = WRAP_HISTORY(historySearchIndex + 1);
 }
 
 static void promptHistoryNext(void)
@@ -134,7 +133,7 @@ static void promptHistoryNext(void)
 static void promptHistoryShow(void)
 {
     int historyIndex = promptHistoryCurrent;
-    while(promptHistory[historyIndex] != 0)
+    while(promptHistory[historyIndex] != ASCII_NUL)
     {
         promptAdd(promptHistory[historyIndex]);
         historyIndex++;
@@ -158,7 +157,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
             switch(c)
             {
                 case ASCII_BS:
-                    if(promptHistory[WRAP_HISTORY(promptHistoryHead - 1)] != 0)
+                    if(promptHistory[WRAP_HISTORY(promptHistoryHead - 1)] != ASCII_NUL)
                     {
                         promptDel(1);
                     }
@@ -169,10 +168,10 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                     // note, we are filling the buffer end to start,
                     char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
                     // terminate string
-                    *p = 0;
+                    *p = ASCII_NUL;
                     // scan backward through history and copy backwards to the buffer
                     int i = WRAP_HISTORY(promptHistoryHead - 1);
-                    while ((promptHistory[i] != 0) && (p >= newcommand))
+                    while ((promptHistory[i] != ASCII_NUL) && (p >= newcommand))
                     {
                         p--;
                         *p = promptHistory[i];
@@ -224,6 +223,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                         break;
                         case ansiCursorDown:
                             // TODO go to next command if available
+                            // check if you hit promptHistoryHead from promptHistoryCurrent without a nul in between
                             promptState = promptNormal;
                         break;
                         default:
