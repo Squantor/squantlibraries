@@ -38,9 +38,6 @@ extern "C" {
 
 #define CMDLINE_MAX_LENGTH  64
 #define CMDLINE_MAX_ARGS    6
-#define STRTOK_DELIM        (" \n\r")
-// power of twos only!
-#define PROMPT_HISTBUF_SIZE     128
 
 typedef result (*cmdlineHandler)(int * arglist);
 
