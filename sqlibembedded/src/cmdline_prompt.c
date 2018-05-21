@@ -39,7 +39,7 @@ SOFTWARE.
 #define	ASCII_CR    (13)    // Carriage Return
 #define ASCII_ESC   (27)    // escape
 
-#define WRAP(value, mask) ((value) & ((mask) - 1))
+#define WRAP_HISTORY(value) ((value) & (PROMPT_HISTBUF_SIZE - 1))
 
 typedef enum
 {
@@ -63,40 +63,30 @@ void promptInit()
     sqmemset(promptHistory, 0, sizeof(promptHistory));
 }
 
+static void promptHistoryDel()
+{
+    // zero out the character
+    promptHistory[promptHistoryHead] = 0;
+    promptHistoryHead = WRAP_HISTORY(promptHistoryHead - 1);
+}
+
 static void promptHistoryClearLast()
 {
     while(promptHistory[promptHistoryTail] != 0)
     {
         promptHistory[promptHistoryTail] = 0;
-        promptHistoryTail = WRAP(promptHistoryTail + 1, PROMPT_HISTBUF_SIZE);
+        promptHistoryTail = WRAP_HISTORY(promptHistoryTail + 1);
     }
     // end reached, skip zero char
-    promptHistoryTail = WRAP(promptHistoryTail + 1, PROMPT_HISTBUF_SIZE);
-}
-
-static void promptHistoryHistoryPrev(void)
-{
-    
-}
-
-static void promptHistoryHistoryNext(void)
-{
-    
+    promptHistoryTail = WRAP_HISTORY(promptHistoryTail + 1);
 }
 
 static void promptHistoryAdd(char c)
 {
     promptHistory[promptHistoryHead] = c;
-    promptHistoryHead = WRAP(promptHistoryHead + 1, PROMPT_HISTBUF_SIZE);
+    promptHistoryHead = WRAP_HISTORY(promptHistoryHead + 1);
     if(promptHistoryHead == promptHistoryTail)
         promptHistoryClearLast();
-}
-
-static void promptHistoryDel()
-{
-    // zero out the character
-    promptHistory[promptHistoryHead] = 0;
-    promptHistoryHead = WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE);
 }
 
 /*
@@ -124,6 +114,33 @@ static void promptAdd(char c)
     promptConsoleFill++;
 }
 
+static void promptHistoryPrev(void)
+{
+    // skip zero char
+    int historySearchIndex = WRAP_HISTORY(promptHistoryCurrent - 2);
+    while(promptHistory[historySearchIndex] != 0)
+    {
+        promptHistory[historySearchIndex] = 0;
+        historySearchIndex = WRAP_HISTORY(historySearchIndex - 1);
+    }
+    promptHistoryCurrent = historySearchIndex;
+}
+
+static void promptHistoryNext(void)
+{
+    
+}
+
+static void promptHistoryShow(void)
+{
+    int historyIndex = promptHistoryCurrent;
+    while(promptHistory[historyIndex] != 0)
+    {
+        promptAdd(promptHistory[historyIndex]);
+        historyIndex++;
+    }
+}
+
 /*
  *  Prompt handler, call periodically from your mainloop
  */
@@ -141,7 +158,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
             switch(c)
             {
                 case ASCII_BS:
-                    if(promptHistory[WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE)] != 0)
+                    if(promptHistory[WRAP_HISTORY(promptHistoryHead - 1)] != 0)
                     {
                         promptDel(1);
                     }
@@ -154,12 +171,12 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                     // terminate string
                     *p = 0;
                     // scan backward through history and copy backwards to the buffer
-                    int i = WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE);
+                    int i = WRAP_HISTORY(promptHistoryHead - 1);
                     while ((promptHistory[i] != 0) && (p >= newcommand))
                     {
                         p--;
                         *p = promptHistory[i];
-                        i = WRAP(i - 1, PROMPT_HISTBUF_SIZE);
+                        i = WRAP_HISTORY(i - 1);
                     }
                     // call handler
                     cmdlineParse(cmdLineEntries, p);
@@ -192,37 +209,17 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                             promptState = promptNormal;
                         break;
                         case ansiCursorUp:
-                            // search previous command by using promptHistoryCurrent
-                            // if available
-                            // add to current prompt
-                        
-                        
-                            // clear prompt/history
-                            promptDel(promptConsoleFill);
-                            promptConsoleFill = 0;
-                            // now find previous command
-                            // skip zero terminate of previous command and empty char
-                            int indexSearchPrev = WRAP(promptHistoryHead - 2, PROMPT_HISTBUF_SIZE);
-                            if(indexSearchPrev != promptHistoryTail)
+                            // history available?
+                            if(promptHistoryCurrent != promptHistoryTail)
                             {
-                                while((promptHistory[indexSearchPrev] != 0))
-                                {
-                                    // find previous in history
-                                    indexSearchPrev = WRAP(indexSearchPrev - 1, PROMPT_HISTBUF_SIZE);
-                                }
-                                // end found, put on prompt and history
-                                indexSearchPrev = WRAP(indexSearchPrev + 1, PROMPT_HISTBUF_SIZE);
-                                while(promptHistory[indexSearchPrev] != 0)
-                                {
-                                    promptAdd(promptHistory[indexSearchPrev]);
-                                    indexSearchPrev = WRAP(indexSearchPrev + 1, PROMPT_HISTBUF_SIZE);
-                                }
+                                // search previous command by using promptHistoryCurrent
+                                promptHistoryPrev();
+                                // clear prompt/history
+                                promptDel(promptConsoleFill);
+                                promptConsoleFill = 0;
+                                // add to current prompt
+                                promptHistoryShow();
                             }
-                            else
-                            {
-                                // we are at the end of history, do nothing
-                            }
-                            // put in newcommand and on the prompt
                             promptState = promptNormal;
                         break;
                         case ansiCursorDown:
