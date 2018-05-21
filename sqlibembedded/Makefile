@@ -1,6 +1,6 @@
 # Project settings
 BIN_NAME = libsqlibembedded
-SOURCES = src/cmdline.c src/print.c \
+SOURCES = src/print.c \
 src/strlen.c src/strtok.c src/strcmp.c src/strncpy.c \
 src/memchr.c src/memcmp.c src/memcpy.c src/memmove.c src/memset.c \
 src/strto.c \
@@ -9,6 +9,7 @@ src/isspace.c src/isxdigit.c \
 src/empty_stdio.c src/getchar.c  src/putchar.c src/puts.c \
 src/fgetc.c src/fgets.c src/fputc.c src/fputs.c \
 src/empty_logfs.c src/logfs.c \
+src/cmdline.c src/cmdline_cmd.c src/cmdline_prompt.c \
 src/parse_ansi.c
 INCLUDES = -Iinc
 

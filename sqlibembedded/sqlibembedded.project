@@ -6,6 +6,8 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
+    <File Name="src/cmdline_prompt.c"/>
+    <File Name="src/cmdline_cmd.c"/>
     <File Name="src/parse_ansi.c"/>
     <File Name="src/queue_compact.c"/>
     <File Name="src/logfs.c"/>
@@ -49,6 +51,8 @@
     <File Name="src/memcpy.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/cmdline_prompt.h"/>
+    <File Name="inc/cmdline_cmd.h"/>
     <File Name="inc/parse_ansi.h"/>
     <File Name="inc/queue_macro.h"/>
     <File Name="inc/queue_compact.h"/>

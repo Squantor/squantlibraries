@@ -13,7 +13,7 @@ int testCmdlineLoop(int timeout)
 {
     int counts = timeout;
     do {
-        cmdlineProcess(cmdLineEntries);
+        promptProcess(cmdLineEntries);
         counts--;
     } while(mockStdinStatus() == queueNotEmpty && (counts > 0));
     return counts;
@@ -23,7 +23,7 @@ void testCmdlineSetup(void)
 {
    mockStdinReset();
    mockStdoutReset();
-   cmdlineInit();
+   promptInit();
 }
 
 void testCmdlineTeardown(void) 

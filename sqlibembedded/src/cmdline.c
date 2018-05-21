@@ -35,8 +35,7 @@ SOFTWARE.
 #define	ASCII_CR    (13)    // Carriage Return
 #define ASCII_ESC   (27)    // escape
 
-#define INC_WRAP(value, mask) (((value) + 1) & ((mask) - 1))
-#define DEC_WRAP(value, mask) (((value) - 1) & ((mask) - 1))
+#define WRAP(value, mask) ((value) & ((mask) - 1))
 
 typedef enum
 {
@@ -44,54 +43,58 @@ typedef enum
     promptEscape,
 } promptState_t;
 
-static char historyBuffer[CMDLINE_BUFSIZE];
-static int historyIndexEnd;
-static int historyIndexBegin;
+static char promptHistory[PROMPT_HISTBUF_SIZE];
+static int promptHistoryHead;
+static int promptHistoryTail;
 // where are we pointing when going through history
-static int historyIndexIndex;
-
-
-// how many characters are there on the prompt?
-static uint16_t promptFill = 0;
-
-
+static int promptHistoryPrevious;
+// how many characters printed on the console prompt?
+static uint16_t promptConsoleFill = 0;
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line);
 
-void cmdlineInit()
+void promptInit()
 {
-    historyIndexBegin = historyIndexEnd = 0;
-    sqmemset(historyBuffer, 0, sizeof(historyBuffer));
+    promptHistoryTail = promptHistoryHead = 0;
+    sqmemset(promptHistory, 0, sizeof(promptHistory));
 }
 
-void cmdlineBufferAdd(char c)
+static void promptHistoryAdd(char c)
 {
-    historyBuffer[historyIndexEnd] = c;
-    historyIndexEnd = INC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
+    promptHistory[promptHistoryHead] = c;
+    promptHistoryHead = WRAP(promptHistoryHead + 1, PROMPT_HISTBUF_SIZE);
 }
 
-void cmdlineBufferRemove()
+static void promptHistoryDel()
 {
     // zero out the character
-    historyBuffer[historyIndexEnd] = 0;
-    historyIndexEnd = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
+    promptHistory[promptHistoryHead] = 0;
+    promptHistoryHead = WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE);
 }
 
-void promptEraseCharacters(uint16_t count)
+/*
+ * Delete characters prompt and history
+ */
+static void promptDel(uint16_t count)
 {
     for(uint16_t i = 0; i < count; i++)
     {
+        promptHistoryDel();
         sqputchar(ASCII_BS);
         sqputchar(ASCII_SPACE);
         sqputchar(ASCII_BS);        
-        promptFill--;
+        promptConsoleFill--;
     }
 }
 
-void promptAddCharacter(char c)
+/*
+ * Add characters to prompt and history
+ */
+static void promptAdd(char c)
 {
+    promptHistoryAdd(c);
     sqputchar(c);
-    promptFill++;
+    promptConsoleFill++;
 }
 
 result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
@@ -99,7 +102,7 @@ result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
     char *strtok_state;
     char commandline[CMDLINE_MAX_LENGTH];
     sqstrncpy(commandline, line, sizeof(commandline));
-    char *trigger = sqstrtok_r(commandline,STRTOK_DELIM, &strtok_state);
+    char *trigger = sqstrtok_r(commandline, STRTOK_DELIM, &strtok_state);
     // trigger can be NULL when you just push enter
     if(trigger != NULL)
     {
@@ -112,7 +115,7 @@ result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
                 // matched, parse arguments of commandline
                 for(int j = 0; j < cmdLineEntries->argCnt; j++)
                 {
-                    char *arg = sqstrtok_r(NULL,STRTOK_DELIM, &strtok_state);
+                    char *arg = sqstrtok_r(NULL, STRTOK_DELIM, &strtok_state);
                     if(arg == NULL)
                         return cmdlineInvalidArg;
                     arguments[j] = sqstrstol(arg);
@@ -127,8 +130,10 @@ result cmdlineParse(const cmdLineEntry * cmdLineEntries, char * line)
     return cmdlineNotFound;
 }
 
-// call periodically to fetch received characters
-void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
+/*
+ *  Prompt handler, call periodically from your mainloop
+ */
+void promptProcess(const cmdLineEntry * cmdLineEntries)
 {
     char newcommand[CMDLINE_MAX_LENGTH];
     static promptState_t promptState = promptNormal;
@@ -142,31 +147,31 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
             switch(c)
             {
                 case ASCII_BS:
-                    if(historyBuffer[DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE)] != 0)
+                    if(promptHistory[WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE)] != 0)
                     {
-                        cmdlineBufferRemove();
-                        promptEraseCharacters(1);
+                        promptHistoryDel();
+                        promptDel(1);
                     }
                     break;
                 case ASCII_CR:
                     sqputchar(ASCII_CR);
-                    promptFill = 0;
+                    promptConsoleFill = 0;
                     // note, we are filling the buffer end to start,
                     char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
                     // terminate string
                     *p = 0;
                     // scan backward through history and copy backwards to the buffer
-                    int i = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
-                    while ((historyBuffer[i] != 0) && (p >= newcommand))
+                    int i = WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE);
+                    while ((promptHistory[i] != 0) && (p >= newcommand))
                     {
                         p--;
-                        *p = historyBuffer[i];
-                        i = DEC_WRAP(i, CMDLINE_BUFSIZE);
+                        *p = promptHistory[i];
+                        i = WRAP(i - 1, PROMPT_HISTBUF_SIZE);
                     }
                     // call handler
                     cmdlineParse(cmdLineEntries, p);
                     // terminate the history buffer
-                    cmdlineBufferAdd(0);
+                    promptHistoryAdd(0);
                     break;
                 case ASCII_ESC:
                     ansiParse(c);
@@ -175,8 +180,7 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                 case EOF:
                     break;
                 default:
-                    cmdlineBufferAdd(c);
-                    promptAddCharacter(c);
+                    promptAdd(c);
                     break;
             }
         break;
@@ -194,31 +198,31 @@ void cmdlineProcess(const cmdLineEntry * cmdLineEntries)
                         break;
                         case ansiCursorUp:
                             // clear out current commandline
-                            promptEraseCharacters(promptFill);
-                            promptFill = 0;
-                            int indexClearHist = DEC_WRAP(historyIndexEnd, CMDLINE_BUFSIZE);
-                            while(historyBuffer[indexClearHist] != 0)
+                            promptDel(promptConsoleFill);
+                            promptConsoleFill = 0;
+                            // TODO: review this loop as you can use remove char from hist for this
+                            int indexClearHist = WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE);
+                            while(promptHistory[indexClearHist] != 0)
                             {
-                                historyBuffer[indexClearHist] = 0;
-                                indexClearHist = DEC_WRAP(indexClearHist, CMDLINE_BUFSIZE);
+                                promptHistory[indexClearHist] = 0;
+                                indexClearHist = WRAP(indexClearHist - 1, PROMPT_HISTBUF_SIZE);
                             }
-                            historyIndexEnd = INC_WRAP(indexClearHist, CMDLINE_BUFSIZE);
+                            promptHistoryHead = WRAP(indexClearHist + 1, PROMPT_HISTBUF_SIZE);
                             // cleared buffer, lets continue from here
-                            int indexSearchPrev = DEC_WRAP(indexClearHist, CMDLINE_BUFSIZE);
-                            if(indexSearchPrev != historyIndexBegin)
+                            int indexSearchPrev = WRAP(indexClearHist - 1, PROMPT_HISTBUF_SIZE);
+                            if(indexSearchPrev != promptHistoryTail)
                             {
-                                while((historyBuffer[indexSearchPrev] != 0))
+                                while((promptHistory[indexSearchPrev] != 0))
                                 {
                                     // find previous in history
-                                    indexSearchPrev = DEC_WRAP(indexSearchPrev, CMDLINE_BUFSIZE);
+                                    indexSearchPrev = WRAP(indexSearchPrev - 1, PROMPT_HISTBUF_SIZE);
                                 }
                                 // end found, put on prompt and history
-                                indexSearchPrev = INC_WRAP(indexSearchPrev, CMDLINE_BUFSIZE);
-                                while(historyBuffer[indexSearchPrev] != 0)
+                                indexSearchPrev = WRAP(indexSearchPrev + 1, PROMPT_HISTBUF_SIZE);
+                                while(promptHistory[indexSearchPrev] != 0)
                                 {
-                                    cmdlineBufferAdd(historyBuffer[indexSearchPrev]);
-                                    promptAddCharacter(historyBuffer[indexSearchPrev]);
-                                    indexSearchPrev = INC_WRAP(indexSearchPrev, CMDLINE_BUFSIZE);
+                                    promptAdd(promptHistory[indexSearchPrev]);
+                                    indexSearchPrev = WRAP(indexSearchPrev + 1, PROMPT_HISTBUF_SIZE);
                                 }
                             }
                             else
