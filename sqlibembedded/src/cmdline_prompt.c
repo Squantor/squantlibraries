@@ -50,19 +50,46 @@ typedef enum
 static char promptHistory[PROMPT_HISTBUF_SIZE];
 static int promptHistoryHead;
 static int promptHistoryTail;
+// pointer to start of current command
+static int promptHistoryCurrent;
 // how many characters printed on the console prompt?
 static uint16_t promptConsoleFill = 0;
 
 void promptInit()
 {
-    promptHistoryTail = promptHistoryHead = 0;
+    promptHistoryCurrent = 0;
+    promptHistoryTail = 0;
+    promptHistoryHead = 0;
     sqmemset(promptHistory, 0, sizeof(promptHistory));
+}
+
+static void promptHistoryClearLast()
+{
+    while(promptHistory[promptHistoryTail] != 0)
+    {
+        promptHistory[promptHistoryTail] = 0;
+        promptHistoryTail = WRAP(promptHistoryTail + 1, PROMPT_HISTBUF_SIZE);
+    }
+    // end reached, skip zero char
+    promptHistoryTail = WRAP(promptHistoryTail + 1, PROMPT_HISTBUF_SIZE);
+}
+
+static void promptHistoryHistoryPrev(void)
+{
+    
+}
+
+static void promptHistoryHistoryNext(void)
+{
+    
 }
 
 static void promptHistoryAdd(char c)
 {
     promptHistory[promptHistoryHead] = c;
     promptHistoryHead = WRAP(promptHistoryHead + 1, PROMPT_HISTBUF_SIZE);
+    if(promptHistoryHead == promptHistoryTail)
+        promptHistoryClearLast();
 }
 
 static void promptHistoryDel()
@@ -116,7 +143,6 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                 case ASCII_BS:
                     if(promptHistory[WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE)] != 0)
                     {
-                        promptHistoryDel();
                         promptDel(1);
                     }
                     break;
@@ -139,6 +165,8 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                     cmdlineParse(cmdLineEntries, p);
                     // terminate the history buffer
                     promptHistoryAdd(0);
+                    // update current command
+                    promptHistoryCurrent = promptHistoryHead;
                     break;
                 case ASCII_ESC:
                     ansiParse(c);
@@ -164,19 +192,17 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                             promptState = promptNormal;
                         break;
                         case ansiCursorUp:
-                            // clear out current commandline
+                            // search previous command by using promptHistoryCurrent
+                            // if available
+                            // add to current prompt
+                        
+                        
+                            // clear prompt/history
                             promptDel(promptConsoleFill);
                             promptConsoleFill = 0;
-                            // TODO: review this loop as you can use remove char from hist for this
-                            int indexClearHist = WRAP(promptHistoryHead - 1, PROMPT_HISTBUF_SIZE);
-                            while(promptHistory[indexClearHist] != 0)
-                            {
-                                promptHistory[indexClearHist] = 0;
-                                indexClearHist = WRAP(indexClearHist - 1, PROMPT_HISTBUF_SIZE);
-                            }
-                            promptHistoryHead = WRAP(indexClearHist + 1, PROMPT_HISTBUF_SIZE);
-                            // cleared buffer, lets continue from here
-                            int indexSearchPrev = WRAP(indexClearHist - 1, PROMPT_HISTBUF_SIZE);
+                            // now find previous command
+                            // skip zero terminate of previous command and empty char
+                            int indexSearchPrev = WRAP(promptHistoryHead - 2, PROMPT_HISTBUF_SIZE);
                             if(indexSearchPrev != promptHistoryTail)
                             {
                                 while((promptHistory[indexSearchPrev] != 0))
