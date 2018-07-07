@@ -106,10 +106,7 @@ MU_TEST(testCmdlineIgnoreEscapes)
 }
 
 MU_TEST(testCmdlinePreviousEmpty) 
-{
-    char cmdline[16];
-    char cmdoutput[64];
-   
+{  
     // emit the up button escape sequence
     mu_check(noError == mockStdinPuts("\e[A"));
     mu_check(12 == testCmdlineLoop(15));
@@ -177,6 +174,94 @@ MU_TEST(testCmdlineMultiPrevious)
     mu_check(queueEmpty == mockStdoutStatus()); 
 }
 
+MU_TEST(testCmdlinePreviousNext)
+{
+    char prompt[16];
+    mockStdinPuts("test 51 99\r");
+    testCmdlineLoop(15);
+    // input a something on the prompt, should get erased
+    mockStdinPuts("foo\r");
+    testCmdlineLoop(5);
+    mockStdoutClear();
+   
+    // emit the up button escape sequence, multiple times
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "foo") == 0);
+
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "test 51 99") == 0);  
+
+    mu_check(noError == mockStdinPuts("\e[B"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "foo") == 0);
+  
+    mu_check(queueEmpty == mockStdoutStatus()); 
+}
+
+MU_TEST(testCmdlineMultiPreviousMultiNext)
+{
+    char prompt[16];
+    mockStdinPuts("test 51 99\r");
+    testCmdlineLoop(15);
+    mockStdinPuts("foo\r");
+    testCmdlineLoop(5);
+    mockStdinPuts("bar\r");
+    testCmdlineLoop(5);
+    mockStdoutClear();
+   
+    // emit the up button escape sequence, multiple times
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "foo") == 0);
+    
+    for(int i = 0; i < 10; i++)
+    {
+        mu_check(noError == mockStdinPuts("\e[A"));
+        mu_check(12 == testCmdlineLoop(15));
+        mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+        mu_check(strcmp(prompt, "test 51 99") == 0);  
+
+        mu_check(noError == mockStdinPuts("\e[B"));
+        mu_check(12 == testCmdlineLoop(15));
+        mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+        mu_check(strcmp(prompt, "foo") == 0);
+        
+    }
+    mu_check(queueEmpty == mockStdoutStatus()); 
+}
+
+MU_TEST(testCmdlineMultiNextBufferExceed)
+{
+    char prompt[16];
+    char teststring[32];
+     
+    // emit a bunch of commands to fill the history buffer up completely
+    for(int i = 0; i < 10; i++)
+    {
+        sprintf(teststring, "blaat %d\r",i);
+        testCmdlineLoop(10);
+        mockStdinPuts(teststring);
+        mockStdoutClear();
+    }
+    // check if we get what we expect
+    for(int i = 0; i < 10; i++)
+    {
+        sprintf(teststring, "blaat %d\r",i);
+        mu_check(noError == mockStdinPuts("\e[A"));
+        mu_check(12 == testCmdlineLoop(15));
+        mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+        mu_check(strcmp(prompt, teststring) == 0);
+    }    
+    
+    mu_check(queueEmpty == mockStdoutStatus()); 
+}
+
 MU_TEST_SUITE(testCmdline) 
 {
     MU_SUITE_CONFIGURE(&testCmdlineSetup, &testCmdlineTeardown);
@@ -190,8 +275,9 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlinePrevious);
     MU_RUN_TEST(testCmdlinePreviousNonEmptyPrompt);
     MU_RUN_TEST(testCmdlineMultiPrevious);
-    // MU_RUN_TEST(testCmdlinePreviousNext);
-    // MU_RUN_TEST(testCmdlineMultiPreviousMultiNext);
+    MU_RUN_TEST(testCmdlinePreviousNext);
+    MU_RUN_TEST(testCmdlineMultiPreviousMultiNext);
+    MU_RUN_TEST(testCmdlineMultiNextBufferExceed);
 }
 
 int testCmdlineSuite()
