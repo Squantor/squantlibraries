@@ -119,6 +119,7 @@ static void promptHistoryPrev(void)
 {
     // skip zero char
     int historySearchIndex = WRAP_HISTORY(promptHistoryCurrent - 2);
+    // search end of string
     while(promptHistory[historySearchIndex] != ASCII_NUL)
         historySearchIndex = WRAP_HISTORY(historySearchIndex - 1);
     // point to begin
@@ -127,7 +128,18 @@ static void promptHistoryPrev(void)
 
 static void promptHistoryNext(void)
 {
-    
+    int historySearchIndex = promptHistoryCurrent;
+    // search next command
+    while(  (promptHistory[historySearchIndex] != ASCII_NUL) ||
+            // and check if you reach the end
+            (historySearchIndex != promptHistoryHead) ) 
+        historySearchIndex = WRAP_HISTORY(historySearchIndex + 1);
+    // check again if we have a next one
+    if(historySearchIndex != promptHistoryHead)
+    {
+        // yes, update current history pointer
+        promptHistoryCurrent = WRAP_HISTORY(historySearchIndex + 1);
+    }
 }
 
 static void promptHistoryShow(void)
@@ -223,7 +235,13 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                         break;
                         case ansiCursorDown:
                             // TODO go to next command if available
-                            // check if you hit promptHistoryHead from promptHistoryCurrent without a nul in between
+                            // search next command by using promptHistoryCurrent
+                            promptHistoryNext();
+                            // clear prompt/history
+                            promptDel(promptConsoleFill);
+                            promptConsoleFill = 0;
+                            // add to current prompt
+                            promptHistoryShow();
                             promptState = promptNormal;
                         break;
                         default:
