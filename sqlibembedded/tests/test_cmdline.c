@@ -218,19 +218,19 @@ MU_TEST(testCmdlineMultiPreviousMultiNext)
     mu_check(noError == mockStdinPuts("\e[A"));
     mu_check(12 == testCmdlineLoop(15));
     mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
-    mu_check(strcmp(prompt, "foo") == 0);
+    mu_check(strcmp(prompt, "bar") == 0);
     
     for(int i = 0; i < 10; i++)
     {
         mu_check(noError == mockStdinPuts("\e[A"));
         mu_check(12 == testCmdlineLoop(15));
         mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
-        mu_check(strcmp(prompt, "test 51 99") == 0);  
+        mu_check(strcmp(prompt, "foo") == 0);  
 
         mu_check(noError == mockStdinPuts("\e[B"));
         mu_check(12 == testCmdlineLoop(15));
         mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
-        mu_check(strcmp(prompt, "foo") == 0);
+        mu_check(strcmp(prompt, "bar") == 0);
         
     }
     mu_check(queueEmpty == mockStdoutStatus()); 
@@ -242,22 +242,59 @@ MU_TEST(testCmdlineMultiNextBufferExceed)
     char teststring[32];
      
     // emit a bunch of commands to fill the history buffer up completely
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 20; i++)
     {
         sprintf(teststring, "blaat %d\r",i);
-        testCmdlineLoop(10);
         mockStdinPuts(teststring);
-        mockStdoutClear();
+        testCmdlineLoop(15);
     }
+    mockStdoutClear();
     // check if we get what we expect
-    for(int i = 0; i < 10; i++)
+    for(int i = 19; i > 6; i--)
     {
-        sprintf(teststring, "blaat %d\r",i);
+        printf("%d \n",i);
+        sprintf(teststring, "blaat %d",i);
         mu_check(noError == mockStdinPuts("\e[A"));
         mu_check(12 == testCmdlineLoop(15));
         mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
         mu_check(strcmp(prompt, teststring) == 0);
-    }    
+    }
+    
+    // reached end, should be no command left anymore
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "") == 0);
+    
+    // press enter just to clear
+    mockStdinPuts("\r");
+    testCmdlineLoop(1);
+    mockStdoutClear();
+    
+    // emit a bunch of commands to fill the history buffer up completely
+    for(int i = 80; i < 100; i++)
+    {
+        sprintf(teststring, "blaat %d\r",i);
+        mockStdinPuts(teststring);
+        testCmdlineLoop(15);
+    }
+    
+    // check if we get what we expect
+    for(int i = 99; i > 78; i--)
+    {
+        printf("%d \n",i);
+        sprintf(teststring, "blaat %d",i);
+        mu_check(noError == mockStdinPuts("\e[A"));
+        mu_check(12 == testCmdlineLoop(15));
+        mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+        mu_check(strcmp(prompt, teststring) == 0);
+    }
+    
+    // reached end, should be no command left anymore
+    mu_check(noError == mockStdinPuts("\e[A"));
+    mu_check(12 == testCmdlineLoop(15));
+    mu_check(mockStdoutGets(prompt, sizeof(prompt)) == prompt);
+    mu_check(strcmp(prompt, "") == 0);
     
     mu_check(queueEmpty == mockStdoutStatus()); 
 }

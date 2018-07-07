@@ -130,7 +130,7 @@ static void promptHistoryNext(void)
 {
     int historySearchIndex = promptHistoryCurrent;
     // search next command
-    while(  (promptHistory[historySearchIndex] != ASCII_NUL) ||
+    while(  (promptHistory[historySearchIndex] != ASCII_NUL) &&
             // and check if you reach the end
             (historySearchIndex != promptHistoryHead) ) 
         historySearchIndex = WRAP_HISTORY(historySearchIndex + 1);
@@ -148,7 +148,7 @@ static void promptHistoryShow(void)
     while(promptHistory[historyIndex] != ASCII_NUL)
     {
         promptAdd(promptHistory[historyIndex]);
-        historyIndex++;
+        historyIndex = WRAP_HISTORY(historyIndex + 1);
     }
 }
 
