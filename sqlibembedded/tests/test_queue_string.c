@@ -29,7 +29,7 @@ MU_TEST(testEnqueue)
     char *stringEmpty = "";
     char stringMassive[128+20];
     char *stringNormal = "Hello World\n";
-    char *stringNumeric[16];
+    char stringNumeric[16];
     memset(stringMassive, 'a', sizeof(stringMassive)-1);
     // zero terminate massive string
     stringMassive[sizeof(stringMassive)-1] = 0;
@@ -56,16 +56,34 @@ MU_TEST(testDequeue)
 
 MU_TEST(testEnqueueDequeue) 
 {
-
+    char stringInput[] = "Hello World\n";
+    char stringOutput[32];
+    mu_check(queueStringEnqueue(&testQueue, stringInput) == noError);
+    mu_check(queueStringDequeue(&testQueue, stringOutput) == noError);
+    mu_check(strcmp(stringInput, stringOutput) == 0);
 }
 
 MU_TEST(testEnqueueDequeueOverwrite) 
 {
-
+    char stringNumeric[16];
+    char stringOutput[32];
+    // add so many strings you overflow the buffer a few times
+    for(int i = 0; i < 200; i++)
+    {
+        sprintf(stringNumeric,"%d",i);
+        mu_check(queueStringEnqueue(&testQueue, stringNumeric) == noError);
+    }
+    
+    for(int i = 150; i < 200; i++)
+    {
+        sprintf(stringNumeric,"%d",i);
+        mu_check(queueStringDequeue(&testQueue, stringOutput) == noError);
+        mu_check(strcmp(stringNumeric, stringOutput) == 0); 
+    }
 }
 
 
-MU_TEST_SUITE(test_getchar) 
+MU_TEST_SUITE(testSuiteQueueString) 
 {
     MU_SUITE_CONFIGURE(&testSetupQueueString, &testTeardownQueueString);
     MU_RUN_TEST(testEnqueue);
@@ -77,7 +95,7 @@ MU_TEST_SUITE(test_getchar)
 
 int testQueueString()
 {
-    MU_RUN_SUITE(test_getchar);
+    MU_RUN_SUITE(testSuiteQueueString);
     MU_REPORT();
     return minunit_fail;
 }
