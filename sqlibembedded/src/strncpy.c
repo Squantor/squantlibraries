@@ -17,7 +17,7 @@ char * sqstrncpy(char * restrict s1, const char * restrict s2, size_t n)
 char * sqstrcpy(char * restrict s1, const char * restrict s2)
 {
     char * r = s1;
-    while(*s1++ = *s2++) 
+    while((*s1++ = *s2++))
         ;
     return r;
 }
