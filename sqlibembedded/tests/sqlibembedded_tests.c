@@ -7,6 +7,7 @@
 #include <test_getchar.h>
 #include <test_cmdline.h>
 #include <test_parse_ansi.h>
+#include <test_queue_string.h>
 
 
 int main(int argc, char *argv[]) 
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
     failedTests += testGetcharSuite();
     failedTests += testCmdlineSuite();
     failedTests += testParseAnsiSuite();
+    failedTests += testQueueString();
     if(failedTests > 0)
     {
         printf("ERROR: %d tests failed\n", failedTests);
