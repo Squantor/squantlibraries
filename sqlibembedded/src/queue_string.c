@@ -80,9 +80,8 @@ result queueStringEnqueue(t_queueString *queue, char * s)
         }
     }
     
-    // TODO, refactor into strcpy
     sqstrcpy(&(queue->data[indexNew]), s);
-    // point to next spare location
+    // point to next space
     queue->head = indexNew + stringSize;
     return noError;
 }
