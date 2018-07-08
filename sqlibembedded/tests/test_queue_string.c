@@ -74,14 +74,40 @@ MU_TEST(testEnqueueDequeueOverwrite)
         mu_check(queueStringEnqueue(&testQueue, stringNumeric) == noError);
     }
     
-    for(int i = 150; i < 200; i++)
+    for(int i = 170; i < 200; i++)
     {
         sprintf(stringNumeric,"%d",i);
         mu_check(queueStringDequeue(&testQueue, stringOutput) == noError);
         mu_check(strcmp(stringNumeric, stringOutput) == 0); 
     }
+    mu_check(queueStringDequeue(&testQueue, stringOutput) == queueEmpty);
 }
 
+MU_TEST(testGetFirst) 
+{
+    uint16_t idx;
+    mu_check(queueStringFirst(NULL, NULL, NULL) == invalidArg);
+    mu_check(queueStringFirst(&testQueue, NULL, NULL) == invalidArg);
+    mu_check(queueStringFirst(&testQueue, &idx, NULL) == invalidArg);
+    
+    char stringInput[] = "Hello World\n";
+    char stringOutput[32];
+    mu_check(queueStringEnqueue(&testQueue, stringInput) == noError);
+    mu_check(queueStringFirst(&testQueue, &idx, stringOutput) == noError);
+    mu_check(strcmp(stringInput, stringOutput) == 0);
+    mu_check(queueStringDequeue(&testQueue, stringOutput) == noError);
+    mu_check(strcmp(stringInput, stringOutput) == 0);
+}
+
+MU_TEST(testGetPrev) 
+{
+    
+}
+
+MU_TEST(testGetNext) 
+{
+    
+}
 
 MU_TEST_SUITE(testSuiteQueueString) 
 {
@@ -90,7 +116,9 @@ MU_TEST_SUITE(testSuiteQueueString)
     MU_RUN_TEST(testDequeue);
     MU_RUN_TEST(testEnqueueDequeue);
     MU_RUN_TEST(testEnqueueDequeueOverwrite);
-    // TODO a test that checks if the tail overtake does not match end of buffer garbage
+    MU_RUN_TEST(testGetFirst);
+    MU_RUN_TEST(testGetPrev);
+    MU_RUN_TEST(testGetNext);
 }
 
 int testQueueString()

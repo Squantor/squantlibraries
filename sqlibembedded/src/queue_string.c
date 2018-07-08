@@ -110,7 +110,25 @@ result queueStringDequeue(t_queueString *queue, char * s)
     *s = 0;
     // then scan terminators until we find something or head is reached
     while(queue->data[newtail] == 0)
-        newtail++;
+        newtail = WRAP(newtail+1, queue->mask);
     queue->tail = newtail;
+    return noError;
+}
+
+result queueStringFirst(t_queueString * queue, uint16_t * i, char * s)
+{
+    if((queue == NULL) || (i == NULL) || (s == NULL))
+        return invalidArg;
+    if(queue->head == queue->tail)
+        return queueEmpty;
+    // search from head down
+    uint16_t indexNew = WRAP(queue->head - 2, queue->mask);
+    while(queue->data[indexNew] != 0)
+        indexNew = WRAP(indexNew - 1, queue->mask);
+    // point to begin of string
+    indexNew = WRAP(indexNew + 1, queue->mask);
+    // copy over string to s
+    sqstrcpy(s, &(queue->data[indexNew]));
+    *i = indexNew;
     return noError;
 }
