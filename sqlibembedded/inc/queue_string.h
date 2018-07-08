@@ -6,6 +6,7 @@
 
 typedef struct queueString
 {
+    // mask be power of two!
     const uint16_t    mask;
     uint16_t    head;
     uint16_t    tail;
