@@ -72,7 +72,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make debug</BuildCommand>
+        <BuildCommand>make debug -j5</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
@@ -111,7 +111,7 @@
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make release</BuildCommand>
+        <BuildCommand>make release -j5</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
