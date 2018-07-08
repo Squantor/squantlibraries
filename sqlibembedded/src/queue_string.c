@@ -24,4 +24,12 @@ SOFTWARE.
 
 #include <results.h>
 #include <queue_string.h>
+#include <sqstring.h>
 
+result queueStringEnqueue(t_queueString queue, char * s)
+{
+    // check if the string is longer then the queue
+    // add string while updating that the tail gets updated
+    // 
+    return noError;
+}

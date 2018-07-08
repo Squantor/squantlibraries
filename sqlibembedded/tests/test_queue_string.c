@@ -1,4 +1,5 @@
 #include <minunit.h>
+#include <string.h>
 #include <results.h>
 #include <queue_string.h>
 #include <test_queue_string.h>
@@ -8,7 +9,10 @@ t_queueString testQueue = {.mask = sizeof(testQueueStringBuffer)-1, .head = 0, .
 
 void testSetupQueueString(void) 
 {
-
+    // clear queue
+    testQueue.head = 0;
+    testQueue.tail = 0;
+    memset(testQueueStringBuffer, 0, sizeof(testQueueStringBuffer));
 }
 
 void testTeardownQueueString(void) 
@@ -18,7 +22,10 @@ void testTeardownQueueString(void)
 
 MU_TEST(testEnqueue) 
 {
-
+    // add empty string
+    // add too big string
+    // add string
+    // add so many strings you overflow the buffer
 }
 
 MU_TEST(testDequeue) 

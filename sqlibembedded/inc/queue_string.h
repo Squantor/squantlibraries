@@ -4,13 +4,16 @@
 #include <results.h>
 #include <stdint.h>
 
-typedef struct
+typedef struct queueString
 {
     uint16_t    mask;
     uint16_t    head;
     uint16_t    tail;
     char *      data;
 } t_queueString;
+
+// add string, if it does not fit, oldest gets deleted
+result queueStringEnqueue(t_queueString queue, char * s);
 
 
 
