@@ -15,6 +15,7 @@ typedef struct queueString
 
 // add string, if it does not fit, oldest gets deleted
 result queueStringEnqueue(t_queueString * queue, char * s);
+result queueStringDequeue(t_queueString *queue, char * s);
 
 
 

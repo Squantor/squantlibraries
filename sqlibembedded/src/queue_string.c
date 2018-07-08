@@ -44,7 +44,7 @@ result queueStringEnqueue(t_queueString *queue, char * s)
     if((stringSize) > (queue->mask - queue->head))
     {
         // no, clear the end so we do not find strings later on there
-        memset(&queue->data[queue->head], 0, queue->mask - queue->head);
+        sqmemset(&(queue->data[queue->head]), 0, queue->mask - queue->head);
         indexAdd = 0;
         // are we going overtake the tail?
         if((queue->head < queue->tail) || (queue->tail <= stringSize))
@@ -90,5 +90,27 @@ result queueStringEnqueue(t_queueString *queue, char * s)
     queue->data[indexAdd] = 0;
     // point to next spare location
     queue->head = indexAdd+1;
+    return noError;
+}
+
+result queueStringDequeue(t_queueString *queue, char * s)
+{
+    if((queue == NULL) || (s == NULL))
+        return invalidArg;
+    if(queue->head == queue->tail)
+        return queueEmpty;
+    
+    uint16_t newtail = queue->tail;
+    // dequeue into s until size or zero
+    while(queue->data[newtail] != 0)
+    {
+        *s = queue->data[newtail];
+        newtail++; s++;
+    }
+    *s = 0;
+    // then scan terminators until we find something or head is reached
+    while(queue->data[newtail] == 0)
+        newtail++;
+    queue->tail = newtail;
     return noError;
 }

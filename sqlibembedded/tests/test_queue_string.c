@@ -49,7 +49,8 @@ MU_TEST(testEnqueue)
 
 MU_TEST(testDequeue) 
 {
-
+    mu_check(queueStringDequeue(NULL, NULL) == invalidArg);
+    mu_check(queueStringDequeue(&testQueue, NULL) == invalidArg);
 }
 
 
