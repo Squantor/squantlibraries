@@ -26,9 +26,15 @@ SOFTWARE.
 #include <queue_string.h>
 #include <sqstring.h>
 
-result queueStringEnqueue(t_queueString queue, char * s)
+result queueStringEnqueue(t_queueString *queue, char * s)
 {
-    // check if the string is longer then the queue
+    if((queue == NULL) || (s == NULL))
+        return invalidArg;
+        
+    size_t a = sqstrlen(s);
+    if(!(a > 0) || !(a < queue->mask))
+        return dataInvalid;
+    
     // add string while updating that the tail gets updated
     // 
     return noError;
