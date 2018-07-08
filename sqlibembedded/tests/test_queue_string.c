@@ -92,6 +92,7 @@ MU_TEST(testGetFirst)
     
     char stringInput[] = "Hello World\n";
     char stringOutput[32];
+    mu_check(queueStringFirst(&testQueue, &idx, stringOutput) == queueEmpty);
     mu_check(queueStringEnqueue(&testQueue, stringInput) == noError);
     mu_check(queueStringFirst(&testQueue, &idx, stringOutput) == noError);
     mu_check(strcmp(stringInput, stringOutput) == 0);
@@ -102,9 +103,9 @@ MU_TEST(testGetFirst)
 MU_TEST(testGetPrev) 
 {
     uint16_t idx;
-    mu_check(queueStringFirst(NULL, NULL, NULL) == invalidArg);
-    mu_check(queueStringFirst(&testQueue, NULL, NULL) == invalidArg);
-    mu_check(queueStringFirst(&testQueue, &idx, NULL) == invalidArg);
+    mu_check(queueStringPrev(NULL, NULL, NULL) == invalidArg);
+    mu_check(queueStringPrev(&testQueue, NULL, NULL) == invalidArg);
+    mu_check(queueStringPrev(&testQueue, &idx, NULL) == invalidArg);
     
     char stringNumeric[16];
     char stringOutput[32];
@@ -130,9 +131,17 @@ MU_TEST(testGetPrev)
 MU_TEST(testGetNext) 
 {
     uint16_t idx;
-    mu_check(queueStringFirst(NULL, NULL, NULL) == invalidArg);
-    mu_check(queueStringFirst(&testQueue, NULL, NULL) == invalidArg);
-    mu_check(queueStringFirst(&testQueue, &idx, NULL) == invalidArg);    
+    mu_check(queueStringNext(NULL, NULL, NULL) == invalidArg);
+    mu_check(queueStringNext(&testQueue, NULL, NULL) == invalidArg);
+    mu_check(queueStringNext(&testQueue, &idx, NULL) == invalidArg);    
+    
+    char stringTest[] = "Hello World\n";
+    char stringNumeric[16];
+    char stringOutput[32];
+    queueStringEnqueue(&testQueue, stringTest);
+    queueStringFirst(&testQueue, &idx, stringOutput);
+    mu_check(queueStringNext((&testQueue, &idx, stringOutput) == queueEmpty));
+    // TODO previous and next tests
 }
 
 MU_TEST_SUITE(testSuiteQueueString) 

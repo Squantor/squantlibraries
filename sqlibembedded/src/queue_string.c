@@ -40,12 +40,12 @@ result queueStringEnqueue(t_queueString *queue, char * s)
     // now also add the zero terminator
     stringSize++;
     // do we have enough space to add at the head?
-    uint16_t indexAdd;
+    uint16_t indexNew;
     if((stringSize) > (queue->mask - queue->head))
     {
         // no, clear the end so we do not find strings later on there
         sqmemset(&(queue->data[queue->head]), 0, queue->mask - queue->head);
-        indexAdd = 0;
+        indexNew = 0;
         // are we going overtake the tail?
         if((queue->head < queue->tail) || (queue->tail <= stringSize))
         {
@@ -65,7 +65,7 @@ result queueStringEnqueue(t_queueString *queue, char * s)
     }
     else
     {
-        indexAdd = queue->head;
+        indexNew = queue->head;
         // are we going overtake the tail?
         if((queue->head < queue->tail) && (queue->tail <= (queue->head + stringSize)))
         {
@@ -81,15 +81,9 @@ result queueStringEnqueue(t_queueString *queue, char * s)
     }
     
     // TODO, refactor into strcpy
-    while(*s != 0)
-    {
-        queue->data[indexAdd] = *s;
-        s++; indexAdd++;
-    }
-    // zero terminate
-    queue->data[indexAdd] = 0;
+    sqstrcpy(&(queue->data[indexNew]), s);
     // point to next spare location
-    queue->head = indexAdd+1;
+    queue->head = indexNew + stringSize;
     return noError;
 }
 
@@ -155,8 +149,19 @@ result queueStringNext(t_queueString * queue, uint16_t * i, char * s)
 {
     if((queue == NULL) || (i == NULL) || (s == NULL))
         return invalidArg;
-    if(queue->head == queue->tail)
+    if((queue->head == queue->tail) || (queue->head == *i))
         return queueEmpty;
-    
+    uint16_t indexNew = *i;
+    while(queue->data[indexNew] != 0)
+        indexNew = WRAP(indexNew + 1, queue->mask);
+    // point to begin of string
+    indexNew = WRAP(indexNew + 1, queue->mask);
+    *i = indexNew;
+    if(queue->head == indexNew)
+    {
+        return queueEmpty;
+    }
+    // copy over string to s
+    sqstrcpy(s, &(queue->data[indexNew]));
     return noError;
 }
