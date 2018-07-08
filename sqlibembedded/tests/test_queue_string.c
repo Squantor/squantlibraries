@@ -29,6 +29,7 @@ MU_TEST(testEnqueue)
     char *stringEmpty = "";
     char stringMassive[128+20];
     char *stringNormal = "Hello World\n";
+    char *stringNumeric[16];
     memset(stringMassive, 'a', sizeof(stringMassive)-1);
     // zero terminate massive string
     stringMassive[sizeof(stringMassive)-1] = 0;
@@ -38,10 +39,11 @@ MU_TEST(testEnqueue)
     mu_check(queueStringEnqueue(&testQueue, stringMassive) == dataInvalid);
     // add string
     mu_check(queueStringEnqueue(&testQueue, stringNormal) == noError);
-    // add so many strings you overflow the buffer
-    for(int i; i < 20; i++)
+    // add so many strings you overflow the buffer a few times
+    for(int i = 0; i < 200; i++)
     {
-        mu_check(queueStringEnqueue(&testQueue, stringNormal) == noError);
+        sprintf(stringNumeric,"%d",i);
+        mu_check(queueStringEnqueue(&testQueue, stringNumeric) == noError);
     }
 }
 
@@ -69,6 +71,7 @@ MU_TEST_SUITE(test_getchar)
     MU_RUN_TEST(testDequeue);
     MU_RUN_TEST(testEnqueueDequeue);
     MU_RUN_TEST(testEnqueueDequeueOverwrite);
+    // TODO a test that checks if the tail overtake does not match end of buffer garbage
 }
 
 int testQueueString()
