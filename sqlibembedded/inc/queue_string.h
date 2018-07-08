@@ -19,6 +19,8 @@ result queueStringEnqueue(t_queueString * queue, char * s);
 result queueStringDequeue(t_queueString *queue, char * s);
 // get first string in queue
 result queueStringFirst(t_queueString * queue, uint16_t * index, char * s);
+// get previous string in queue from index
+result queueStringPrev(t_queueString * queue, uint16_t * i, char * s);
 
 
 

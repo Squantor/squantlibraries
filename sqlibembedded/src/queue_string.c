@@ -132,3 +132,31 @@ result queueStringFirst(t_queueString * queue, uint16_t * i, char * s)
     *i = indexNew;
     return noError;
 }
+
+result queueStringPrev(t_queueString * queue, uint16_t * i, char * s)
+{
+    if((queue == NULL) || (i == NULL) || (s == NULL))
+        return invalidArg;
+    if((queue->head == queue->tail) || (queue->tail == *i))
+        return queueEmpty;
+    // search from index
+    uint16_t indexNew = WRAP(*i - 2, queue->mask);
+    while(queue->data[indexNew] != 0)
+        indexNew = WRAP(indexNew - 1, queue->mask);
+    // point to begin of string
+    indexNew = WRAP(indexNew + 1, queue->mask);
+    // copy over string to s
+    sqstrcpy(s, &(queue->data[indexNew]));
+    *i = indexNew;    
+    return noError;
+}
+
+result queueStringNext(t_queueString * queue, uint16_t * i, char * s)
+{
+    if((queue == NULL) || (i == NULL) || (s == NULL))
+        return invalidArg;
+    if(queue->head == queue->tail)
+        return queueEmpty;
+    
+    return noError;
+}

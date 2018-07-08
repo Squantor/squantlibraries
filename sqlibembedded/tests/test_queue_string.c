@@ -101,12 +101,38 @@ MU_TEST(testGetFirst)
 
 MU_TEST(testGetPrev) 
 {
+    uint16_t idx;
+    mu_check(queueStringFirst(NULL, NULL, NULL) == invalidArg);
+    mu_check(queueStringFirst(&testQueue, NULL, NULL) == invalidArg);
+    mu_check(queueStringFirst(&testQueue, &idx, NULL) == invalidArg);
     
+    char stringNumeric[16];
+    char stringOutput[32];
+    // add a bunch of strings
+    for(int i = 0; i < 30; i++)
+    {
+        sprintf(stringNumeric,"%d",i);
+        queueStringEnqueue(&testQueue, stringNumeric);
+    }
+    
+    mu_check(queueStringFirst(&testQueue, &idx, stringOutput) == noError);
+    mu_check(strcmp(stringNumeric, stringOutput) == 0);
+    
+    for(int i = 28; i >= 0; i--)
+    {
+        sprintf(stringNumeric,"%d",i);
+        mu_check(queueStringPrev(&testQueue, &idx, stringOutput) == noError);
+        mu_check(strcmp(stringNumeric, stringOutput) == 0);
+    }
+    mu_check(queueStringPrev(&testQueue, &idx, stringOutput) == queueEmpty);
 }
 
 MU_TEST(testGetNext) 
 {
-    
+    uint16_t idx;
+    mu_check(queueStringFirst(NULL, NULL, NULL) == invalidArg);
+    mu_check(queueStringFirst(&testQueue, NULL, NULL) == invalidArg);
+    mu_check(queueStringFirst(&testQueue, &idx, NULL) == invalidArg);    
 }
 
 MU_TEST_SUITE(testSuiteQueueString) 
