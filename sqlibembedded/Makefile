@@ -10,6 +10,7 @@ src/empty_stdio.c src/getchar.c  src/putchar.c src/puts.c \
 src/fgetc.c src/fgets.c src/fputc.c src/fputs.c \
 src/empty_logfs.c src/logfs.c \
 src/cmdline.c src/cmdline_cmd.c src/cmdline_prompt.c \
+src/queue_string.c \
 src/parse_ansi.c
 INCLUDES = -Iinc
 
