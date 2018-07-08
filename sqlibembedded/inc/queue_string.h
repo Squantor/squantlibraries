@@ -9,7 +9,7 @@ typedef struct
     uint16_t    mask;
     uint16_t    head;
     uint16_t    tail;
-    char *      data[];
+    char *      data;
 } t_queueString;
 
 
