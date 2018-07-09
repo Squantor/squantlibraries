@@ -6,7 +6,7 @@
 #include <sqstring.h>
 
 char testQueueStringBuffer[128];
-t_queueString testQueue = {.mask = sizeof(testQueueStringBuffer)-1, .head = 0, .tail = 0, .data = testQueueStringBuffer};
+t_queueString testQueue = {.len = sizeof(testQueueStringBuffer)-1, .head = 0, .tail = 0, .data = testQueueStringBuffer};
 
 void testSetupQueueString(void) 
 {
@@ -83,23 +83,6 @@ MU_TEST(testEnqueueDequeueOverwrite)
     mu_check(queueStringDequeue(&testQueue, stringOutput) == queueEmpty);
 }
 
-MU_TEST(testGetFirst) 
-{
-    uint16_t idx;
-    mu_check(queueStringFirst(NULL, NULL, NULL) == invalidArg);
-    mu_check(queueStringFirst(&testQueue, NULL, NULL) == invalidArg);
-    mu_check(queueStringFirst(&testQueue, &idx, NULL) == invalidArg);
-    
-    char stringInput[] = "Hello World\n";
-    char stringOutput[32];
-    mu_check(queueStringFirst(&testQueue, &idx, stringOutput) == queueEmpty);
-    mu_check(queueStringEnqueue(&testQueue, stringInput) == noError);
-    mu_check(queueStringFirst(&testQueue, &idx, stringOutput) == noError);
-    mu_check(strcmp(stringInput, stringOutput) == 0);
-    mu_check(queueStringDequeue(&testQueue, stringOutput) == noError);
-    mu_check(strcmp(stringInput, stringOutput) == 0);
-}
-
 MU_TEST(testGetPrev) 
 {
     uint16_t idx;
@@ -116,10 +99,8 @@ MU_TEST(testGetPrev)
         queueStringEnqueue(&testQueue, stringNumeric);
     }
     
-    mu_check(queueStringFirst(&testQueue, &idx, stringOutput) == noError);
-    mu_check(strcmp(stringNumeric, stringOutput) == 0);
-    
-    for(int i = 28; i >= 0; i--)
+    idx = testQueue.head;   
+    for(int i = 29; i >= 0; i--)
     {
         sprintf(stringNumeric,"%d",i);
         mu_check(queueStringPrev(&testQueue, &idx, stringOutput) == noError);
@@ -136,11 +117,11 @@ MU_TEST(testGetNext)
     mu_check(queueStringNext(&testQueue, &idx, NULL) == invalidArg);    
     
     char stringTest[] = "Hello World\n";
-    char stringNumeric[16];
     char stringOutput[32];
     queueStringEnqueue(&testQueue, stringTest);
-    queueStringFirst(&testQueue, &idx, stringOutput);
-    mu_check(queueStringNext((&testQueue, &idx, stringOutput) == queueEmpty));
+    idx = testQueue.head;
+    queueStringPrev(&testQueue, &idx, stringOutput);
+    mu_check(queueStringNext(&testQueue, &idx, stringOutput) == queueEmpty);
     // TODO previous and next tests
 }
 
@@ -151,7 +132,6 @@ MU_TEST_SUITE(testSuiteQueueString)
     MU_RUN_TEST(testDequeue);
     MU_RUN_TEST(testEnqueueDequeue);
     MU_RUN_TEST(testEnqueueDequeueOverwrite);
-    MU_RUN_TEST(testGetFirst);
     MU_RUN_TEST(testGetPrev);
     MU_RUN_TEST(testGetNext);
 }

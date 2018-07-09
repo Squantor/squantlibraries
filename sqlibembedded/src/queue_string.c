@@ -26,7 +26,32 @@ SOFTWARE.
 #include <queue_string.h>
 #include <sqstring.h>
 
-#define WRAP(value, mask) ((value) & (mask))
+#define WRAP(value, len) ((value) & (len))
+
+// helper functions
+// search forward for seperator
+static uint16_t SeekForwardSep(t_queueString * queue, uint16_t idx)
+{
+    while(queue->data[idx] != 0)
+        idx = WRAP(idx + 1, queue->len);
+    return idx;
+}
+
+// search forward for not seperator
+static uint16_t SeekForwardNotSep(t_queueString * queue, uint16_t idx)
+{
+    while(queue->data[idx] == 0)
+        idx = WRAP(idx + 1, queue->len);
+    return idx;
+}
+
+// search backward for seperator
+static uint16_t SeekBackSep(t_queueString * queue, uint16_t idx)
+{
+    while(queue->data[idx] != 0)
+        idx = WRAP(idx - 1, queue->len);
+    return idx;
+}
 
 result queueStringEnqueue(t_queueString *queue, char * s)
 {
@@ -34,55 +59,42 @@ result queueStringEnqueue(t_queueString *queue, char * s)
         return invalidArg;
         
     uint16_t stringSize = sqstrlen(s);
-    if(!(stringSize > 0) || !(stringSize < queue->mask))
+    if(!(stringSize > 0) || !(stringSize < queue->len))
         return dataInvalid;
     
     // now also add the zero terminator
     stringSize++;
     // do we have enough space to add at the head?
-    uint16_t indexNew;
-    if((stringSize) > (queue->mask - queue->head))
+    uint16_t newHead;
+    if((stringSize) > (queue->len - queue->head))
     {
         // no, clear the end so we do not find strings later on there
-        sqmemset(&(queue->data[queue->head]), 0, queue->mask - queue->head);
-        indexNew = 0;
-        // are we going overtake the tail?
-        if((queue->head < queue->tail) || (queue->tail <= stringSize))
-        {
-            // yes, shift tail to future head and search from there
-            uint16_t newtail = stringSize;
-            while(queue->data[newtail] != 0)
-            {
-                newtail = WRAP(newtail + 1, queue->mask);
-            }
-            // skip over the found zero terminators
-            while(queue->data[newtail] == 0)
-            {
-                newtail = WRAP(newtail + 1, queue->mask);
-            }            
-            queue->tail = newtail;            
-        }
+        sqmemset(&(queue->data[queue->head]), 0, queue->len - queue->head);
+        // reset head to 0
+        newHead = 0;
+        // did we overtake the tail?
+        if((queue->head + stringSize) > queue->tail)
+            // put tail beyond so overtake will detect it
+            queue->tail = stringSize;
     }
     else
     {
-        indexNew = queue->head;
-        // are we going overtake the tail?
-        if((queue->head < queue->tail) && (queue->tail <= (queue->head + stringSize)))
-        {
-            // yes, shift tail to future head and search from there
-            uint16_t newtail = queue->head + stringSize;
-            while(queue->data[newtail] != 0)
-            {
-                newtail = WRAP(newtail + 1, queue->mask);
-            }
-            // skip over the found zero terminator
-            queue->tail = WRAP(newtail + 1, queue->mask);
-        }
+        // yes, append to head
+        newHead = queue->head;
     }
     
-    sqstrcpy(&(queue->data[indexNew]), s);
+    // will the new head overtake the tail?
+    if((newHead < queue->tail) && (queue->tail <= (newHead + stringSize)))
+    {
+        // yes, search new place for head
+        uint16_t newtail = newHead + stringSize;
+        newtail = SeekForwardSep(queue, newtail);
+        queue->tail = SeekForwardNotSep(queue, newtail);
+    }
+    
+    sqstrcpy(&(queue->data[newHead]), s);
     // point to next space
-    queue->head = indexNew + stringSize;
+    queue->head = newHead + stringSize;
     return noError;
 }
 
@@ -95,34 +107,15 @@ result queueStringDequeue(t_queueString *queue, char * s)
     
     uint16_t newtail = queue->tail;
     // dequeue into s until size or zero
+    // no refactor as it would need strlen, strcpy combo
     while(queue->data[newtail] != 0)
     {
         *s = queue->data[newtail];
         newtail++; s++;
     }
     *s = 0;
-    // then scan terminators until we find something or head is reached
-    while(queue->data[newtail] == 0)
-        newtail = WRAP(newtail+1, queue->mask);
+    newtail = SeekForwardNotSep(queue, newtail);
     queue->tail = newtail;
-    return noError;
-}
-
-result queueStringFirst(t_queueString * queue, uint16_t * i, char * s)
-{
-    if((queue == NULL) || (i == NULL) || (s == NULL))
-        return invalidArg;
-    if(queue->head == queue->tail)
-        return queueEmpty;
-    // search from head down
-    uint16_t indexNew = WRAP(queue->head - 2, queue->mask);
-    while(queue->data[indexNew] != 0)
-        indexNew = WRAP(indexNew - 1, queue->mask);
-    // point to begin of string
-    indexNew = WRAP(indexNew + 1, queue->mask);
-    // copy over string to s
-    sqstrcpy(s, &(queue->data[indexNew]));
-    *i = indexNew;
     return noError;
 }
 
@@ -133,11 +126,10 @@ result queueStringPrev(t_queueString * queue, uint16_t * i, char * s)
     if((queue->head == queue->tail) || (queue->tail == *i))
         return queueEmpty;
     // search from index
-    uint16_t indexNew = WRAP(*i - 2, queue->mask);
-    while(queue->data[indexNew] != 0)
-        indexNew = WRAP(indexNew - 1, queue->mask);
+    uint16_t indexNew = WRAP(*i - 2, queue->len);
+    indexNew = SeekBackSep(queue, indexNew);
     // point to begin of string
-    indexNew = WRAP(indexNew + 1, queue->mask);
+    indexNew = WRAP(indexNew + 1, queue->len);
     // copy over string to s
     sqstrcpy(s, &(queue->data[indexNew]));
     *i = indexNew;    
@@ -151,16 +143,15 @@ result queueStringNext(t_queueString * queue, uint16_t * i, char * s)
     if((queue->head == queue->tail) || (queue->head == *i))
         return queueEmpty;
     uint16_t indexNew = *i;
-    while(queue->data[indexNew] != 0)
-        indexNew = WRAP(indexNew + 1, queue->mask);
+    indexNew = SeekForwardSep(queue, indexNew);
     // point to begin of string
-    indexNew = WRAP(indexNew + 1, queue->mask);
-    *i = indexNew;
+    indexNew = WRAP(indexNew + 1, queue->len);
     if(queue->head == indexNew)
     {
         return queueEmpty;
     }
     // copy over string to s
     sqstrcpy(s, &(queue->data[indexNew]));
+    *i = indexNew;
     return noError;
 }

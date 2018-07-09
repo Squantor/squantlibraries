@@ -7,7 +7,7 @@
 typedef struct queueString
 {
     // mask be power of two!
-    const uint16_t    mask;
+    const uint16_t    len;
     uint16_t    head;
     uint16_t    tail;
     char *      data;
@@ -18,9 +18,11 @@ result queueStringEnqueue(t_queueString * queue, char * s);
 // remove last added string
 result queueStringDequeue(t_queueString *queue, char * s);
 // get first string in queue
-result queueStringFirst(t_queueString * queue, uint16_t * index, char * s);
-// get previous string in queue from index
+result queueStringFirst(t_queueString * queue, uint16_t * i, char * s);
+// get previous string in queue from i
 result queueStringPrev(t_queueString * queue, uint16_t * i, char * s);
+// get next string in queue from i
+result queueStringNext(t_queueString * queue, uint16_t * i, char * s);
 
 
 
