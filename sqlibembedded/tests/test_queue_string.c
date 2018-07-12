@@ -120,9 +120,14 @@ MU_TEST(testGetNext)
     char stringOutput[32];
     queueStringEnqueue(&testQueue, stringTest);
     idx = testQueue.head;
+    mu_check(queueStringNext(&testQueue, &idx, stringOutput) == queueEmpty);
     queueStringPrev(&testQueue, &idx, stringOutput);
     mu_check(queueStringNext(&testQueue, &idx, stringOutput) == queueEmpty);
-    // TODO previous and next tests
+    // tests to do
+    // First half fill
+    // then move down and up
+    // then full fill
+    // then move down and up (crossing boundaries)
 }
 
 MU_TEST_SUITE(testSuiteQueueString) 
