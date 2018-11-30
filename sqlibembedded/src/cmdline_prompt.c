@@ -61,7 +61,7 @@ static void promptDel(char * promptBuf, uint16_t * promptBufIdx, uint16_t count)
     {
         sqputchar(ASCII_BS);
         sqputchar(ASCII_SPACE);
-        sqputchar(ASCII_BS);        
+        sqputchar(ASCII_BS);  
         *promptBufIdx--;
         if(*promptBufIdx == 0)
             return;
@@ -77,7 +77,7 @@ static void promptAdd(char * promptBuf, uint16_t * promptBufIdx, char c)
     {
         sqputchar(c);
         promptBuf[*promptBufIdx] = c;
-        *promptBufIdx++;
+        (*promptBufIdx)++;
     }
 }
 
@@ -109,7 +109,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                     // execute
                     cmdlineParse(cmdLineEntries, currentPrompt);
                     // clear prompt
-                    promptDel(currentPrompt, &currentPromptIndex, currentPromptIndex);
+                    currentPromptIndex = 0;
                     break;
                 case ASCII_ESC:
                     ansiParse(c);
