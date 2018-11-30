@@ -86,10 +86,6 @@ MU_TEST(testEnqueueDequeueOverwrite)
 MU_TEST(testGetPrev) 
 {
     uint16_t idx;
-    mu_check(queueStringPrev(NULL, NULL, NULL) == invalidArg);
-    mu_check(queueStringPrev(&testQueue, NULL, NULL) == invalidArg);
-    mu_check(queueStringPrev(&testQueue, &idx, NULL) == invalidArg);
-    
     char stringNumeric[16];
     char stringOutput[32];
     // add a bunch of strings
@@ -112,22 +108,28 @@ MU_TEST(testGetPrev)
 MU_TEST(testGetNext) 
 {
     uint16_t idx;
-    mu_check(queueStringNext(NULL, NULL, NULL) == invalidArg);
-    mu_check(queueStringNext(&testQueue, NULL, NULL) == invalidArg);
-    mu_check(queueStringNext(&testQueue, &idx, NULL) == invalidArg);    
-    
-    char stringTest[] = "Hello World\n";
+    char stringTest[] = "Test\n";
     char stringOutput[32];
-    queueStringEnqueue(&testQueue, stringTest);
-    idx = testQueue.head;
-    mu_check(queueStringNext(&testQueue, &idx, stringOutput) == queueEmpty);
-    queueStringPrev(&testQueue, &idx, stringOutput);
-    mu_check(queueStringNext(&testQueue, &idx, stringOutput) == queueEmpty);
-    // tests to do
     // First half fill
-    // then move down and up
-    // then full fill
-    // then move down and up (crossing boundaries)
+    for(int i = 0; i < 10; i++)
+    {
+        queueStringEnqueue(&testQueue, stringTest);
+    }
+    
+    // move down
+    idx = testQueue.head;
+    for(int i = 0; i < 10; i++)
+    {
+        queueStringPrev(&testQueue, &idx, stringOutput);
+    }
+    mu_check(queueStringPrev(&testQueue, &idx, stringOutput) == queueEmpty);
+    // move up
+    for(int i = 0; i < 10; i++)
+    {
+        queueStringNext(&testQueue, &idx, stringOutput);
+        mu_check(strcmp(stringTest, stringOutput) == 0);
+    }
+    mu_check(queueStringNext(&testQueue, &idx, stringOutput) == queueEmpty);
 }
 
 MU_TEST_SUITE(testSuiteQueueString) 
