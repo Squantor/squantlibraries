@@ -65,6 +65,8 @@ static void promptDel(uint16_t count)
         sqputchar(ASCII_SPACE);
         sqputchar(ASCII_BS);        
         promptConsoleFill--;
+        if(promptConsoleFill == 0)
+            return;
     }
 }
 
@@ -76,7 +78,6 @@ static void promptAdd(char c)
     sqputchar(c);
     promptConsoleFill++;
 }
-
 
 /*
  *  Prompt handler, call periodically from your mainloop
@@ -95,6 +96,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
             switch(c)
             {
                 case ASCII_BS:
+                        promptDel(1);
                     break;
                 case ASCII_CR:
                     sqputchar(ASCII_CR);
