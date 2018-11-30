@@ -33,9 +33,9 @@ SOFTWARE.
 #include <queue_string.h>
 
 #define ASCII_NUL   (0)
-#define	ASCII_BS    (8)     // backspace
+#define ASCII_BS    (8)     // backspace
 #define ASCII_SPACE (32)    // space
-#define	ASCII_CR    (13)    // Carriage Return
+#define ASCII_CR    (13)    // Carriage Return
 #define ASCII_ESC   (27)    // escape
 
 typedef enum
@@ -47,22 +47,27 @@ typedef enum
 // command history
 t_queueString * commandHistory;
 
+static uint16_t currentPromptIndex = 0;
+static uint16_t currentHistoryIndex = 0;
+
 void promptInit(t_queueString * q)
 {
     commandHistory = q;
+    currentPromptIndex = 0;
+    currentHistoryIndex = 0;
 }
 
 /*
  * Delete characters prompt and history
  */
-static void promptDel(char * promptBuf, uint16_t * promptBufIdx, uint16_t count)
+static void promptDel(uint16_t * promptBufIdx, uint16_t count)
 {
     for(uint16_t i = 0; i < count; i++)
     {
         sqputchar(ASCII_BS);
         sqputchar(ASCII_SPACE);
         sqputchar(ASCII_BS);  
-        *promptBufIdx--;
+        (*promptBufIdx)--;
         if(*promptBufIdx == 0)
             return;
     }
@@ -82,13 +87,25 @@ static void promptAdd(char * promptBuf, uint16_t * promptBufIdx, char c)
 }
 
 /*
+ * Add character to prompt
+ */
+static void promptAddString(char * promptBuf, uint16_t * promptBufIdx, char *s)
+{
+    while(*s != ASCII_NUL)
+    {
+        sqputchar(*s);
+        promptBuf[*promptBufIdx] = *s;
+        (*promptBufIdx)++;
+        s++;
+    }
+}
+
+/*
  *  Prompt handler, call periodically from your mainloop
  */
 void promptProcess(const cmdLineEntry * cmdLineEntries)
 {
     char currentPrompt[CMDLINE_MAX_LENGTH];
-    static uint16_t currentPromptIndex = 0;
-    static uint16_t currentHistoryIndex = 0;
     
     static promptState_t promptState = promptNormal;
     
@@ -101,7 +118,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
             switch(c)
             {
                 case ASCII_BS:
-                        promptDel(currentPrompt, &currentPromptIndex, 1);
+                    promptDel(&currentPromptIndex, 1);
                     break;
                 case ASCII_CR:
                     sqputchar(ASCII_CR);
@@ -113,6 +130,8 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                     cmdlineParse(cmdLineEntries, currentPrompt);
                     // clear prompt
                     currentPromptIndex = 0;
+                    // reset history index
+                    currentHistoryIndex = commandHistory->head;
                     break;
                 case ASCII_ESC:
                     ansiParse(c);
@@ -140,20 +159,20 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                             promptState = promptNormal;
                         break;
                         case ansiCursorUp:
-                            r = queueStringPrev(commandHistory,currentPromptIndex, currentHistory);
+                            r = queueStringPrev(commandHistory, &currentHistoryIndex, currentHistory);
                             if(r == noError)
                             {
                                 // clear prompt
-                                promptDel(currentPrompt, &currentPromptIndex, currentPromptIndex);
+                                promptDel(&currentPromptIndex, currentPromptIndex);
                                 // add new prompt
-                                
+                                promptAddString(currentPrompt, &currentPromptIndex, currentHistory);
                             }
                             promptState = promptNormal;
                         break;
                         case ansiCursorDown:
                             // TODO go to next command if available
                             // clear prompt/history
-                            promptDel(currentPrompt, &currentPromptIndex, currentPromptIndex);
+                            promptDel(&currentPromptIndex, currentPromptIndex);
                             promptState = promptNormal;
                         break;
                         default:
