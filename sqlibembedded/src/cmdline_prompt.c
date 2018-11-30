@@ -30,9 +30,7 @@ SOFTWARE.
 #include <cmdline.h>
 #include <cmdline_cmd.h>
 #include <parse_ansi.h>
-
-// power of twos only!
-#define PROMPT_HISTBUF_SIZE     128
+#include <queue_string.h>
 
 #define ASCII_NUL   (0)
 #define	ASCII_BS    (8)     // backspace
@@ -40,54 +38,20 @@ SOFTWARE.
 #define	ASCII_CR    (13)    // Carriage Return
 #define ASCII_ESC   (27)    // escape
 
-#define WRAP_HISTORY(value) ((value) & (PROMPT_HISTBUF_SIZE - 1))
-
 typedef enum
 {
     promptNormal,
     promptEscape,
 } promptState_t;
 
-static char promptHistory[PROMPT_HISTBUF_SIZE];
-static int promptHistoryHead;
-static int promptHistoryTail;
-// pointer to start of current command
-static int promptHistoryCurrent;
 // how many characters printed on the console prompt?
 static uint16_t promptConsoleFill = 0;
+// command history
+t_queueString * commandHistory;
 
-void promptInit()
+void promptInit(t_queueString * q)
 {
-    promptHistoryCurrent = 0;
-    promptHistoryTail = 0;
-    promptHistoryHead = 0;
-    sqmemset(promptHistory, 0, sizeof(promptHistory));
-}
-
-static void promptHistoryDel()
-{
-    // zero out the character
-    promptHistory[promptHistoryHead] = ASCII_NUL;
-    promptHistoryHead = WRAP_HISTORY(promptHistoryHead - 1);
-}
-
-static void promptHistoryClearLast()
-{
-    while(promptHistory[promptHistoryTail] != ASCII_NUL)
-    {
-        promptHistory[promptHistoryTail] = ASCII_NUL;
-        promptHistoryTail = WRAP_HISTORY(promptHistoryTail + 1);
-    }
-    // end reached, skip zero char
-    promptHistoryTail = WRAP_HISTORY(promptHistoryTail + 1);
-}
-
-static void promptHistoryAdd(char c)
-{
-    promptHistory[promptHistoryHead] = c;
-    promptHistoryHead = WRAP_HISTORY(promptHistoryHead + 1);
-    if(promptHistoryHead == promptHistoryTail)
-        promptHistoryClearLast();
+    commandHistory = q;
 }
 
 /*
@@ -97,7 +61,6 @@ static void promptDel(uint16_t count)
 {
     for(uint16_t i = 0; i < count; i++)
     {
-        promptHistoryDel();
         sqputchar(ASCII_BS);
         sqputchar(ASCII_SPACE);
         sqputchar(ASCII_BS);        
@@ -106,51 +69,14 @@ static void promptDel(uint16_t count)
 }
 
 /*
- * Add characters to prompt and history
+ * Add characters to prompt
  */
 static void promptAdd(char c)
 {
-    promptHistoryAdd(c);
     sqputchar(c);
     promptConsoleFill++;
 }
 
-static void promptHistoryPrev(void)
-{
-    // skip zero char
-    int historySearchIndex = WRAP_HISTORY(promptHistoryCurrent - 2);
-    // search end of string
-    while(promptHistory[historySearchIndex] != ASCII_NUL)
-        historySearchIndex = WRAP_HISTORY(historySearchIndex - 1);
-    // point to begin
-    promptHistoryCurrent = WRAP_HISTORY(historySearchIndex + 1);
-}
-
-static void promptHistoryNext(void)
-{
-    int historySearchIndex = promptHistoryCurrent;
-    // search next command
-    while(  (promptHistory[historySearchIndex] != ASCII_NUL) &&
-            // and check if you reach the end
-            (historySearchIndex != promptHistoryHead) ) 
-        historySearchIndex = WRAP_HISTORY(historySearchIndex + 1);
-    // check again if we have a next one
-    if(historySearchIndex != promptHistoryHead)
-    {
-        // yes, update current history pointer
-        promptHistoryCurrent = WRAP_HISTORY(historySearchIndex + 1);
-    }
-}
-
-static void promptHistoryShow(void)
-{
-    int historyIndex = promptHistoryCurrent;
-    while(promptHistory[historyIndex] != ASCII_NUL)
-    {
-        promptAdd(promptHistory[historyIndex]);
-        historyIndex = WRAP_HISTORY(historyIndex + 1);
-    }
-}
 
 /*
  *  Prompt handler, call periodically from your mainloop
@@ -169,10 +95,6 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
             switch(c)
             {
                 case ASCII_BS:
-                    if(promptHistory[WRAP_HISTORY(promptHistoryHead - 1)] != ASCII_NUL)
-                    {
-                        promptDel(1);
-                    }
                     break;
                 case ASCII_CR:
                     sqputchar(ASCII_CR);
@@ -181,20 +103,8 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                     char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
                     // terminate string
                     *p = ASCII_NUL;
-                    // scan backward through history and copy backwards to the buffer
-                    int i = WRAP_HISTORY(promptHistoryHead - 1);
-                    while ((promptHistory[i] != ASCII_NUL) && (p >= newcommand))
-                    {
-                        p--;
-                        *p = promptHistory[i];
-                        i = WRAP_HISTORY(i - 1);
-                    }
                     // call handler
                     cmdlineParse(cmdLineEntries, p);
-                    // terminate the history buffer
-                    promptHistoryAdd(0);
-                    // update current command
-                    promptHistoryCurrent = promptHistoryHead;
                     break;
                 case ASCII_ESC:
                     ansiParse(c);
@@ -221,27 +131,19 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                         break;
                         case ansiCursorUp:
                             // history available?
-                            if(promptHistoryCurrent != promptHistoryTail)
+                            if(1)
                             {
-                                // search previous command by using promptHistoryCurrent
-                                promptHistoryPrev();
                                 // clear prompt/history
                                 promptDel(promptConsoleFill);
                                 promptConsoleFill = 0;
-                                // add to current prompt
-                                promptHistoryShow();
                             }
                             promptState = promptNormal;
                         break;
                         case ansiCursorDown:
                             // TODO go to next command if available
-                            // search next command by using promptHistoryCurrent
-                            promptHistoryNext();
                             // clear prompt/history
                             promptDel(promptConsoleFill);
                             promptConsoleFill = 0;
-                            // add to current prompt
-                            promptHistoryShow();
                             promptState = promptNormal;
                         break;
                         default:
