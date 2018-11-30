@@ -308,13 +308,13 @@ MU_TEST_SUITE(testCmdline)
     MU_RUN_TEST(testCmdlineHelpBuffer);
     MU_RUN_TEST(testCmdlineArgs);
     MU_RUN_TEST(testCmdlineIgnoreEscapes);
-    //MU_RUN_TEST(testCmdlinePreviousEmpty);
-    //MU_RUN_TEST(testCmdlinePrevious);
-    //MU_RUN_TEST(testCmdlinePreviousNonEmptyPrompt);
-    //MU_RUN_TEST(testCmdlineMultiPrevious);
-    //MU_RUN_TEST(testCmdlinePreviousNext);
-    //MU_RUN_TEST(testCmdlineMultiPreviousMultiNext);
-    //MU_RUN_TEST(testCmdlineMultiNextBufferExceed);
+    MU_RUN_TEST(testCmdlinePreviousEmpty);
+    MU_RUN_TEST(testCmdlinePrevious);
+    MU_RUN_TEST(testCmdlinePreviousNonEmptyPrompt);
+    MU_RUN_TEST(testCmdlineMultiPrevious);
+    MU_RUN_TEST(testCmdlinePreviousNext);
+    MU_RUN_TEST(testCmdlineMultiPreviousMultiNext);
+    MU_RUN_TEST(testCmdlineMultiNextBufferExceed);
 }
 
 int testCmdlineSuite()
