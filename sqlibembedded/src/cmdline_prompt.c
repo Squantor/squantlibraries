@@ -44,8 +44,6 @@ typedef enum
     promptEscape,
 } promptState_t;
 
-// how many characters printed on the console prompt?
-static uint16_t promptConsoleFill = 0;
 // command history
 t_queueString * commandHistory;
 
@@ -57,15 +55,15 @@ void promptInit(t_queueString * q)
 /*
  * Delete characters prompt and history
  */
-static void promptDel(uint16_t count)
+static void promptDel(char * promptBuf, uint16_t * promptBufIdx, uint16_t count)
 {
     for(uint16_t i = 0; i < count; i++)
     {
         sqputchar(ASCII_BS);
         sqputchar(ASCII_SPACE);
         sqputchar(ASCII_BS);        
-        promptConsoleFill--;
-        if(promptConsoleFill == 0)
+        *promptBufIdx--;
+        if(*promptBufIdx == 0)
             return;
     }
 }
@@ -73,10 +71,14 @@ static void promptDel(uint16_t count)
 /*
  * Add characters to prompt
  */
-static void promptAdd(char c)
+static void promptAdd(char * promptBuf, uint16_t * promptBufIdx, char c)
 {
-    sqputchar(c);
-    promptConsoleFill++;
+    if(*promptBufIdx < CMDLINE_MAX_LENGTH-1)
+    {
+        sqputchar(c);
+        promptBuf[*promptBufIdx] = c;
+        *promptBufIdx++;
+    }
 }
 
 /*
@@ -84,7 +86,9 @@ static void promptAdd(char c)
  */
 void promptProcess(const cmdLineEntry * cmdLineEntries)
 {
-    char newcommand[CMDLINE_MAX_LENGTH];
+    char currentPrompt[CMDLINE_MAX_LENGTH];
+    static uint16_t currentPromptIndex = 0;
+    
     static promptState_t promptState = promptNormal;
     
     int c = sqgetchar();
@@ -96,17 +100,16 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
             switch(c)
             {
                 case ASCII_BS:
-                        promptDel(1);
+                        promptDel(currentPrompt, &currentPromptIndex, 1);
                     break;
                 case ASCII_CR:
                     sqputchar(ASCII_CR);
-                    promptConsoleFill = 0;
-                    // note, we are filling the buffer end to start,
-                    char * p = &newcommand[CMDLINE_MAX_LENGTH-1];
-                    // terminate string
-                    *p = ASCII_NUL;
-                    // call handler
-                    cmdlineParse(cmdLineEntries, p);
+                    // terminate prompt string
+                    currentPrompt[currentPromptIndex] = ASCII_NUL;
+                    // execute
+                    cmdlineParse(cmdLineEntries, currentPrompt);
+                    // clear prompt
+                    promptDel(currentPrompt, &currentPromptIndex, currentPromptIndex);
                     break;
                 case ASCII_ESC:
                     ansiParse(c);
@@ -115,7 +118,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                 case EOF:
                     break;
                 default:
-                    promptAdd(c);
+                    promptAdd(currentPrompt, &currentPromptIndex, c);
                     break;
             }
         break;
@@ -136,16 +139,14 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                             if(1)
                             {
                                 // clear prompt/history
-                                promptDel(promptConsoleFill);
-                                promptConsoleFill = 0;
+                                promptDel(currentPrompt, &currentPromptIndex, currentPromptIndex);
                             }
                             promptState = promptNormal;
                         break;
                         case ansiCursorDown:
                             // TODO go to next command if available
                             // clear prompt/history
-                            promptDel(promptConsoleFill);
-                            promptConsoleFill = 0;
+                            promptDel(currentPrompt, &currentPromptIndex, currentPromptIndex);
                             promptState = promptNormal;
                         break;
                         default:
