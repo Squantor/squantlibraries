@@ -69,7 +69,7 @@ static void promptDel(char * promptBuf, uint16_t * promptBufIdx, uint16_t count)
 }
 
 /*
- * Add characters to prompt
+ * Add character to prompt
  */
 static void promptAdd(char * promptBuf, uint16_t * promptBufIdx, char c)
 {
@@ -88,6 +88,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
 {
     char currentPrompt[CMDLINE_MAX_LENGTH];
     static uint16_t currentPromptIndex = 0;
+    static uint16_t currentHistoryIndex = 0;
     
     static promptState_t promptState = promptNormal;
     
@@ -127,6 +128,8 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
         case promptEscape:
             {
                 ansiSequence ansiState = ansiParse(c);
+                char currentHistory[CMDLINE_MAX_LENGTH];
+                result r;
                 // we have successfully parsed the sequence
                 if(ansiState > ansiKnown)
                 {
@@ -137,11 +140,13 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                             promptState = promptNormal;
                         break;
                         case ansiCursorUp:
-                            // history available?
-                            if(1)
+                            r = queueStringPrev(commandHistory,currentPromptIndex, currentHistory);
+                            if(r == noError)
                             {
-                                // clear prompt/history
+                                // clear prompt
                                 promptDel(currentPrompt, &currentPromptIndex, currentPromptIndex);
+                                // add new prompt
+                                
                             }
                             promptState = promptNormal;
                         break;
