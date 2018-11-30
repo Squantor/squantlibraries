@@ -31,6 +31,7 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <results.h>
+#include <queue_string.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,7 +54,7 @@ typedef struct {
     const cmdlineHandler argHandler;
 } cmdLineEntry;
 
-void promptInit();
+void promptInit(t_queueString * q);
 void promptProcess(const cmdLineEntry * cmdLineEntries);
 
 #ifdef __cplusplus

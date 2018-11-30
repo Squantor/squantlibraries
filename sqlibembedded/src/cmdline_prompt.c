@@ -107,7 +107,7 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                     // terminate prompt string
                     currentPrompt[currentPromptIndex] = ASCII_NUL;
                     // add to history
-                    
+                    queueStringEnqueue(commandHistory, currentPrompt);
                     // execute
                     cmdlineParse(cmdLineEntries, currentPrompt);
                     // clear prompt

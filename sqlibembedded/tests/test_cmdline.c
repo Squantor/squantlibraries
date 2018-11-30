@@ -6,8 +6,10 @@
 #include <results.h>
 #include <mock_stdio.h>
 #include <cmdline_commands.h>
+#include <queue_string.h>
 
-
+char CmdlineHistoryBuffer[128];
+t_queueString CmdlineHistory = {.len = sizeof(CmdlineHistoryBuffer)-1, .head = 0, .tail = 0, .data = CmdlineHistoryBuffer};
 
 int testCmdlineLoop(int timeout)
 {
@@ -23,7 +25,10 @@ void testCmdlineSetup(void)
 {
    mockStdinReset();
    mockStdoutReset();
-   promptInit();
+   CmdlineHistory.head = 0;
+   CmdlineHistory.tail = 0;
+   memset(CmdlineHistoryBuffer, 0, sizeof(CmdlineHistoryBuffer));
+   promptInit(&CmdlineHistory);
 }
 
 void testCmdlineTeardown(void) 
