@@ -23,7 +23,7 @@ AR = ar
 OBJDUMP = objdump
 
 # Toolchain flags
-COMPILE_FLAGS = -std=c99 -Wall -Wextra
+COMPILE_FLAGS = -std=c99 -Wall -Wextra -Werror
 DEFINES = 
 RDEFINES = -DNDEBUG
 DDEFINES = -DDEBUG
