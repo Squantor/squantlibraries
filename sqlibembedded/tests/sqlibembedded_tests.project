@@ -132,4 +132,10 @@
       </Completion>
     </Configuration>
   </Settings>
+  <Dependencies Name="debug">
+    <Project Name="sqlibembedded"/>
+  </Dependencies>
+  <Dependencies Name="release">
+    <Project Name="sqlibembedded"/>
+  </Dependencies>
 </CodeLite_Project>

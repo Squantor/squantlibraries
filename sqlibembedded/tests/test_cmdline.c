@@ -247,7 +247,7 @@ MU_TEST(testCmdlineMultiNextBufferExceed)
     char teststring[32];
      
     // emit a bunch of commands to fill the history buffer up completely
-    for(int i = 0; i < 20; i++)
+    for(int i = 10; i < 30; i++)
     {
         sprintf(teststring, "blaat %d\r",i);
         mockStdinPuts(teststring);
@@ -255,9 +255,8 @@ MU_TEST(testCmdlineMultiNextBufferExceed)
     }
     mockStdoutClear();
     // check if we get what we expect
-    for(int i = 19; i > 6; i--)
+    for(int i = 29; i > 16; i--)
     {
-        printf("%d \n",i);
         sprintf(teststring, "blaat %d",i);
         mu_check(noError == mockStdinPuts("\e[A"));
         mu_check(12 == testCmdlineLoop(15));
@@ -284,10 +283,14 @@ MU_TEST(testCmdlineMultiNextBufferExceed)
         testCmdlineLoop(15);
     }
     
+    // press enter just to clear
+    mockStdinPuts("\r");
+    testCmdlineLoop(1);
+    mockStdoutClear();
+    
     // check if we get what we expect
-    for(int i = 99; i > 78; i--)
+    for(int i = 99; i > 86; i--)
     {
-        printf("%d \n",i);
         sprintf(teststring, "blaat %d",i);
         mu_check(noError == mockStdinPuts("\e[A"));
         mu_check(12 == testCmdlineLoop(15));

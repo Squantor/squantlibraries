@@ -48,7 +48,7 @@ static uint16_t SeekForwardNotSep(t_queueString * queue, uint16_t idx)
 // search backward for seperator
 static uint16_t SeekBackSep(t_queueString * queue, uint16_t idx)
 {
-    uint16_t newIndex = idx;
+    uint16_t newIndex = WRAP(idx - 1, queue->len);
     // first scan backwards for one or more NUL chars while checking the tail
     while(queue->data[newIndex] == 0)
     {
@@ -61,11 +61,11 @@ static uint16_t SeekBackSep(t_queueString * queue, uint16_t idx)
     while(queue->data[newIndex] != 0)
     {
         newIndex = WRAP(newIndex - 1, queue->len);
-        if(newIndex == queue->tail)
-            return idx;
+        // we dont check for tail, tail always should end on a NUL char
+        // this way we prevent not losing the last string
     }
     // return the new index
-    return newIndex+1;
+    return WRAP(newIndex + 1, queue->len);
 }
 
 result queueStringEnqueue(t_queueString *queue, char * s)

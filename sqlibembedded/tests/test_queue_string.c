@@ -96,10 +96,9 @@ MU_TEST(testGetPrev)
     }
     
     idx = testQueue.head;   
-    for(int i = 33; i >= 20; i--)
+    for(int i = 33; i >= 23; i--)
     {
         sprintf(stringNumeric,"foobar %d",i);
-        printf("%d\n", i);
         mu_check(queueStringPrev(&testQueue, &idx, stringOutput) == noError);
         mu_check(strcmp(stringNumeric, stringOutput) == 0);
     }
