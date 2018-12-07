@@ -10,7 +10,7 @@
 #include <test_queue_string.h>
 
 
-int main(int argc, char *argv[]) 
+int main() 
 {
     mockStdioSetup();
     int failedTests = 0;

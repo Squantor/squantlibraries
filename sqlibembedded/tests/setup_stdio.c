@@ -6,32 +6,32 @@
 #include <results.h>
 #include <mock_stdio.h>
 
-result stdinRead(uint8_t *c)
+result stdinRead(char *c)
 {
-	if(mockStdinStatus() == queueNotEmpty)
-	{
+    if(mockStdinStatus() == queueNotEmpty)
+    {
         mockStdinRead(c);
-		return noError;
-	}
-	else
-		return streamEOF;
+        return noError;
+    }
+    else
+        return streamEOF;
 }
 
 const rStream sqstdindef = {
-	stdinRead,
+    stdinRead,
 };
 
-result stdoutWrite(uint8_t c)
+result stdoutWrite(char c)
 {
-	if(mockStdoutStatus() == queueFull)
-		return streamEOF;
-	else
+    if(mockStdoutStatus() == queueFull)
+        return streamEOF;
+    else
     {
         mockStdoutWrite(c);
-		return noError;
+        return noError;
     }
 }
 
 const wStream sqstdoutdef = {
-	stdoutWrite,
+    stdoutWrite,
 };

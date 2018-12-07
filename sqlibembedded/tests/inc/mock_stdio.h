@@ -23,6 +23,6 @@ result mockStdoutIsEmpty();
 result mockStdoutWrite(char c);
 result mockStdoutRead(char *c);
 char * mockStdoutGets(char * restrict s, int size);
-int mockStdoutClear(void);
+void mockStdoutClear(void);
 
 #endif

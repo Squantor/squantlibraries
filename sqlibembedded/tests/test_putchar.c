@@ -22,7 +22,7 @@ MU_TEST(test_putchar_EOF)
 MU_TEST(test_putchar_normal) 
 {
     mu_assert_int_eq('a', sqputchar('a'));
-    uint8_t c;
+    char c;
     mockStdoutRead(&c);
     mu_assert_int_eq('a', c);
 }

@@ -29,17 +29,21 @@ SOFTWARE.
 #include <results.h>
 #include <cmdline_commands.h>
 #include <sqstring.h>
+#include <print.h>
 
 const char strCmdHelpTrigger[] = "help";
 const char strHelpHelp[] = "help\n";
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 result CmdHelpHandler(int * arglist)
 {
     int i = 0;
     while(cmdLineEntries[i].strHelp != NULL)
     {
-    	print_line(cmdLineEntries[i].strHelp, sqstrlen(cmdLineEntries[i].strHelp));
+        print_line(cmdLineEntries[i].strHelp, sqstrlen(cmdLineEntries[i].strHelp));
         i++;
     }
     return noError;
 }
+#pragma GCC diagnostic pop

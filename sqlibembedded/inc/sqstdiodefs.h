@@ -6,12 +6,12 @@
 
 typedef struct 
 {
-    result (*readStream)(uint8_t *);
+    result (*readStream)(char *);
 } rStream;
 
 typedef struct 
 {
-    result (*writeStream)(uint8_t);
+    result (*writeStream)(char);
 } wStream;
 
 #endif

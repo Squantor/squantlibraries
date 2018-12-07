@@ -4,7 +4,7 @@ int sqfgetc (const rStream * stream)
 {
     if(stream->readStream != NULL)
     {
-        uint8_t c;
+        char c;
         if(stream->readStream(&c) != noError)
             return EOF;
         else
