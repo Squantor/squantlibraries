@@ -170,9 +170,14 @@ void promptProcess(const cmdLineEntry * cmdLineEntries)
                             promptState = promptNormal;
                         break;
                         case ansiCursorDown:
-                            // TODO go to next command if available
-                            // clear prompt/history
-                            promptDel(&currentPromptIndex, currentPromptIndex);
+                            r = queueStringNext(commandHistory, &currentHistoryIndex, currentHistory);
+                            if(r == noError)
+                            {
+                                // clear prompt
+                                promptDel(&currentPromptIndex, currentPromptIndex);
+                                // add new prompt
+                                promptAddString(currentPrompt, &currentPromptIndex, currentHistory);
+                            }
                             promptState = promptNormal;
                         break;
                         default:
