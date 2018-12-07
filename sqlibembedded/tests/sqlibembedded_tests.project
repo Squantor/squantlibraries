@@ -42,7 +42,7 @@
   </VirtualDirectory>
   <Description/>
   <Dependencies/>
-  <Settings Type="Dynamic Library">
+  <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
         <IncludePath Value="."/>
@@ -110,7 +110,7 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
-        <RebuildCommand/>
+        <RebuildCommand>make clean &amp;&amp; make release -j5</RebuildCommand>
         <CleanCommand>make clean</CleanCommand>
         <BuildCommand>make release -j5</BuildCommand>
         <PreprocessFileCommand/>

@@ -3,13 +3,13 @@
 #include <mock_setup.h>
 #include <queue_macro.h>
 
-TEMPLATE_QUEUE_PROTO(stdinQueue, uint8_t)
-TEMPLATE_QUEUE_VARS(stdinQueue, uint8_t, STDIOMOCK_BUFSIZE)
-TEMPLATE_QUEUE_FUNCTIONS(stdinQueue, uint8_t, STDIOMOCK_BUFSIZE, (STDIOMOCK_BUFSIZE-1))
+TEMPLATE_QUEUE_PROTO(stdinQueue, char)
+TEMPLATE_QUEUE_VARS(stdinQueue, char, STDIOMOCK_BUFSIZE)
+TEMPLATE_QUEUE_FUNCTIONS(stdinQueue, char, STDIOMOCK_BUFSIZE, (STDIOMOCK_BUFSIZE-1))
 
-TEMPLATE_QUEUE_PROTO(stdoutQueue, uint8_t)
-TEMPLATE_QUEUE_VARS(stdoutQueue, uint8_t, STDIOMOCK_BUFSIZE)
-TEMPLATE_QUEUE_FUNCTIONS(stdoutQueue, uint8_t, STDIOMOCK_BUFSIZE, (STDIOMOCK_BUFSIZE-1))
+TEMPLATE_QUEUE_PROTO(stdoutQueue, char)
+TEMPLATE_QUEUE_VARS(stdoutQueue, char, STDIOMOCK_BUFSIZE)
+TEMPLATE_QUEUE_FUNCTIONS(stdoutQueue, char, STDIOMOCK_BUFSIZE, (STDIOMOCK_BUFSIZE-1))
 
 result mockStdioSetup()
 {
@@ -30,7 +30,7 @@ result mockStdinStatus()
     return stdinQueueState();
 }
 
-result mockStdinWrite(uint8_t c)
+result mockStdinWrite(char c)
 {
     return stdinQueueEnqueue(&c);
 }
@@ -45,9 +45,10 @@ result mockStdinPuts(char * s)
         }
         ++s;
     }
+    return noError;
 }
 
-result mockStdinRead(uint8_t *c)
+result mockStdinRead(char *c)
 {
     stdinQueueDequeue(c);
     return noError;
@@ -63,12 +64,12 @@ result mockStdoutStatus()
     return stdoutQueueState();
 }
 
-result mockStdoutWrite(uint8_t c)
+result mockStdoutWrite(char c)
 {
     return stdoutQueueEnqueue(&c);
 }
 
-result mockStdoutRead(uint8_t *c)
+result mockStdoutRead(char *c)
 {
     return stdoutQueueDequeue(c);
 }
@@ -89,7 +90,7 @@ char * mockStdoutGets(char * restrict s, int num)
     int size = num - 1;
     while(size > 0)
     {
-        uint8_t c;
+        char c;
         result r = stdoutQueueDequeue(&c);
         if(r == queueEmpty)
         {
@@ -136,7 +137,7 @@ char * mockStdoutGets(char * restrict s, int num)
  */
 int mockStdoutClear(void)
 {
-    uint8_t c;
+    char c;
     result r = stdoutQueueDequeue(&c);
     while(r != queueEmpty)
         r = stdoutQueueDequeue(&c);
