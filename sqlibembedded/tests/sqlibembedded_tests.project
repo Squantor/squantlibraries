@@ -6,6 +6,7 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="inc">
+    <File Name="inc/test_queue_string.h"/>
     <File Name="inc/test_parse_ansi.h"/>
     <File Name="inc/cmdline_commands.h"/>
     <File Name="inc/cmdline_test.h"/>
@@ -22,6 +23,7 @@
     <File Name="inc/mock_setup.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="tests">
+    <File Name="test_queue_string.c"/>
     <File Name="test_parse_ansi.c"/>
     <File Name="cmdline_test.c"/>
     <File Name="cmdline_commands.c"/>
@@ -130,4 +132,10 @@
       </Completion>
     </Configuration>
   </Settings>
+  <Dependencies Name="debug">
+    <Project Name="sqlibembedded"/>
+  </Dependencies>
+  <Dependencies Name="release">
+    <Project Name="sqlibembedded"/>
+  </Dependencies>
 </CodeLite_Project>

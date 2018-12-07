@@ -7,6 +7,7 @@ size_t sqstrlen ( const char * str );
 size_t sqstrnlen ( const char * str, size_t num );
 int sqstrcmp(const char * s1, const char * s2);
 char * sqstrncpy( char * restrict s1, const char * restrict s2, size_t n );
+char * sqstrcpy( char * restrict s1, const char * restrict s2);
 
 void * sqmemchr( const void * s, int c, size_t n );
 void * sqmemset( void * s, int c, size_t n );

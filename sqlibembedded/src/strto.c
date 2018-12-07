@@ -5,10 +5,10 @@
 // string to long converter, simple edition
 long int sqstrstol(const char * s)
 {
-    return sqstrtol(s, NULL, 0);
+    return sqstrtol(s, 0);
 }
 
-long int sqstrtol( const char * s, char ** endptr, int base )
+long int sqstrtol( const char * s, int base )
 {
     long int value = 0;
     char sign = '+';

@@ -32,18 +32,20 @@ extern "C" {
 typedef enum {
     noError = 0,
     error,
+    invalidArg,     // invalid (often NULL) argument passed, good case for hard assert
     cmdlineNotFound,
     cmdlineInvalidArg,
     streamEOF,
-	flashUnknownId,
-	flashInvalidAddr,
-	fileNotFound,	// could not find file
-	fileNoEntries,	// could not find free entry
-	fileNoSpace,	// insufficient free space
+    flashUnknownId,
+    flashInvalidAddr,
+    fileNotFound,	// could not find file
+    fileNoEntries,	// could not find free entry
+    fileNoSpace,	// insufficient free space
     queueFull,
-	queueNotEmpty,
-	queueEmpty,
-	resultEnd,
+    queueNotEmpty,
+    queueEmpty,
+    dataInvalid,    // you passed data that is problematic
+    resultEnd,
 } result;
 
 #ifdef __cplusplus
