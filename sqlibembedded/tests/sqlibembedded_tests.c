@@ -14,14 +14,15 @@ int main(int argc, char *argv[])
 {
     mockStdioSetup();
     int failedTests = 0;
+    // sort test modules on dependencies
     failedTests += testStrlenSuite();
     failedTests += testStrtoSuite();
     failedTests += testStrtokSuite();
     failedTests += testPutcharSuite();
     failedTests += testGetcharSuite();
-    failedTests += testCmdlineSuite();
-    failedTests += testParseAnsiSuite();
     failedTests += testQueueString();
+    failedTests += testParseAnsiSuite();
+    failedTests += testCmdlineSuite();
     if(failedTests > 0)
     {
         printf("ERROR: %d tests failed\n", failedTests);

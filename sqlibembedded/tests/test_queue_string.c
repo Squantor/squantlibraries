@@ -89,16 +89,16 @@ MU_TEST(testGetPrev)
     char stringNumeric[16];
     char stringOutput[32];
     // add a bunch of strings
-    for(int i = 0; i < 30; i++)
+    for(int i = 10; i < 28; i++)
     {
-        sprintf(stringNumeric,"%d",i);
+        sprintf(stringNumeric,"foo %d",i);
         queueStringEnqueue(&testQueue, stringNumeric);
     }
     
     idx = testQueue.head;   
-    for(int i = 29; i >= 0; i--)
+    for(int i = 28; i >= 10; i--)
     {
-        sprintf(stringNumeric,"%d",i);
+        sprintf(stringNumeric,"foo %d",i);
         mu_check(queueStringPrev(&testQueue, &idx, stringOutput) == noError);
         mu_check(strcmp(stringNumeric, stringOutput) == 0);
     }
