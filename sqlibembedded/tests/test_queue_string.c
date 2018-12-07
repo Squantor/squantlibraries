@@ -88,17 +88,18 @@ MU_TEST(testGetPrev)
     uint16_t idx;
     char stringNumeric[16];
     char stringOutput[32];
-    // add a bunch of strings
-    for(int i = 10; i < 28; i++)
+    // add a bunch of strings that also overwrite old ones
+    for(int i = 0; i < 34; i++)
     {
-        sprintf(stringNumeric,"foo %d",i);
+        sprintf(stringNumeric,"foobar %d",i);
         queueStringEnqueue(&testQueue, stringNumeric);
     }
     
     idx = testQueue.head;   
-    for(int i = 28; i >= 10; i--)
+    for(int i = 33; i >= 20; i--)
     {
-        sprintf(stringNumeric,"foo %d",i);
+        sprintf(stringNumeric,"foobar %d",i);
+        printf("%d\n", i);
         mu_check(queueStringPrev(&testQueue, &idx, stringOutput) == noError);
         mu_check(strcmp(stringNumeric, stringOutput) == 0);
     }

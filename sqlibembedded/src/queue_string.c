@@ -48,9 +48,24 @@ static uint16_t SeekForwardNotSep(t_queueString * queue, uint16_t idx)
 // search backward for seperator
 static uint16_t SeekBackSep(t_queueString * queue, uint16_t idx)
 {
-    while(queue->data[idx] != 0)
-        idx = WRAP(idx - 1, queue->len);
-    return idx;
+    uint16_t newIndex = idx;
+    // first scan backwards for one or more NUL chars while checking the tail
+    while(queue->data[newIndex] == 0)
+    {
+        newIndex = WRAP(newIndex - 1, queue->len);
+        // reached end, new index is old index
+        if(newIndex == queue->tail)
+            return idx;
+    }
+    // then scan backwards for one or more non NUL characters while checking the tail
+    while(queue->data[newIndex] != 0)
+    {
+        newIndex = WRAP(newIndex - 1, queue->len);
+        if(newIndex == queue->tail)
+            return idx;
+    }
+    // return the new index
+    return newIndex+1;
 }
 
 result queueStringEnqueue(t_queueString *queue, char * s)
@@ -125,14 +140,13 @@ result queueStringPrev(t_queueString * queue, uint16_t * i, char * s)
         return invalidArg;
     if((queue->head == queue->tail) || (queue->tail == *i))
         return queueEmpty;
-    // search from index
-    uint16_t indexNew = WRAP(*i - 2, queue->len);
-    indexNew = SeekBackSep(queue, indexNew);
-    // point to begin of string
-    indexNew = WRAP(indexNew + 1, queue->len);
+    // search backwards from current index index
+    uint16_t indexNew = SeekBackSep(queue, *i);
+    if(indexNew == *i)
+        return queueEmpty;
     // copy over string to s
     sqstrcpy(s, &(queue->data[indexNew]));
-    *i = indexNew;    
+    *i = indexNew;
     return noError;
 }
 
