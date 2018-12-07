@@ -2,47 +2,47 @@
 <CodeLite_Project Name="sqlibembedded_tests" Version="10.0.0" InternalType="">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
     </Plugin>
   </Plugins>
-  <VirtualDirectory Name="inc">
-    <File Name="inc/test_queue_string.h"/>
-    <File Name="inc/test_parse_ansi.h"/>
-    <File Name="inc/cmdline_commands.h"/>
-    <File Name="inc/cmdline_test.h"/>
-    <File Name="inc/cmdline_help.h"/>
-    <File Name="inc/test_getchar.h"/>
-    <File Name="inc/test_strlen.h"/>
-    <File Name="inc/test_strtok.h"/>
-    <File Name="inc/minunit.h"/>
-    <File Name="inc/mock_stdio.h"/>
-    <File Name="inc/test_strto.h"/>
-    <File Name="inc/mock_logfs.h"/>
-    <File Name="inc/test_cmdline.h"/>
-    <File Name="inc/test_putchar.h"/>
-    <File Name="inc/mock_setup.h"/>
-  </VirtualDirectory>
   <VirtualDirectory Name="tests">
-    <File Name="test_queue_string.c"/>
-    <File Name="test_parse_ansi.c"/>
-    <File Name="cmdline_test.c"/>
-    <File Name="cmdline_commands.c"/>
-    <File Name="cmdline_help.c"/>
-    <File Name="mock_logfs.c"/>
     <File Name="mock_stdio.c"/>
-    <File Name="setup_logfs.c"/>
-    <File Name="setup_stdio.c"/>
-    <File Name="test_cmdline.c"/>
-    <File Name="test_strlen.c"/>
-    <File Name="test_getchar.c"/>
     <File Name="test_strtok.c"/>
+    <File Name="cmdline_help.c"/>
+    <File Name="cmdline_test.c"/>
+    <File Name="mock_logfs.c"/>
+    <File Name="setup_logfs.c"/>
+    <File Name="cmdline_commands.c"/>
+    <File Name="test_cmdline.c"/>
+    <File Name="test_getchar.c"/>
+    <File Name="test_strlen.c"/>
     <File Name="test_putchar.c"/>
     <File Name="test_strto.c"/>
+    <File Name="setup_stdio.c"/>
+    <File Name="test_queue_string.c"/>
     <File Name="sqlibembedded_tests.c"/>
+    <File Name="test_parse_ansi.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="inc">
+    <File Name="inc/test_parse_ansi.h"/>
+    <File Name="inc/test_strto.h"/>
+    <File Name="inc/mock_setup.h"/>
+    <File Name="inc/test_cmdline.h"/>
+    <File Name="inc/minunit.h"/>
+    <File Name="inc/test_queue_string.h"/>
+    <File Name="inc/test_strtok.h"/>
+    <File Name="inc/test_putchar.h"/>
+    <File Name="inc/cmdline_help.h"/>
+    <File Name="inc/cmdline_test.h"/>
+    <File Name="inc/test_strlen.h"/>
+    <File Name="inc/test_getchar.h"/>
+    <File Name="inc/mock_logfs.h"/>
+    <File Name="inc/cmdline_commands.h"/>
+    <File Name="inc/mock_stdio.h"/>
   </VirtualDirectory>
   <Description/>
   <Dependencies/>
-  <Settings Type="Executable">
+  <Settings Type="Dynamic Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
         <IncludePath Value="."/>
@@ -52,15 +52,14 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
-        <IncludePath Value="./inc"/>
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(ProjectName)" IntermediateDirectory="./bin/$(WorkspaceConfiguration)" Command="./bin/$(WorkspaceConfiguration)/$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <BuildSystem Name="GNU makefile onestep build"/>
+      <General OutputFile="./bin/debug/sqlibembedded_tests" IntermediateDirectory="./build/debug" Command="./bin/debug/sqlibembedded_tests" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -92,14 +91,14 @@
         <SearchPaths/>
       </Completion>
     </Configuration>
-    <Configuration Name="release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="-O2" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(ProjectName)" IntermediateDirectory="./bin/$(WorkspaceConfiguration)" Command="./bin/$(WorkspaceConfiguration)/$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <BuildSystem Name="GNU makefile onestep build"/>
+      <General OutputFile="./bin/release/sqlibembedded_tests" IntermediateDirectory="./build/release" Command="./bin/release/sqlibembedded_tests" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -132,10 +131,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <Dependencies Name="debug">
-    <Project Name="sqlibembedded"/>
-  </Dependencies>
-  <Dependencies Name="release">
-    <Project Name="sqlibembedded"/>
-  </Dependencies>
 </CodeLite_Project>

@@ -2,77 +2,76 @@
 <CodeLite_Project Name="sqlibembedded" Version="10.0.0" InternalType="">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00020001N0005debug0000000000000001N0007release000000000000]]>
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
     </Plugin>
   </Plugins>
+  <VirtualDirectory Name="inc">
+    <File Name="inc/sqstdiodefs.h"/>
+    <File Name="inc/sqstring.h"/>
+    <File Name="inc/sqctype.h"/>
+    <File Name="inc/parse_ansi.h"/>
+    <File Name="inc/logfs.h"/>
+    <File Name="inc/cmdline.h"/>
+    <File Name="inc/results.h"/>
+    <File Name="inc/queue_compact.h"/>
+    <File Name="inc/queue_string.h"/>
+    <File Name="inc/print.h"/>
+    <File Name="inc/logfsint.h"/>
+    <File Name="inc/queue_macro.h"/>
+    <File Name="inc/cmdline_prompt.h"/>
+    <File Name="inc/sqstdio.h"/>
+    <File Name="inc/sqstdlib.h"/>
+    <File Name="inc/cmdline_cmd.h"/>
+    <File Name="inc/sqctypetable.h"/>
+  </VirtualDirectory>
   <VirtualDirectory Name="src">
-    <File Name="src/queue_string.c"/>
+    <File Name="src/strlen.c"/>
+    <File Name="src/getchar.c"/>
     <File Name="src/cmdline_prompt.c"/>
-    <File Name="src/cmdline_cmd.c"/>
-    <File Name="src/parse_ansi.c"/>
-    <File Name="src/queue_compact.c"/>
-    <File Name="src/logfs.c"/>
+    <File Name="src/memcmp.c"/>
+    <File Name="src/putchar.c"/>
+    <File Name="src/toupper.c"/>
+    <File Name="src/fgetc.c"/>
     <File Name="src/empty_stdio.c"/>
-    <File Name="src/empty_logfs.c"/>
+    <File Name="src/isalpha.c"/>
+    <File Name="src/strtok.c"/>
+    <File Name="src/isxdigit.c"/>
+    <File Name="src/queue_compact.c"/>
+    <File Name="src/parse_ansi.c"/>
+    <File Name="src/iscntrl.c"/>
+    <File Name="src/memchr.c"/>
+    <File Name="src/isgraph.c"/>
+    <File Name="src/isalnum.c"/>
+    <File Name="src/strto.c"/>
+    <File Name="src/isupper.c"/>
+    <File Name="src/memset.c"/>
     <File Name="src/fputs.c"/>
     <File Name="src/puts.c"/>
-    <File Name="src/fgets.c"/>
-    <File Name="src/iscntrl.c"/>
-    <File Name="src/isalnum.c"/>
-    <File Name="src/stdFILE.c"/>
-    <File Name="src/memcmp.c"/>
-    <File Name="src/isdigit.c"/>
-    <File Name="src/tolower.c"/>
-    <File Name="src/strlen.c"/>
-    <File Name="src/isprint.c"/>
-    <File Name="src/isupper.c"/>
-    <File Name="src/memmove.c"/>
-    <File Name="src/strcmp.c"/>
-    <File Name="src/isgraph.c"/>
-    <File Name="src/fgetc.c"/>
-    <File Name="src/isalpha.c"/>
-    <File Name="src/isblank.c"/>
-    <File Name="src/toupper.c"/>
-    <File Name="src/isascii.c"/>
-    <File Name="src/isxdigit.c"/>
-    <File Name="src/cmdline.c"/>
-    <File Name="src/strtok.c"/>
-    <File Name="src/isspace.c"/>
-    <File Name="src/strncpy.c"/>
-    <File Name="src/ispunct.c"/>
-    <File Name="src/islower.c"/>
-    <File Name="src/print.c"/>
-    <File Name="src/memset.c"/>
     <File Name="src/fputc.c"/>
-    <File Name="src/strto.c"/>
-    <File Name="src/ctypetable.c"/>
-    <File Name="src/memchr.c"/>
-    <File Name="src/getchar.c"/>
-    <File Name="src/putchar.c"/>
+    <File Name="src/queue_string.c"/>
+    <File Name="src/fgets.c"/>
+    <File Name="src/strcmp.c"/>
+    <File Name="src/isascii.c"/>
+    <File Name="src/memmove.c"/>
+    <File Name="src/isblank.c"/>
+    <File Name="src/empty_logfs.c"/>
+    <File Name="src/tolower.c"/>
+    <File Name="src/strncpy.c"/>
+    <File Name="src/isdigit.c"/>
+    <File Name="src/logfs.c"/>
+    <File Name="src/isspace.c"/>
+    <File Name="src/ispunct.c"/>
+    <File Name="src/cmdline.c"/>
     <File Name="src/memcpy.c"/>
-  </VirtualDirectory>
-  <VirtualDirectory Name="inc">
-    <File Name="inc/queue_string.h"/>
-    <File Name="inc/cmdline_prompt.h"/>
-    <File Name="inc/cmdline_cmd.h"/>
-    <File Name="inc/parse_ansi.h"/>
-    <File Name="inc/queue_macro.h"/>
-    <File Name="inc/queue_compact.h"/>
-    <File Name="inc/logfs.h"/>
-    <File Name="inc/logfsint.h"/>
-    <File Name="inc/sqstdlib.h"/>
-    <File Name="inc/sqstring.h"/>
-    <File Name="inc/cmdline.h"/>
-    <File Name="inc/print.h"/>
-    <File Name="inc/sqctypetable.h"/>
-    <File Name="inc/sqstdio.h"/>
-    <File Name="inc/sqctype.h"/>
-    <File Name="inc/results.h"/>
-    <File Name="inc/sqstdiodefs.h"/>
+    <File Name="src/islower.c"/>
+    <File Name="src/isprint.c"/>
+    <File Name="src/print.c"/>
+    <File Name="src/cmdline_cmd.c"/>
+    <File Name="src/ctypetable.c"/>
   </VirtualDirectory>
   <Description/>
   <Dependencies/>
-  <Settings Type="Static Library">
+  <Settings Type="Dynamic Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
         <IncludePath Value="."/>
@@ -82,14 +81,14 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug" CompilerType="Cross GCC ( x86_64-linux-gnu )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(ProjectName)" IntermediateDirectory="./build/$(WorkspaceConfiguration)" Command="./bin/$(WorkspaceConfiguration)/$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <BuildSystem Name="GNU makefile onestep build"/>
+      <General OutputFile="" IntermediateDirectory="./Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -121,14 +120,14 @@
         <SearchPaths/>
       </Completion>
     </Configuration>
-    <Configuration Name="release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Release" CompilerType="Cross GCC ( x86_64-linux-gnu )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="-O2" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(ProjectName)" IntermediateDirectory="./bin/$(ProjectName)" Command="./bin/$(WorkspaceConfiguration)/$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <BuildSystem Name="GNU makefile onestep build"/>
+      <General OutputFile="" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
