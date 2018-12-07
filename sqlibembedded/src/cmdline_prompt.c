@@ -105,8 +105,7 @@ static void promptAddString(char * promptBuf, uint16_t * promptBufIdx, char *s)
  */
 void promptProcess(const cmdLineEntry * cmdLineEntries)
 {
-    char currentPrompt[CMDLINE_MAX_LENGTH];
-    
+    static char currentPrompt[CMDLINE_MAX_LENGTH];
     static promptState_t promptState = promptNormal;
     
     int c = sqgetchar();
