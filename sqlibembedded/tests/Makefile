@@ -7,9 +7,9 @@ setup_stdio.c \
 mock_stdio.c \
 cmdline_commands.c cmdline_test.c cmdline_help.c
 INCLUDES = -I../inc -I./inc
-RLIBDIR = -L"../bin/release"
+RLIBDIR = -L"../bin/pc/release"
 RLIBS = -lsqlibembedded
-DLIBDIR = -L"../bin/debug"
+DLIBDIR = -L"../bin/pc/debug"
 DLIBS = -lsqlibembedded
 
 # Toolchain settings
@@ -72,13 +72,13 @@ DEPS = $(OBJECTS:.o=.d)
 # Standard, non-optimized release build
 .PHONY: release
 release: dirs
-	$(MAKE) -C .. release
+	$(MAKE) -C .. release PLATFORM=pc
 	$(MAKE) all --no-print-directory
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
-	$(MAKE) -C .. debug
+	$(MAKE) -C .. debug PLATFORM=pc
 	$(MAKE) all --no-print-directory
 
 # Create the directories used in the build

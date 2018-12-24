@@ -5,10 +5,7 @@
 PLATFORM ?= pc
 PROJECT = libsqlibembedded
 
-# Project settings
-
-
-# Toolchain settings
+# Tool settings
 MAKE = make
 MKDIR = mkdir
 RM = rm
@@ -20,11 +17,8 @@ OBJDUMP = objdump
 # other settings
 SRC_EXT = c
 
-# build up various variables
-PLATFORM_DIR = platforms/$(PLATFORM)
-
 # include settings pertaining to the platform
-include $(PLATFORM_DIR)/Makefile.inc
+include platforms/$(PLATFORM)/Makefile.inc
 
 # Clear built-in rules
 .SUFFIXES:
