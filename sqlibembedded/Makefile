@@ -1,43 +1,30 @@
+# generic makefile template
+# valid options PLATFORM, defines the platform to compile for (pc, cortexM0, RV32I etc)
+
+# Target settings
+PLATFORM ?= pc
+PROJECT = libsqlibembedded
+
 # Project settings
-BIN_NAME = libsqlibembedded
-SOURCES = src/print.c \
-src/strlen.c src/strtok.c src/strcmp.c src/strncpy.c \
-src/memchr.c src/memcmp.c src/memcpy.c src/memmove.c src/memset.c \
-src/strto.c \
-src/ctypetable.c \
-src/isspace.c src/isxdigit.c \
-src/empty_stdio.c src/getchar.c  src/putchar.c src/puts.c \
-src/fgetc.c src/fgets.c src/fputc.c src/fputs.c \
-src/empty_logfs.c src/logfs.c \
-src/cmdline.c src/cmdline_cmd.c src/cmdline_prompt.c \
-src/queue_string.c \
-src/parse_ansi.c
-INCLUDES = -Iinc
+
 
 # Toolchain settings
 MAKE = make
 MKDIR = mkdir
 RM = rm
 CXX = gcc
-CXX_PREFIX = 
 SIZE = size
 AR = ar
 OBJDUMP = objdump
 
-# Toolchain flags
-COMPILE_FLAGS = -std=c99 -Wall -Wextra -Werror
-DEFINES = 
-RDEFINES = -DNDEBUG
-DDEFINES = -DDEBUG
-RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -g3 -O3
-DCOMPILE_FLAGS = $(DEFINES) $(DDEFINES) -g3 -O0
-
-LINK_FLAGS =
-RLINK_FLAGS =
-DLINK_FLAGS =
-
 # other settings
 SRC_EXT = c
+
+# build up various variables
+PLATFORM_DIR = platforms/$(PLATFORM)
+
+# include settings pertaining to the platform
+include $(PLATFORM_DIR)/Makefile.inc
 
 # Clear built-in rules
 .SUFFIXES:
@@ -54,10 +41,10 @@ debug: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) $(DCOMPILE_FLAGS)
 debug: export LDFLAGS := $(LINK_FLAGS) $(DLINK_FLAGS)
 
 # Build and output paths
-release: export BUILD_PATH := build/release
-release: export BIN_PATH := bin/release
-debug: export BUILD_PATH := build/debug
-debug: export BIN_PATH := bin/debug
+release: export BUILD_PATH := build/$(PLATFORM)/release
+release: export BIN_PATH := bin/$(PLATFORM)/release
+debug: export BUILD_PATH := build/$(PLATFORM)/debug
+debug: export BIN_PATH := bin/$(PLATFORM)/debug
 
 # export what target we are building, used for size logs
 release: export BUILD_TARGET := release
@@ -94,15 +81,15 @@ clean:
 	$(RM) -r bin
 
 # Main rule, checks the executable and symlinks to the output
-all: $(BIN_PATH)/$(BIN_NAME).a
+all: $(BIN_PATH)/$(PROJECT).a
 
 # create the archive
-$(BIN_PATH)/$(BIN_NAME).a: $(OBJECTS)
+$(BIN_PATH)/$(PROJECT).a: $(OBJECTS)
 	$(CXX_PREFIX)$(AR) -r $@ $(OBJECTS)
 	$(CXX_PREFIX)$(SIZE) $@
 	date >> size$(BUILD_TARGET).log
 	$(CXX_PREFIX)$(SIZE) $@ >> size$(BUILD_TARGET).log
-	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(BIN_NAME).lss"
+	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(PROJECT).lss"
 
 # Add dependency files, if they exist
 -include $(DEPS)
