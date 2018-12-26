@@ -8,9 +8,9 @@ mock_stdio.c \
 cmdline_commands.c cmdline_test.c cmdline_help.c
 INCLUDES = -I../inc -I./inc
 RLIBDIR = -L"../bin/pc/release"
-RLIBS = -lsqlibembedded
+RLIBS = -lsqlibembedded_c
 DLIBDIR = -L"../bin/pc/debug"
-DLIBS = -lsqlibembedded
+DLIBS = -lsqlibembedded_c
 
 # Toolchain settings
 MAKE = make
