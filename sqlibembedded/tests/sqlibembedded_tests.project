@@ -6,6 +6,7 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="tests">
+    <File Name="mock_assert.c"/>
     <File Name="test_assert.c"/>
     <File Name="mock_stdio.c"/>
     <File Name="test_strtok.c"/>
@@ -25,6 +26,7 @@
     <File Name="test_parse_ansi.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="inc/mock_assert.h"/>
     <File Name="inc/test_assert.h"/>
     <File Name="inc/test_parse_ansi.h"/>
     <File Name="inc/test_strto.h"/>

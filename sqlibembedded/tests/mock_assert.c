@@ -21,10 +21,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include <mock_assert.h>
 #include <sqassert.h>
 
-void __attribute__((weak)) assertion_failure()
+int assert_counts = 0;
+
+/* override this function if you want to use assert */
+void assertion_failure()
 {
-    while(1)
-        ;
+    assert_counts++;
+}
+
+void reset_assertion_count()
+{
+    assert_counts = 0;
+}
+
+int get_assertion_failures()
+{
+    return assert_counts;
 }

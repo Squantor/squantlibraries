@@ -21,8 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef ASSERT_H
-#define ASSERT_H
+#ifndef SQASSERT_H
+#define SQASSERT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,9 +31,9 @@ extern "C" {
 void assertion_failure();
 
 #ifdef NDEBUG
-#define assert(x)
+#define sqassert(x)
 #elif DEBUG
-#define assert(x) \
+#define sqassert(x) \
     !(x) ? assertion_failure() : (void)0
 #else
     #warning no debug state defined

@@ -8,6 +8,7 @@
 #include <test_cmdline.h>
 #include <test_parse_ansi.h>
 #include <test_queue_string.h>
+#include <test_assert.h>
 
 
 int main() 
@@ -23,6 +24,7 @@ int main()
     failedTests += testQueueString();
     failedTests += testParseAnsiSuite();
     failedTests += testCmdlineSuite();
+    failedTests += testAssertSuite();
     if(failedTests > 0)
     {
         printf("ERROR: %d tests failed\n", failedTests);

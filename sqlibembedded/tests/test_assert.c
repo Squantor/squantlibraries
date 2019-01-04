@@ -23,33 +23,35 @@ SOFTWARE.
 */
 #include "minunit.h"
 #include "test_assert.h"
-#include <assert.h>
+#include <sqassert.h>
+#include <mock_assert.h>
 
 void test_assert_setup(void) 
 {
-    
+    reset_assertion_count();
 }
 
 void test_assert_teardown(void) 
 {
-
+   
 }
 
-MU_TEST(test_assert_debug) 
+MU_TEST(test_assert_mock) 
 {
-    
+    mu_check(get_assertion_failures() == 0);
 }
 
-MU_TEST(test_assert_release) 
+MU_TEST(test_assert_call) 
 {
-    
+    sqassert(1 == 0);    
+    mu_check(get_assertion_failures() == 1);
 }
 
 MU_TEST_SUITE(test_assert) 
 {
     MU_SUITE_CONFIGURE(&test_assert_setup, &test_assert_teardown);
-    MU_RUN_TEST(test_assert_debug);
-    MU_RUN_TEST(test_assert_release);
+    MU_RUN_TEST(test_assert_mock);
+    MU_RUN_TEST(test_assert_call);
 }
 
 int testAssertSuite()
