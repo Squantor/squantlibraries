@@ -43,8 +43,12 @@ MU_TEST(test_assert_mock)
 
 MU_TEST(test_assert_call) 
 {
-    sqassert(1 == 0);    
+    sqassert(1 == 0);
+#ifdef NDEBUG
+    mu_check(get_assertion_failures() == 0);
+#elif DEBUG
     mu_check(get_assertion_failures() == 1);
+#endif
 }
 
 MU_TEST_SUITE(test_assert) 
