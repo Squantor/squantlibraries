@@ -3,7 +3,7 @@
 
 # Target settings
 PLATFORM ?= pc
-PROJECT = libsqlibembedded
+PROJECT = libsqlibembedded_c
 
 # Tool settings
 MAKE = make

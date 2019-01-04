@@ -15,15 +15,15 @@ src/empty_assert.c
 INCLUDES = -Iinc
 
 # toolchain prefix
-CXX_PREFIX = arm-none-eabi-
+CXX_PREFIX = x86_64-linux-gnu-
 
 # Toolchain flags
-COMPILE_FLAGS = -std=c11 -Wall -Wextra -Werror -mcpu=cortex-m0 -mthumb -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections
-DEFINES = -DCORE_M0
+COMPILE_FLAGS = -std=c99 -Wall -Wextra -Werror
+DEFINES = 
 RDEFINES = -DNDEBUG
 DDEFINES = -DDEBUG
-RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -g -Os
-DCOMPILE_FLAGS = $(DEFINES) $(DDEFINES) -g3 -O0
+RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -g3 -O3
+DCOMPILE_FLAGS = $(DEFINES) $(DDEFINES) -g3 -Og
 
 LINK_FLAGS =
 RLINK_FLAGS =
