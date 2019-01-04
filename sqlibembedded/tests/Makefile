@@ -2,7 +2,7 @@
 BIN_NAME = sqlibembedded_tests
 SOURCES = sqlibembedded_tests.c test_strlen.c test_strto.c test_strtok.c \
 test_putchar.c test_getchar.c test_cmdline.c test_parse_ansi.c \
-test_queue_string.c \
+test_queue_string.c test_assert.c \
 setup_stdio.c \
 mock_stdio.c \
 cmdline_commands.c cmdline_test.c cmdline_help.c
