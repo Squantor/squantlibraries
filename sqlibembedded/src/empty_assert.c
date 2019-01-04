@@ -21,11 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <assert.h>
+#include <sqassert.h>
 
-void assertion_failure()
+/* override this function if you want to use assert */
+void __attribute__((weak)) assertion_failure()
 {
-	// Turn on assertion led
-	while(1)
-		;
+    while(1)
+        ;
 }

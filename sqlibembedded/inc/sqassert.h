@@ -32,9 +32,11 @@ void assertion_failure();
 
 #ifdef NDEBUG
 #define assert(x)
-#else
+#elif DEBUG
 #define assert(x) \
-	!(x) ? assertion_failure() : (void)0
+    !(x) ? assertion_failure() : (void)0
+#else
+    #warning no debug state defined
 #endif
 
 #ifdef __cplusplus

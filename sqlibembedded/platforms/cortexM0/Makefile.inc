@@ -11,7 +11,7 @@ src/empty_logfs.c src/logfs.c \
 src/cmdline.c src/cmdline_cmd.c src/cmdline_prompt.c \
 src/queue_string.c \
 src/parse_ansi.c \
-src/assert.c
+src/empty_assert.c
 INCLUDES = -Iinc
 
 # toolchain prefix
